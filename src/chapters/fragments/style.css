@@ -1,0 +1,118 @@
+@font-face {
+    font-family: angel;
+    src: url('../../ang.ttf');
+}
+
+body {
+    margin: 40px 0px;
+    background-color: #000;
+    background-image: none;
+    color: white;
+    font-family: cursive;
+    font-size: 1rem;
+}
+
+h1,
+h2 {
+    color: #d7cb66;
+    font-family: angel;
+    font-size: 3em;
+    margin: 1em 0px;
+    text-align: center;
+    text-shadow: 2px 2px 4px rgb(83, 81, 196);
+}
+
+h2 {
+    text-transform: capitalize;
+}
+
+.container {
+    margin: 0 auto;
+}
+
+q {
+    font-size: 0.8rem;
+    color: #aaa;
+}
+
+.authorname {
+    font-size: 0.8rem;
+    color: white;
+}
+
+canvas {
+    border: 2px solid #fff !important;
+    border-radius: 15px;
+    box-shadow: 1px 1px 5px grey;
+    position: absolute;
+    transition: 1s ease all;
+    transform-style: preserve-3d;
+}
+
+#target {
+    perspective: 1000;
+    position: relative;
+}
+
+canvas:hover {
+    /*transform: scale(1.01, 1.01);*/
+    transform: scale(1.25);
+    transition: 0.5s ease all;
+}
+
+p {
+    font-size: 1.6rem;
+    line-height: 1.8rem;
+}
+
+hr {
+    margin: 40px auto;
+    border-top: 2px solid #433e14;
+}
+
+
+em {
+    color: #d7cb66;
+}
+
+.cm-s-default .cm-number,
+.cm-s-default .cm-keyword,
+.cm-error,
+.cm-s-default {
+    border-radius: 15px;
+    font-size: 8px;
+    color: black !important;
+}
+
+/* bah? */
+
+.CodeMirror-hscrollbar {
+    display: none !important;
+}
+
+.CodeMirror-scroll {
+    height: 500px;
+}
+
+.CodeMirror:hover {
+    transform: scale(1.25);
+    z-index: 10;
+    box-shadow: 1px 1px 5px #aaa;
+}
+
+.CodeMirror,
+.CodeMirror .cm-s-default {
+    transition: 0.8s ease all;
+    box-shadow: 1px 1px 5px #aaa;
+    /*border: 1px solid #aaa;*/
+    /*display: inline-block;*/
+    /*font-size: 14px;*/
+    /*height: auto !important;*/
+    min-width: 300px !important;
+    max-width: 300px !important;
+    min-height: 500px;
+
+    /*width: 200px;*/
+    /*height: 400px !important;*/
+    /*margin: 0 20px 14px 0;*/
+}

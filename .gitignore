@@ -1,0 +1,6 @@
+.DS_Store
+
+# dirs
+node_modules/
+wip/
+
