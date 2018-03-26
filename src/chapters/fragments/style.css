@@ -45,7 +45,7 @@ canvas {
     border-radius: 15px;
     box-shadow: 1px 1px 5px grey;
     position: absolute;
-    transition: 1s ease all;
+    transition: .35s ease all;
     transform-style: preserve-3d;
 }
 
@@ -57,7 +57,7 @@ canvas {
 canvas:hover {
     /*transform: scale(1.01, 1.01);*/
     transform: scale(1.25);
-    transition: 0.5s ease all;
+    transition: 0.35s ease all;
 }
 
 p {

@@ -59,7 +59,7 @@ function makeSketch(fs, params) {
         TWEEN.removeAll();
         new TWEEN.Tween(timeVal)
           .to({ t: 0 }, 2000)
-          .easing(TWEEN.Easing.Quadratic.Out)
+          .easing(TWEEN.Easing.Quadratic.In)
           .onComplete(() => p.noLoop())
           .start();
       });
