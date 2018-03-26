@@ -30,6 +30,17 @@ module.exports = function(grunt) {
       ]
     },
 
+    /*
+     */
+    pug: {
+      dev: {
+        options: {},
+        files: [{
+          src: `${src}/chapters/fragments/index.pug`,
+          dest: `${tmp}/templates-compiled/index.html`
+        }]
+      }
+    },
 
     /** 
      */
@@ -42,7 +53,6 @@ module.exports = function(grunt) {
         ]
       }
     },
-
 
     /**
      *
@@ -59,7 +69,6 @@ module.exports = function(grunt) {
       }
     },
 
-
     /**
      * https://github.com/jsoverson/grunt-open
      * Opens the web server in the browser
@@ -69,7 +78,6 @@ module.exports = function(grunt) {
         path: `http://localhost:<%= connect.options.port %>/`
       }
     },
-
 
     /**
      *  https://www.npmjs.com/package/grunt-processhtml
@@ -88,7 +96,6 @@ module.exports = function(grunt) {
         }]
       }
     },
-
 
     /**
      * Connect port/livereload
@@ -112,7 +119,6 @@ module.exports = function(grunt) {
       }
     },
 
-
     /**
      * https://github.com/gruntjs/grunt-contrib-watch
      */
@@ -127,6 +133,7 @@ module.exports = function(grunt) {
         ],
         tasks: [
           'copy',
+          'pug',
           'processhtml'
         ],
         options: {
@@ -137,12 +144,15 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask('default', [
-    // VALIDATION
+    // JS process
     'jshint',
-    // html validation
-
+    
     'copy',
+
+    // HTML process
+    'pug',
     'processhtml',
+    // html validation
 
     // LIVE UPDATES / PREVIEW
     'connect:livereload',

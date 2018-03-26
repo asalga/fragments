@@ -1,118 +1,110 @@
+/*
+  Andor Saga
+*/
+
 @font-face {
-    font-family: angel;
-    src: url('../../ang.ttf');
+  font-family: angel;
+  src: url('../../ang.ttf');
 }
 
 body {
-    margin: 40px 0px;
-    background-color: #000;
-    background-image: none;
-    color: white;
-    font-family: cursive;
-    font-size: 1rem;
+  background-color: #000;
+  background-image: none;
+  color: #fff;
+  font-family: cursive;
+  font-size: 1rem;
+  margin: 40px 0;
 }
 
 h1,
 h2 {
-    color: #d7cb66;
-    font-family: angel;
-    font-size: 3em;
-    margin: 1em 0px;
-    text-align: center;
-    text-shadow: 2px 2px 4px rgb(83, 81, 196);
+  color: #d7cb66;
+  font-family: angel;
+  font-size: 3em;
+  margin: 1em 0;
+  text-align: center;
+  text-shadow: 2px 2px 4px rgb(83, 81, 196);
 }
 
 h2 {
-    text-transform: capitalize;
+  text-transform: capitalize;
 }
 
 .container {
-    margin: 0 auto;
+  margin: 0 auto;
 }
 
 q {
-    font-size: 0.8rem;
-    color: #aaa;
+  color: #aaa;
+  font-size: .8rem;
 }
 
-.authorname {
-    font-size: 0.8rem;
-    color: white;
+.author-name {
+  color: white;
+  font-size: .8rem;
 }
 
 canvas {
-    border: 2px solid #fff !important;
-    border-radius: 15px;
-    box-shadow: 1px 1px 5px grey;
-    position: absolute;
-    transition: .35s ease all;
-    transform-style: preserve-3d;
-}
-
-#target {
-    perspective: 1000;
-    position: relative;
+  border: 2px solid #fff !important;
+  border-radius: 15px;
+  box-shadow: 1px 1px 5px grey;
+  position: absolute;
+  transition: .35s ease all;
 }
 
 canvas:hover {
-    /*transform: scale(1.01, 1.01);*/
-    transform: scale(1.25);
-    transition: 0.35s ease all;
+  transform: scale(1.25);
+  transition: .35s ease all;
 }
 
 p {
-    font-size: 1.6rem;
-    line-height: 1.8rem;
+  font-size: 1.6rem;
+  line-height: 1.8rem;
 }
 
 hr {
-    margin: 40px auto;
-    border-top: 2px solid #433e14;
+  margin: 40px auto;
+  border-top: 2px solid #433e14;
 }
 
 
 em {
-    color: #d7cb66;
+  color: #d7cb66;
 }
 
 .cm-s-default .cm-number,
 .cm-s-default .cm-keyword,
 .cm-error,
 .cm-s-default {
-    border-radius: 15px;
-    font-size: 8px;
-    color: black !important;
+  border-radius: 15px;
+  color: black !important;
+  font-size: 8px;
 }
 
-/* bah? */
-
-.CodeMirror-hscrollbar {
-    display: none !important;
+/*
+    For some reason if we want to set a min height
+    to codeMirror, we also cannot display the scrollbar
+*/
+.CodeMirror-hscrollbar,
+.CodeMirror-vscrollbar {
+  display: none !important;
 }
 
 .CodeMirror-scroll {
-    height: 500px;
+  height: 480px;
+  overflow: none !important;
 }
 
 .CodeMirror:hover {
-    transform: scale(1.25);
-    z-index: 10;
-    box-shadow: 1px 1px 5px #aaa;
+  box-shadow: 1px 1px 5px #aaa;
+  transform: scale(1.25);
+  z-index: 10;
 }
 
 .CodeMirror,
 .CodeMirror .cm-s-default {
-    transition: 0.8s ease all;
-    box-shadow: 1px 1px 5px #aaa;
-    /*border: 1px solid #aaa;*/
-    /*display: inline-block;*/
-    /*font-size: 14px;*/
-    /*height: auto !important;*/
-    min-width: 300px !important;
-    max-width: 300px !important;
-    min-height: 500px;
-
-    /*width: 200px;*/
-    /*height: 400px !important;*/
-    /*margin: 0 20px 14px 0;*/
+  transition: 0.8s ease all;
+  box-shadow: 1px 1px 5px #aaa;
+  min-width: 300px !important;
+  max-width: 300px !important;
 }

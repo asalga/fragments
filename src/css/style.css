@@ -1,56 +1,51 @@
 /*
-    Andor Saga
+  Andor Saga
 */
 
 body {
-    background-image: url('../img/bk.png');
-    font-family: verdana;
-    /*"Times New Roman", serif;*/
-    font-size: 16px;
-    line-height: 1.2;
-    margin: 0 50px 50px 50px;
-
-    color: #333;
-    background-color: #fefefe;
+  background-color: #fefefe;
+  color: #333;
+  font-family: verdana;
+  font-size: 16px;
+  line-height: 1.2;
+  margin: 0 50px 50px 50px;
 }
 
-div#content {
-    padding: 0 100px;
+#content {
+  padding: 0 100px;
 }
 
 code {
-    /*display: block;*/
-    font-family: monospace;
-    /*background-color: #e59ecb;*/
-    padding: 4px;
+  font-family: monospace;
+  padding: 4px;
 }
 
 a code {
-    font-style: normal;
-    background-color: #D6E0EA;
+  background-color: #D6E0EA;
+  font-style: normal;
 }
 
 pre {
-    font-size: 16px;
+  font-size: 16px;
 }
 
 ul.exercises li {
-    margin-top: 20px;
+  margin-top: 20px;
 }
 
 p {
-    max-width: 600px;
+  max-width: 600px;
 }
 
 em {
-    font-weight: bold;
-    font-style: normal;
+  font-style: normal;
+  font-weight: bold;
 }
 
 span.keyword {
-    color: purple;
-    font-family: monospace;
-    font-weight: bold;
+  color: purple;
+  font-family: monospace;
+  font-weight: bold;
 }
 
 h1,
@@ -59,116 +54,106 @@ h3,
 h4,
 h5,
 h6 {
-    color: #000;
-    font-family: cursive;
-    line-height: 20px;
-    margin-left: -20px;
+  color: #000;
+  font-family: cursive;
+  line-height: 20px;
+  margin-left: -20px;
 }
 
 h1 {
-    font-size: 45px;
+  font-size: 45px;
 }
 
 h2 {
-    font-size: 35px;
-    display: inlin;
-    padding-bottom: 10px;
-    border-bottom: 1px solid gray;
+  font-size: 35px;
+  display: inlin;
+  padding-bottom: 10px;
+  border-bottom: 1px solid gray;
 }
 
 h3 {
-    font-size: 20px;
+  font-size: 20px;
 }
 
 
 hr {
-    margin-bottom: 50px;
-    margin-top: 50px;
-    width: 500px;
+  margin-bottom: 50px;
+  margin-top: 50px;
+  width: 500px;
 }
 
 .title {
-    color: #336699;
-    font-family: cursive;
-    font-size: 45px;
-    margin-bottom: 80px;
-    text-align: center;
+  color: #369;
+  font-family: cursive;
+  font-size: 45px;
+  margin-bottom: 80px;
+  text-align: center;
 }
 
 a {
-    color: #336699;
-    cursor: pointer;
-    font-style: italic;
-    text-decoration: none;
-    transition: .25s ease-in;
+  color: #369;
+  cursor: pointer;
+  font-style: italic;
+  text-decoration: none;
+  transition: .25s ease-in;
 }
 
 a:hover {
-    color: #000;
-    transition: .25s ease-in;
+  color: #000;
+  transition: .25s ease-in;
 }
 
 .advanced {
-    display: block;
-    border: 1px solid #888;
-    background-color: #efefef;
-    font-size: 12px;
-    font-family: sans-serif;
-    padding: 20px;
-    /*max-width: 50%;*/
+  display: block;
+  border: 1px solid #888;
+  background-color: #efefef;
+  font-size: 12px;
+  font-family: sans-serif;
+  padding: 20px;
+  /*max-width: 50%;*/
 }
 
 .advanced span {
-    font-family: sans-serif;
-    font-weight: bold;
-    vertical-align: super;
+  font-family: sans-serif;
+  font-weight: bold;
+  vertical-align: super;
 }
 
 .icon {
-    width: 20px;
-    display: inline-block;
+  width: 20px;
+  display: inline-block;
 }
 
 .nav {
-    list-style: none;
-    text-align: center;
+  list-style: none;
+  text-align: center;
 }
 
 .nav li {
-    display: inline;
-    margin: 40px;
+  display: inline;
+  margin: 40px;
 }
 
 .CodeMirror,
 .CodeMirror .cm-s-default {
-    /*border: 1px solid #aaa;*/
-    display: inline-block;
-    /*font-size: 14px;*/
-    height: auto !important;
-    /*min-width: 500px;*/
-    /*margin: 0 20px 14px 0;*/
+  display: inline-block;
+  height: auto !important;
 }
 
 .line-highlight {
-    background-color: #e9ffb7;
+  background-color: #e9ffb7;
 }
 
 textarea~div {
-    display: block;
+  display: block;
 }
 
 div canvas {
-    border: 1px solid green;
-    vertical-align: top;
+  border: 1px solid #0f0;
+  vertical-align: top;
 }
 
 img.centered {
-    display: block;
-    margin: 0 auto;
-}
-
-img.hero {
-    width: 500px;
-    display: block;
-    margin: 0 auto;
+  display: block;
+  margin: 0 auto;
 }
