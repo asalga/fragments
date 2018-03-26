@@ -3,7 +3,7 @@ mixin card(glsl, title, blurb, aurthorName, quote)
     div.col-sm-4
       textarea.glsl-code(data-params='{"width":300,"height":480,"loop": "true","CodeMirror":{"lineNumbers":"false"}}' data-example=glsl)
     div.col-sm-4
-      h2()=title
+      h2=title
       p=blurb
       q=quote
       p.author-name=("―"+aurthorName)
@@ -56,7 +56,7 @@ block cards
         'We ran as if to meet the moon.')
 
   +card('code/flow.glsl',
-        'flux &amp; flow',
+        'flux & flow',
         'Found throughout almost every symbol―sometimes in the smallest degrees. Flux and flow brings peace and harmony into all it touches. It is a state of neverending change and progression.',
         'Jarar Vernec',
         'The flux &amp; flow stops for no being')

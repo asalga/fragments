@@ -158,10 +158,6 @@ function makeSketch(fs, params) {
               'data-loader': 'customLoaderName'
             });
 
-          // let cvs = divContainer.find('canvas');
-          // console.log(cvs);
-          // window.cvs = cvs;
-
           $(t).prependTo(divContainer);
         }
 
@@ -195,10 +191,6 @@ function makeSketch(fs, params) {
               let test = new p5(makeSketch(fragCode, params), relPath);
               let target = $(test.canvas).parent().parent().parent().find('#target');
               $(test.canvas).appendTo(target);
-
-              // $(test.canvas).attr('id', relPath);
-              // window.test = test;
-              // $(test.canvas).appendTo($('#' + relPath));
             }
           });
         });
