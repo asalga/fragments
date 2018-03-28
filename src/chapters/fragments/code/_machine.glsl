@@ -1,4 +1,4 @@
-precision mediump float;
+precision mediump float
 #define PI 3.141592658
 uniform vec2 u_res;
 

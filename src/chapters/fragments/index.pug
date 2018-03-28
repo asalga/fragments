@@ -1,18 +1,30 @@
-mixin card(glsl, title, blurb, aurthorName, quote)
+mixin card(glsl, title, blurb, authorName, quote)
   div.row
     div.col-sm-4
       textarea.glsl-code(data-params='{"width":300,"height":480,"loop": "true","CodeMirror":{"lineNumbers":"false"}}' data-example=glsl)
     div.col-sm-4
       h2=title
-      p=blurb
-      q=quote
-      p.author-name=("―"+aurthorName)
+      p.
+        !{blurb}
+      if quote
+        q=quote
+      if authorName
+        p.author-name=("―"+authorName)
     div.col-sm-4.test
       div#target
   hr
 
 
 block cards
+
+
+
+  +card('code/machine.fs',
+        'His Divine Shadow',
+        ' ',
+        'Anon',
+        'We worship his divine shadow')
+
   +card('code/osterman.glsl',
         'Osterman',
         'Osterman brings us his unnamed symbol. Here we learn the relationship between time and distance. Insight is gained by understanding the interplay between these two dimensions.',

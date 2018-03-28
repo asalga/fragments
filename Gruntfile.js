@@ -34,7 +34,9 @@ module.exports = function(grunt) {
      */
     pug: {
       dev: {
-        options: {},
+        options: {
+          pretty: true
+        },
         files: [{
           src: `${src}/chapters/fragments/index.pug`,
           dest: `${tmp}/templates-compiled/index.html`
@@ -92,7 +94,7 @@ module.exports = function(grunt) {
         },
         files: [{
           'src': `${app}/chapters/fragments/index.html`,
-          'dest':`${app}/chapters/fragments/index.html`
+          'dest': `${app}/chapters/fragments/index.html`
         }]
       }
     },
@@ -146,7 +148,7 @@ module.exports = function(grunt) {
   grunt.registerTask('default', [
     // JS process
     'jshint',
-    
+
     'copy',
 
     // HTML process
