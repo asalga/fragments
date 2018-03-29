@@ -1,6 +1,7 @@
 precision mediump float;
 uniform float u_time;
 uniform vec2 u_res;
+
 /*
   Since we're going to overlap the teeth of the gear,
   when we specify the radius of the gear, the teeth
