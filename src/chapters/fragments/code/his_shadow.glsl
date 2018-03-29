@@ -33,18 +33,19 @@ void main(){
   float l = length(p) * 25.;
   vec2 pn = normalize(p);
   float theta = acos(dot(pn, vec2(1., 0.))) * l;
+  
   if(theta < 0.15){
-    discard;
+  //  discard;
   }
 
-  p.x += cos(theta)/1.1;
-  p.y += sin(theta)/1.1;
+  // p.x += cos(theta)/1.1;
+  // p.y += sin(theta)/1.1;
 
   pn = normalize(p);
-  float theta2 = acos(dot(pn, vec2(1., 0.)));
+  // float theta2 = acos(dot(pn, vec2(1., 0.)));
  
-  //float theta2 = acos(dot(pn, vec2(1., 0.))) * 1.;
-  //i += step(.5,p.x);
+  float theta2 = acos(dot(pn, vec2(1., 0.))) * 1.;
+  i += step(.5,p.x);
   // first step is for angle, second is for keeping it inside circle // * (1. - ss(0.625, 0.628, length(p)));
   float blade = (1. - step(.5, theta2));
   float c1 = blade;
