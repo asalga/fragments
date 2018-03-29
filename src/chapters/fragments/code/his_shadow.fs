@@ -35,17 +35,18 @@ void main(){
   //   discard;
   // }
 
-  p.x += cos(theta)/1.1;
-  p.y += sin(theta)/1.1;
+  // p.x += cos(theta)/1.1;
+  // p.y += sin(theta)/1.1;
 
-  pn = normalize(p);
-  float theta2 = acos(dot(pn, vec2(1., 0.)));
+  // pn = normalize(p);
+  float theta2 = atan(p.y, p.x);
+  // acos(dot(pn, vec2(1., 0.)));
  
   //float theta2 = acos(dot(pn, vec2(1., 0.))) * 1.;
   //i += step(.5,p.x);
   // first step is for angle, second is for keeping it inside circle // * (1. - ss(0.625, 0.628, length(p)));
-  // float blade = (1. - step(.5, theta2));
+  float blade = (1. - step(.15, theta2));
   // float c1 = blade;
 
-  gl_FragColor = vec4(vec3(i), 1.);
+  gl_FragColor = vec4(vec3(blade), 1.);
 }

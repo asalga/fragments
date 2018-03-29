@@ -1,49 +1,84 @@
-  // arctan uses the signs of the parameters passed in to determine
-  // which quadrant the point is inside
-  // atan returns [−π, π]
 precision mediump float;
 uniform vec2 u_res;
 uniform float u_time;
 #define PI 3.14159265832
+const float NumTeeth = 5.;
 
 float c(vec2 p, vec2 o, float r){
   return step(length(o-p),r);
 }
 
 void main(){
-  float i = 0.;
   vec2 a = vec2(u_res.x/u_res.y, 1.);
   vec2 p = a * (gl_FragCoord.xy / u_res * 2. - 1.);
+//   float plen = length(p);
 
-  // p.x += 0.5;
+//   // 1) Create 'spark pattern'
+//   // Get angle formed by current y and x atan will return a value between -pi and pi
+//   float theta = atan(p.y, p.x);
   
-  vec2 p2 = vec2(p.x+0.5, p.y);
+//   // 1) Feed that into sin which returns a value from -1 to 1
+//   float s = sin(theta * NumTeeth);
+
+//   // 2) We can use step to remove the fade created by sin
+//   float blade = step(0. ,s);
+
   
-  float theta2 = atan(p2.y, p2.x);
-  float plen2 = length(p2);
 
-  vec2 p3 = vec2(p.x-0.5, p.y);
-  float theta3 = atan(p3.y, p3.x);
-  float plen3 = length(p3);
+//   float i = blade;
+  
 
-  float theta = atan(p.y, p.x);
-  float plen = length(p);
-  // i = smoothstep(0.2,0.5, sin((u_time + theta) * 14.)) * 
-  //     step(0.4,plen ) * 
-  //     smoothstep(plen, plen+0.01, 0.5);
+//   // 3) We need to 'shape' the ends into teeth
+//   float i3 = step(0., sin(theta * NumTeeth));
+
+//   if(plen > 0.4){
+//     vec2 z = vec2(p);
+//     vec2 test = p * 1.5;
+//     z += test;
+
+//     // vec2 t = z * 0.16;
+//     // z.y *= -1.;
+//     theta = atan(z.y, z.x);
 
 
-  float f = smoothstep(-0.5, 0.6, cos((theta + u_time) * 20.) ) * .03 + .23;
-  i = step(plen, f);
+//     float i4 = sin(theta * NumTeeth);
 
-  float f2 = smoothstep(-0.5, 0.6, cos((PI/4. + theta2 - u_time) * 20.)) * .03 + .23;
-  float i2 = step(plen2, f2);
+//     float isInside = step(0.0, i4);
+    
+//     if(isInside > 0.0){
+//       i3 = 1.0 - i4;
+//     }
 
-  float f3 = smoothstep(-0.5, 0.6, cos((PI/4. +theta3 - u_time) * 20.)) * .03 + .23;
-  float i3 = step(plen3, f3);
 
-  gl_FragColor = vec4(vec3(i+i2+i3), 1.);
+//     // i = s;//step(0. ,s);
+//   }
+//   // i *= step(0.4, plen);
+// if(plen > 0.7){discard;}
+  
+//   // float i2 = smoothstep(-.3, .6, sin(theta * NumTeeth));
+
+//   // scale it down
+//   // i2 *= 0.2;
+
+//   // i2 += 0.24;
+
+//   // float i2 = smoothstep(-.9, .9, sin(theta * 10.));// * .08;
+//   // i = i * step(plen, 0.6);
+
+//   // float i2 = smoothstep(-.5, .6, sin(theta * 5.)) * 1. + 0.00;
+
+//   // float i2 = step(plen, i3);
+//   gl_FragColor = vec4(i3, i3, i3, 1.);
+
+
+  gl_FragColor = vec4(0., 0., 1., 1.);
 }
+  
+  // float f = smoothstep(-.5, .6, sin(theta * 10.)) * .08;
+  // float test = step(0.0001, f);
+  //  float i = step(plen, teeth);
+  // float i = step(0., v);
 
-// float f = smoothstep(-.5, 1., cos(theta * 40.)) * .2 + .5;
-// float i = 1. - step(f, r);
+    // Image that the sin wave is coming out of the screen
+  // Imagine that the sin wave dives into the xz plane
+  // and it will make perfect sense.
