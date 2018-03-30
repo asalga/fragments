@@ -43,10 +43,9 @@ float gear3(vec2 p, float r, float numTeeth, float teethHeight, float d){
   float pl = length(p) * 1.7;
   float truncedTeeth = 1. - step(r + teethHeight/0.35 , pl);
   vec2 dir = normalize(p);
-  float c = theta + u_time*d;
-  float num = 7.;
-
-  vec2 test = (dir*0.5) * min(0.9, min(mod( c * num, PI), PI - mod(c * num,PI)))* 0.4;
+  float c = theta + u_time * d;
+  float num = 9.;
+  vec2 test = (dir*0.5) * min(1., min(mod( c * num, PI), PI - mod(c * num,PI)))* 0.35;
   return step(length(p + test), r*1.4) * truncedTeeth  * step(.3, pl);
 }
 
@@ -54,8 +53,8 @@ void main(){
   vec2 a = vec2(1.0, u_res.y/u_res.x);
   vec2 p = a * ((gl_FragCoord.xy / u_res) * 2. -1.);
   
-  float g0 = gear3(vec2(0.5, 0.253) + p, 0.5, 30.0, 0.2, +1.);
-  float g1 = gear3(vec2(-.5, -0.253) + p, 0.5, 30.0, 0.2, -1.);
+  float g0 = gear3(vec2(0.4, 0.415) + p, 0.5, 30.0, 0.2, +1.);
+  float g1 = gear3(vec2(-.4, -0.42) + p, 0.5, 30.0, 0.2, -1.);
 
   gl_FragColor = vec4(vec3(g0 + g1), 1.0);
 }
