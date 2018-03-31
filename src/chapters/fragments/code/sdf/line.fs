@@ -6,7 +6,11 @@ float horizLineSDF(vec2 p, float y, float thick){
   return step(abs(p.y - y), thick);
 }
 
-
+// ax + by = c
+// Get the distance between the current pixel and the line
+float lineSDF(vec2 p, float b, float thick){
+  return 1.;
+}
 
 
 void main(){
@@ -15,7 +19,10 @@ void main(){
  
   float pos = .8 * sin(u_time * 1.5);
 
-  float i = horizLineSDF(p, pos, .005);
+  float i;
+
+  i = horizLineSDF(p, pos, .005);
+  i = lineSDF(p, 0., 0.05);
 
   gl_FragColor = vec4(vec3(i), 1.);
 }
