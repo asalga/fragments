@@ -136,7 +136,8 @@ a:hover {
 
 .CodeMirror,
 .CodeMirror .cm-s-default {
-  display: inline-block;
+  /*display: inline-block;*/
+  display: none;
   height: auto !important;
 }
 
@@ -145,7 +146,7 @@ a:hover {
 }
 
 textarea~div {
-  display: block;
+  display: none;
 }
 
 div canvas {
