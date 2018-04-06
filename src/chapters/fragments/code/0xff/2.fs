@@ -6,8 +6,8 @@ uniform vec2 u_res;
 float rectSDF(vec2 p, vec2 dims){
   vec2 a = abs(p / dims);
   float v = max(a.x, a.y);
-  float test = smoothstep(v, v + e,  dims.x) + step(v,  dims.y);
-  //ew ew ew, need to learn a better way
+  float test = smoothstep(v, v + e,  dims.x) + 
+               step(v,  dims.y);
   return ceil(test/2.);
 }
 
@@ -19,7 +19,8 @@ float circleSDF(vec2 p, float rad){
 float loopSDF(vec2 p, vec2 dims){  
   float d = dims.x+dims.y;
   float l = length(p);
-  return (1. - smoothstep(d, d + e, length(p))) * (1. - smoothstep(l, l + e, dims.x));
+  return (1. - smoothstep(d, d + e, length(p))) * 
+         (1. - smoothstep(l, l + e, dims.x));
 }
 
 float halfLoopSDF(vec2 p, vec2 dims){   
@@ -27,16 +28,17 @@ float halfLoopSDF(vec2 p, vec2 dims){
 }
 
 vec2 rot(vec2 p, float theta){
-  return p * mat2( cos(theta), -sin(theta), sin(theta), cos(theta));
+  return p * mat2( cos(theta), -sin(theta),
+                   sin(theta), cos(theta));
 }
 
-float pill(vec2 p, float pos,  float rad, vec2 d, vec2 loopSpec){
+float pill(vec2 p, float pos,  float rad, vec2 d, vec2 ls){
   vec2 a = vec2(1.0, u_res.y / u_res.x);
   vec2 toCut = a * vec2(.03);
   float r0 = rectSDF(p + vec2(0.,  rad + 0.0141), vec2(0.8, 0.028));
   float r1 = rectSDF(p + vec2(0., -rad - 0.0141), vec2(0.8, 0.028));
-  float c1 = halfLoopSDF(p + vec2(0.6, 0.), loopSpec);
-  float c2 = halfLoopSDF(rot(p, -PI) + vec2(0.6, 0.) , loopSpec);
+  float c1 = halfLoopSDF(p + vec2(0.6, 0.), ls);
+  float c2 = halfLoopSDF(rot(p, -PI) + vec2(0.6, 0.) , ls);
   return c1 + r0 + r1 + c2;
 }
 
