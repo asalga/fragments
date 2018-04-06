@@ -66,7 +66,7 @@ h1 {
 
 h2 {
   font-size: 35px;
-  display: inlin;
+  display: inline;
   padding-bottom: 10px;
   border-bottom: 1px solid gray;
 }
@@ -136,8 +136,8 @@ a:hover {
 
 .CodeMirror,
 .CodeMirror .cm-s-default {
-  /*display: inline-block;*/
-  display: none;
+  display: inline-block;
+  /*display: none;*/
   height: auto !important;
 }
 
@@ -146,7 +146,7 @@ a:hover {
 }
 
 textarea~div {
-  display: none;
+  display: block;
 }
 
 div canvas {

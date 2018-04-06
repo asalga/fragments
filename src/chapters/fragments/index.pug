@@ -3,7 +3,7 @@ mixin card(glsl, title, blurb, authorName, quote)
     div.col-sm-4
       textarea.glsl-code(data-params='{"width":300,"height":480,"loop": "true","CodeMirror":{"lineNumbers":"false"}}' data-example=glsl)
     div.col-sm-4
-      // h2=title
+      h2=title
       p.
         !{blurb}
       if quote
