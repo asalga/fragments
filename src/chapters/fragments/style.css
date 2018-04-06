@@ -3,8 +3,8 @@
 */
 
 @font-face {
-  font-family: angel;
-  src: url('../../ang.ttf');
+  font-family: "angel";
+  src: url('fonts/ang.ttf');
 }
 
 body {

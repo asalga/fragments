@@ -63,12 +63,12 @@ function makeSketch(fs, params) {
           .onComplete(() => p.noLoop())
           .start();
       });
-      p.noLoop();
+      p.loop();
     };
 
     p.draw = function() {
       sketchTime += (1 / 60) * timeVal.t;
-
+sketchTime = p.millis() / 1000 * 0.5;
       p.shader(sh);
 
       if (fs.match(/uniform\s+vec2\s+u_res/)) {
