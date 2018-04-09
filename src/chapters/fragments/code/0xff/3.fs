@@ -1,34 +1,36 @@
 precision mediump float;
 uniform vec2 u_res;
+uniform float u_time;
 #define PI 3.141592658
+#define E 0.01
 
-float ring(vec2 p, float r){
-  float l = length(p);
-  float ss = 0.01;
-  float thickness = 0.05;
-  return smoothstep(r, r + ss, l) * 
-  		 smoothstep(l, l + ss, r + thickness);
+float rSDF(vec2 p, vec2 dims){
+  vec2 absValue = abs(p/dims);
+  return max(absValue.x, absValue.y);
 }
 
-float rect(vec2 p, vec2 dims){
-  vec2 scaledP = p / dims;
-  vec2 a = abs(scaledP);
-  float v = max(a.x, a.y);
-  return step(v, dims.x) + step(v,  dims.y);
-}
-
-vec2 rot(vec2 p, float theta){
-  return p * mat2( cos(theta), -sin(theta),
-                   sin(theta), cos(theta));
+float cSDF(vec2 p, float r){
+  return length(p) - r;
 }
 
 void main(){
-  vec2 a = vec2(1., u_res.y / u_res.x);
-  vec2 p = a * (gl_FragCoord.xy / u_res * 2. - 1.);
-  float s = 0.75;
-  float theta = PI/4.;
-  float c = ring(p, s) + 
-  			rect(rot(p, theta), vec2(s, .1)) +
-  			rect(rot(p, -theta), vec2(s, .1));
-  gl_FragColor = vec4(vec3(c), 1.0);
+  vec2 ar = vec2(1.,u_res.y/u_res.x);
+  vec2 p = ar * (gl_FragCoord.xy / u_res * 2. -1.);
+  
+  float theta = sin(u_time * 4.) * PI/8.;
+  mat2 rot = mat2(cos(theta), sin(theta), 
+                  sin(theta), -cos(theta));
+  
+  vec2 bPos = vec2( sin(-theta) * 2., cos(1.5 * theta) - .5);
+  float b = smoothstep(1.-E, 1., 1.-cSDF(p + bPos, 0.33)) - 
+            smoothstep(1.-E, 1., 1.-cSDF(p + bPos, 0.3));
+
+  float bh = smoothstep(1.-E, 1., 1.-cSDF(p + bPos, 0.25)) -
+  			 smoothstep(1.-E, 1., 1.-cSDF(p + bPos + 
+  			 vec2( cos(-theta) * 0.03, 
+  			 	   sin(theta) * 0.03), 0.25));
+
+  p.y -= 1.625;p *= rot;
+  float a = 1.-smoothstep(1.-E, 1., rSDF(p, vec2(0.023, 1.8)));
+  gl_FragColor = vec4(vec3(a+b+bh), 1.);
 }
