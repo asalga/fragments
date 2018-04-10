@@ -30,7 +30,7 @@ void main(){
   t = u_time * 2.0;
   
   // float moveAnim = what(mod(t/5., 1.0));
-  //bounceOut(mod(t/2., 1.));
+  // bounceOut(mod(t/2., 1.));
 
   float moveAnim = 0.;
 
