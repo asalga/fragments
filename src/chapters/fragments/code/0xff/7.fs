@@ -32,7 +32,8 @@ void main(){
   }
 
   // Need to somehow create z coordinate from 2D
-  float z = (sin(p.y * 1.)  - p.x) + (cos(p.x * 1.) - p.y);
+  // float z = (sin(p.y * 1.)  - p.y) + (cos(p.x * 1.) - p.x);
+  float z = sqrt(1. - (p.x*p.x) - (p.y*p.y));
 
   // float z = 0.0;
 
@@ -46,7 +47,6 @@ void main(){
   
   vec3 i = vec3(dot(v, sunDir));
   // c = vec3(step(c.x, 0.5));
-
-  // i = step(vec3(0.4), i);
+  // i = step(vec3(0.9), i);
   gl_FragColor = vec4(i, 1.);
 }
