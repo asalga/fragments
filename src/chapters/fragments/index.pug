@@ -1,7 +1,7 @@
 mixin card(glsl, title, blurb, authorName, quote)
   div.row
     div.col-sm-4
-      textarea.glsl-code(data-params='{"width":300,"height":480,"loop": "true","CodeMirror":{"lineNumbers":"false"}}' data-example=glsl)
+      textarea.glsl-code(data-params='{"width":300,"height":300,"loop": "true","CodeMirror":{"lineNumbers":"false"}}' data-example=glsl)
     div.col-sm-4
       h2=title
       p.
@@ -18,9 +18,9 @@ mixin card(glsl, title, blurb, authorName, quote)
 block cards
 
 
-  +card('code/0xff/9.fs',
-      'Seed of Life',
-      'Never has the seed of life looked like such shit.',
+  +card('code/0xff/10.fs',
+      '',
+      '',
       '',
       '')
 
