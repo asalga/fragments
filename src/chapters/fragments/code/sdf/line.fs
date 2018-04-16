@@ -1,3 +1,68 @@
+// precision mediump float;
+// uniform vec2 u_res;
+// #define COS_30 0.8660256249
+
+// // return max(a.x * 0.866025 + p.y * 0.5, -p.y * 0.5) - size * 0.5;
+
+// // float triangle(vec2 p, float size) {
+// //   vec2 a = abs(p);
+// //   return max(
+//   // a.x * 0.866025 + (p.y * 0.5), 
+
+//   // -p.y * 0.5) 
+//   //- size * 0.5;
+
+// float triangleSDF(vec2 p, float s){
+//   vec2 a = abs(p);
+
+//   // float yDist = -p.y*.5   +.5;
+  
+//   // float l = -a.x - yDist;
+
+//   // float r = a.x - yDist;
+
+//   // Take the horizontal distance to the boundry and
+//   // scale by cos 30 giving us a diagonal line to the object.
+//   float distToSide = a.x * COS_30;
+
+//   //
+//   float u = p.y * 0.5;
+
+  
+//   // We're offsettting it!
+//   // we are offsetting the triangle
+
+//   // Eventually py becomes negative, so we need
+//   // to max() it
+//   float _1 = distToSide + u;
+
+
+//   float _2 = -u;
+
+//   // max - for the bottom part. we're preventing 
+//   // any fragments from satisfying the case of the 
+//   // triangle being taller than desired.
+//   float m = max(_1,_2);
+//   return m - s;
+// }
+
+// void main(){
+//   vec2 a = vec2(1., u_res.y/u_res.x);  
+//   vec2 p = a * vec2(gl_FragCoord.xy/u_res * 2. -1.);
+
+//   p+= vec2(0.5, -0.5);
+
+//   float i = step(0.,triangleSDF(p, .5));
+//   // float i = triangleSDF(p, .5);
+//   gl_FragColor = vec4(vec3(i), 1.);
+// }
+
+// // float triangle(vec2 p, float size) {
+// //   vec2 q = abs(p);
+// //   return max(q.x * 0.866025 + p.y * 0.5, -p.y * 0.5) - size * 0.5;
+// // }
+
+
 precision mediump float;
 uniform vec2 u_res;
 uniform float u_time;
@@ -61,3 +126,6 @@ void main(){
   gl_FragColor = vec4(vec3(i), 1.);
   // gl_FragColor = vec4(d, 1.);
 }
+
+
+

@@ -45,8 +45,8 @@ q {
 }
 
 canvas {
-  border: 2px solid #fff !important;
-  border-radius: 15px;
+  border: 1px solid #fff !important;
+  /*border-radius: 15px;*/
   box-shadow: 1px 1px 5px grey;
   position: absolute;
   transition: .35s ease all;
