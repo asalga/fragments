@@ -1,7 +1,7 @@
 mixin card(glsl, title, blurb, authorName, quote)
   div.row
     div.col-sm-4
-      textarea.glsl-code(data-params='{"width":300,"height":480,"loop": "true","CodeMirror":{"lineNumbers":"false"}}' data-example=glsl)
+      textarea.glsl-code(data-params='{"width":300,"height":450,"loop": "true","CodeMirror":{"lineNumbers":"false"}}' data-example=glsl)
     div.col-sm-4
       h2=title
       p.
@@ -19,9 +19,9 @@ mixin card(glsl, title, blurb, authorName, quote)
 // 
 block cards
 
-  +card('code/0xff/12.fs',
-      'Dark Star',
-      'The dark star is the evil twin of our sun. It remains invisible but it drains the world of wonder, joy and energies.',
+  +card('code/0xff/13.fs',
+      'Utka and Urza',
+      'A complex strategy game involving true and false logic of <em>Niz</em>.',
       '',
       '')
 
