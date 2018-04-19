@@ -4,6 +4,9 @@ uniform float u_time;
 #define COS_30 0.8660254034;
 #define TAU 2.*3.141592658
 
+float ringSDF(vec2 p, float r, float w){
+  return abs(length(p)-r) - w;
+}
 float tri(vec2 p, float s){
   vec2 a = abs(p);
   float distToSide = a.x * COS_30;
@@ -11,9 +14,9 @@ float tri(vec2 p, float s){
   float _1 = distToSide + u;
   float _2 = -u;
   float m = max(_1,_2);
-  if(p.y < -0.1) return 1.;
-  if(p.x < 0.0 && p.y < 0.37)return 1.; 
-  return m - (s*1.2);
+  if(p.y < -0.04) return 1.;
+  if(p.x < 0.0 && p.y < 0.45)return 1.; 
+  return m - (s*1.41);
 }
 float tSDF(vec2 p, float s){
   return tri(p, s) * (2.*tri(p, s*0.8));
@@ -27,10 +30,16 @@ void main(){
   p *=1.2;
   float c = 0.;
   float t = 0.;
+  
+  t = step(ringSDF(p, .99, .02), 0.01);
+
   for(int i = 0; i < 5; i++){
   	mat2 rot = r2d(TAU/5.*float(i));
-    c += step(tSDF(p * rot, .24), 0.)
-     - 2.*step(tSDF(p * rot, .2), 0.);
+    c += step(tSDF(p * rot, .24), 0.) - 
+    step(tSDF(p * rot, .2), 0.);
+    t -= t * step(tSDF(p * rot, .3), 0.);
   }
-  gl_FragColor = vec4(c,c,c, 1.);
+  float res = c+t;
+  // float res = c;
+  gl_FragColor = vec4(vec3(res), 1.);
 }
