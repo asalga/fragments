@@ -53,8 +53,8 @@ canvas {
 }
 
 canvas:hover {
-  transform: scale(1.25);
-  transition: .35s ease all;
+  /*transform: scale(1.25);*/
+  /*transition: .35s ease all;*/
 }
 
 p {
@@ -97,16 +97,14 @@ em {
 
 .CodeMirror:hover {
   box-shadow: 1px 1px 5px #aaa;
-  transform: scale(1.25);
-  z-index: 10;
+  /*transform: scale(1.25);*/
+  /*z-index: 1110;*/
 }
 
 .CodeMirror,
 .CodeMirror .cm-s-default {
-  
   display: block;
   /*display:none;*/
-  
   transition: 0.8s ease all;
   box-shadow: 1px 1px 5px #aaa;
   min-width: 300px !important;
