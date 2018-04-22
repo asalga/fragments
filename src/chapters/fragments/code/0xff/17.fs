@@ -1,38 +1,15 @@
 precision mediump float;
 uniform vec2 u_res;
 uniform float u_time;
-#define PI 3.141592658
-
-float random (vec2 st) {
-    return fract(sin(dot(st.xy,
-                         vec2(12.9898,78.233)))*
-        43758.5453123);
-}
-
-
-float circleSDF(vec2 p, float r){
-  return length(p)-r;
-}
 void main(){
   vec2 a = vec2(1., u_res.y/u_res.x);
   vec2 p = a * (gl_FragCoord.xy/u_res*2.-1.);
-  p += vec2(-.4, -.8);
-  float i = 1.-smoothstep(.23, .24, circleSDF(p,.3));
-  // float i = 0.;
-  
-  float theta = atan(p.y,  p.x);
-
-  //theta 0..TAU
-  theta *= .1 * (1.+(cos(theta))) + cos(3.*sin(theta)) - cos(-4.*sin(theta));
-  // theta *= cos(theta);
-
-  float theta2 = 20.* (1.+sin(atan(p.y, p.x)));
-
-  //theta2 = random(vec2(theta2));
-	//theta += theta2;
-  
-  i += smoothstep(0.,.1,	
-  	sin( theta  * 10.)  );
-
-  gl_FragColor = vec4(vec3(1.-i), 1.);
+  vec3 ldir = vec3(cos(u_time), .0, sin(u_time));
+  float z = sqrt(1.-p.x*p.x-p.y*p.y);
+  vec3 n = normalize(vec3(p, z));
+  vec3 xzVec = normalize(vec3(n.x, 0., n.z));
+  float anY = (atan(xzVec.x/xzVec.z)/3.1415)*2. + u_time;
+  float h = .25 * step(mod(p.y, .4), .2);
+  float i = step(1./4., mod(anY + h,.5)) * step(length(p), 1.);
+  gl_FragColor = vec4(vec3(i),1.);
 }
