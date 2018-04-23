@@ -29,5 +29,26 @@ void main(){
   for(float y = -0.4; y < 0.4; y+=0.14){
     i -= step(cSDF(p+vec2(-.03, y), .01), 0.);
   }
+
+
+
+
+
+
+  if(p.x < p.y){
+    i = 1.-i;
+    
+  }
+
+
+
+
+
+
+
+
+
+
+
   gl_FragColor = vec4(vec3(i), 1.);
 }
