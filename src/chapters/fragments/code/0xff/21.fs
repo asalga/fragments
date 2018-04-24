@@ -11,14 +11,17 @@ uniform vec2 u_res;
 // }
 
 float roundRectSDF(vec2 p, vec2 d, float r){
-	return 1.;
+  vec2 diff = abs(p) - d;
+  return max(diff.x, diff.y);
 }
 
 void main(){
-	vec2 a = vec2(1., u_res.y/u_res.x);
-	vec2 p = a*(gl_FragCoord.xy/u_res*2.-1.);
-	float i = 1.;
-// 	float i;
+  vec2 a = vec2(1., u_res.y/u_res.x);
+  vec2 p = a*(gl_FragCoord.xy/u_res*2.-1.);
+  float i = 1.;
+
+  i = step(roundRectSDF(p, vec2(0.5), 0.), 0.);
+
 // float head = 
 // step(vertLineSDF(
 // 	p+vec2(0.,-.6), 0.2), 0.47);
@@ -35,6 +38,5 @@ void main(){
 	// i = head;
 // i = head * body;
 	   
-
 	gl_FragColor = vec4(vec3(i),1.);
 }
