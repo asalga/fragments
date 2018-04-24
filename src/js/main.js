@@ -22,6 +22,8 @@ function makeSketch(fs, params) {
 
   let timeVal = { t: 0 };
   let sketchTime;
+  let tracking = [];
+  let easing = 0.05;
 
   var sketch = function(p) {
 
@@ -43,6 +45,8 @@ function makeSketch(fs, params) {
       w = params.width || DefaultSketchWidth;
       h = params.height || DefaultSketchHeight;
       sketchTime = 0;
+      tracking = [0,0];
+
       var c = p.createCanvas(w, h, p.WEBGL);
       p.pixelDensity(1);
 
@@ -68,7 +72,8 @@ function makeSketch(fs, params) {
 
     p.draw = function() {
       sketchTime += (1 / 60) * timeVal.t;
-sketchTime = p.millis() / 1000 * 0.5;
+      sketchTime = p.millis() / 1000 * 0.5;
+
       p.shader(sh);
 
       if (fs.match(/uniform\s+vec2\s+u_res/)) {
@@ -76,6 +81,19 @@ sketchTime = p.millis() / 1000 * 0.5;
       }
       if (fs.match(/uniform\s+float\s+u_time/)) {
         sh.setUniform('u_time', sketchTime);
+      }
+      if(fs.match(/uniform\s+vec2\s+u_tracking/)){
+        // target - currPos
+         let x = p.mouseX.clamp(0, w);
+        let y = p.mouseY.clamp(0, h);
+
+        let delta = [(x/w) - tracking[0],
+                     (y/h) - tracking[1]];
+        tracking = [tracking[0] + delta[0] * easing,
+                    tracking[1] + delta[1] * easing];
+
+
+        sh.setUniform('u_tracking', tracking);
       }
 
       // TODO: Add for loop here
@@ -88,6 +106,8 @@ sketchTime = p.millis() / 1000 * 0.5;
         let y = p.mouseY.clamp(0, h);
         sh.setUniform('u_mouse', [x, y, 0]);
       }
+
+
 
       p.quad(-1, -1, 1, -1, 1, 1, -1, 1);
     };
