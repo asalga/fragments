@@ -105,7 +105,11 @@ float diamondSDF(vec2 p, float s){
   return 1.;
 }
 
-
+float lens(vec2 p, float r, float n){
+  float a = step(length(p+vec2(0.,r))-r, r);
+  float b = step(length(p-vec2(0.,r))-r, r);
+  return a*b;
+}
 
 // float lineSDF(vec2 p, float b, float thick){
 //   return 1.;
