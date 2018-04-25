@@ -24,6 +24,9 @@ function makeSketch(fs, params) {
   let sketchTime;
   let tracking = [];
   let easing = 0.05;
+  let start =0;
+  let mouseIsDown = 0;
+  let lastMouseDown= [0,0];
 
   var sketch = function(p) {
 
@@ -50,29 +53,49 @@ function makeSketch(fs, params) {
       var c = p.createCanvas(w, h, p.WEBGL);
       p.pixelDensity(1);
 
-      c.mouseOver(e => {
-        TWEEN.removeAll();
-        new TWEEN.Tween(timeVal)
-          .to({ t: 1 }, 2500)
-          .easing(TWEEN.Easing.Quadratic.Out)
-          .start();
-        p.loop();
+      // reset anim
+      c.mouseClicked(e=>{
+        start = p.millis();
+      });
+      c.mousePressed(e=>{
+        mouseIsDown = 1;
+      });
+      c.mouseReleased(e=>{
+        mouseIsDown = 0;
+
+        let x = p.mouseX.clamp(0, w);
+        let y = p.mouseY.clamp(0, h);
+        lastMouseDown = [x,y];
       });
 
-      c.mouseOut(e => {
-        TWEEN.removeAll();
-        new TWEEN.Tween(timeVal)
-          .to({ t: 0 }, 2000)
-          .easing(TWEEN.Easing.Quadratic.In)
-          .onComplete(() => p.noLoop())
-          .start();
-      });
+      // c.mouseOver(e => {
+      //   TWEEN.removeAll();
+      //   new TWEEN.Tween(timeVal)
+      //     .to({ t: 1 }, 2500)
+      //     .easing(TWEEN.Easing.Quadratic.Out)
+      //     .start();
+      //   p.loop();
+      // });
+
+      // c.mouseOut(e => {
+      //   TWEEN.removeAll();
+      //   new TWEEN.Tween(timeVal)
+      //     .to({ t: 0 }, 2000)
+      //     .easing(TWEEN.Easing.Quadratic.In)
+      //     .onComplete(() => p.noLoop())
+      //     .start();
+      // });
+
       p.loop();
     };
 
     p.draw = function() {
+      // for tweening in animation
       sketchTime += (1 / 60) * timeVal.t;
-      sketchTime = p.millis() / 1000 * 0.5;
+      //sketchTime = p.millis() / 1000 * 0.5;
+
+      // for resetting animation
+      sketchTime = (p.millis()-start) / 1000 * 0.5;
 
       p.shader(sh);
 
@@ -104,10 +127,12 @@ function makeSketch(fs, params) {
       if (fs.match(/uniform\s+vec3\s+u_mouse/)) {
         let x = p.mouseX.clamp(0, w);
         let y = p.mouseY.clamp(0, h);
-        sh.setUniform('u_mouse', [x, y, 0]);
+        sh.setUniform('u_mouse', [x, y, mouseIsDown]);
       }
 
-
+      if (fs.match(/uniform\s+vec2\s+u_lastMouseDown/)) {
+        sh.setUniform('u_lastMouseDown', lastMouseDown);
+      }
 
       p.quad(-1, -1, 1, -1, 1, 1, -1, 1);
     };

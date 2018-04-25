@@ -1,9 +1,13 @@
+// roundRectSDF Test
+
 precision mediump float;
 uniform vec2 u_res;
 
+// 
 float rrectSDF(vec2 p, vec2 d, float r){
   vec2 diff = abs(p) - d;
-  return max(diff.x, diff.y);
+  float test = length(p)-r;
+  return min(max(diff.x, diff.y), test);
 }
 
 void main(){
@@ -16,12 +20,8 @@ i += step(rrectSDF(p+vec2(.5,0.),  vec2(.45,.05),0.),0.);
 i += step(rrectSDF(p+vec2(.5,1.4), vec2(.25,.01),0.),0.);
 
 i += step(rrectSDF(p+vec2(-.5,-1.),vec2(.3,.3),0.1),0.);
-i += step(rrectSDF(p+vec2(-.5,0.), vec2(.3,.3),0.5),0.);
-i += step(rrectSDF(p+vec2(-.5,1.), vec2(.3,.3),1.),0.);
-// i += step(rrectSDF(p+vec2(.5,1.4), vec2(.25,.01),0.),0.);
-// i += step(rrectSDF(p+vec2(.5,1.4), vec2(.25,.01),0.),0.);
-  // i += step(rrectSDF(p, vec2(0.5, 0.1), 0.), 0.);
-
+i += step(rrectSDF(p+vec2(-.5,0.), vec2(.3,.3),0.34),0.);
+i += step(rrectSDF(p+vec2(-.5,1.), vec2(.3,.3),0.7),0.);
 
   gl_FragColor = vec4(vec3(i),1.);
 }
