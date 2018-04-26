@@ -40,7 +40,7 @@ void main(){
   float theta = initialTheta;
 
   //
-  vec2 point = normalize(vec2(abs(-lm.x), lm.y));
+  vec2 point = normalize(vec2(abs(lm.x), lm.y));
 
   // vec2 test = normalize(vec2(0., 1.));
   // vec2 test = vec2(0., 1.);
@@ -51,17 +51,22 @@ void main(){
 
   // very top will mean we're pulling the bob 
   // as far up as it will go..
-  float swingMag = T;// * (PI/2.;
+  float swingMag = T/4.;
+  // float swingMag = T/PI;
 
 	 // float anim = (initialTheta/ (PI/2.));
 	// anim = 1.- theta;
 	// anim *= PI;
 	// // anim = sin(a) 
 	// theta = anim *  sin(t);
+  // float S = (1.+sin(t)/2.);
 
-  float S = sin(t);
+  // max we can go is one axis to the other
+  // float S = (sin(t) * PI/2.)+1.5;
 
-  theta = theta + (S * swingMag);
+  // theta = theta + (S * .5);
+  theta = (sin(t) * PI * swingMag);
+  //swingMag);
 
   // sin -1 1
   // 0 initialTheta
@@ -72,8 +77,7 @@ void main(){
   // theta *=.5;
 	// PI/2. + sin(t) + initialTheta;
 
-  armLength = 0.5;
-	vec2 bPos = p + armLength * (vec2(-cos(theta), sin(theta)));
+	vec2 bPos = p + armLength * (vec2(-sin(theta), cos(theta)));
 
   // place bob under cursor if mouse button is down
 	if(u_mouse.z == 1.){
