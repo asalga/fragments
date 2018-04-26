@@ -26,7 +26,7 @@ function makeSketch(fs, params) {
   let easing = 0.05;
   let start =0;
   let mouseIsDown = 0;
-  let lastMouseDown= [0,0];
+  let lastMouseDown= [120,200];
 
   var sketch = function(p) {
 
@@ -133,6 +133,7 @@ function makeSketch(fs, params) {
       if (fs.match(/uniform\s+vec2\s+u_lastMouseDown/)) {
         sh.setUniform('u_lastMouseDown', lastMouseDown);
       }
+      // sh.setUniform('u_lastMouseDown', lastMouseDown);
 
       p.quad(-1, -1, 1, -1, 1, 1, -1, 1);
     };
