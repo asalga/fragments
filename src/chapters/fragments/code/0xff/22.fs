@@ -1,13 +1,11 @@
-// 22 - Eye of Horus
 precision mediump float;
 uniform vec2 u_res;
 #define COS_30 0.8660256249
 #define PI 3.14159265834
 #define TAU (2.*PI)
 uniform float u_time;
-
 float cSDF(vec2 p, float r){
-  return length(p)-r;
+  return length(p) - r;
 }
 float cInter(vec2 p, float r, float i){
   float a = smoothstep(0.01, 0.001,cSDF(p+vec2(0.,-i), r));
@@ -15,8 +13,8 @@ float cInter(vec2 p, float r, float i){
   return a*b;
 }
 float cInterStroke(vec2 p, float r, float i){
-	float a = cInter(p,r,i);
-	return a - cInter(p,r-.06,i);
+  float a = cInter(p,r,i);
+  return a - cInter(p,r-.06,i);
 }
 float triSDF(vec2 p, float s, float sc){
   vec2 a = abs(p);
@@ -25,7 +23,7 @@ float triSDF(vec2 p, float s, float sc){
   return max(distToSide + u, -u) - s;
 }
 float py(vec2 p){
-  float tri = step(triSDF(p+vec2(0., .2), .3, 0.5), 0.);
+  float tri = step(triSDF(p+vec2(0.,.2), .3, 0.5), 0.);
   tri *= step(p.y, 0.10);
   tri *= step(mod(p.y, 0.1), 0.05);
   return tri;
@@ -43,8 +41,7 @@ void main(){
   float i = 0.;
 
   i += py(p);
-  // /i += eye();
- float eye = cInter(p-vec2(0.,.6), .6, 0.3);
+  float eye = cInter(p-vec2(0.,.6), .6, 0.3);
 
   i += fan(p) - (fan(p) *eye);
   i += eye - cInter(p-vec2(0.,.6), .55, 0.3);
@@ -53,6 +50,9 @@ void main(){
   i += cInterStroke(p+vec2(0.0, wavesY), .5, 0.3);
   i += cInterStroke(p+vec2(+.73, wavesY), .5, 0.3);
   i += cInterStroke(p+vec2(-.73, wavesY), .5, 0.3);
+
+
+  i += step(cSDF(p-vec2(0.,0.7), 0.2), 0.);
 
   gl_FragColor = vec4(vec3(i), 1.);
 }
