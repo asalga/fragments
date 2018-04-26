@@ -37,46 +37,16 @@ void main(){
 	//vec2 initialPos = p;// + lm;// + vec2(-1., 1.6);
 	//vec2 bPos = initialPos;//+ vec2(0., 0.4);// + 0.3 * vec2(sin(t), 0.);
 
-  float theta = initialTheta;
-
-  //
+  float theta = initialTheta;  
   vec2 point = normalize(vec2(abs(lm.x), lm.y));
 
-  // vec2 test = normalize(vec2(0., 1.));
-  // vec2 test = vec2(0., 1.);
-	// theta = // + (1.+sin(t));
-  
-  vec2 rightVec = vec2(1., 0.);
-  float T = acos(1. - dot(rightVec, point));
+  vec2 rightVec = vec2(0.,1.);
+  float d = dot(rightVec, point);
+  float swingMag = acos(d);
 
   // very top will mean we're pulling the bob 
   // as far up as it will go..
-  float swingMag = T/4.;
-  // float swingMag = T/PI;
-
-	 // float anim = (initialTheta/ (PI/2.));
-	// anim = 1.- theta;
-	// anim *= PI;
-	// // anim = sin(a) 
-	// theta = anim *  sin(t);
-  // float S = (1.+sin(t)/2.);
-
-  // max we can go is one axis to the other
-  // float S = (sin(t) * PI/2.)+1.5;
-
-  // theta = theta + (S * .5);
-  theta = (sin(t) * PI * swingMag);
-  //swingMag);
-
-  // sin -1 1
-  // 0 initialTheta
-  // 0..2
-  // 0..1
-  // float arg = ((sin(t)+1.)/2.) * theta;
-  // theta += arg;
-  // theta *=.5;
-	// PI/2. + sin(t) + initialTheta;
-
+  theta = cos(t) * swingMag;
 	vec2 bPos = p + armLength * (vec2(-sin(theta), cos(theta)));
 
   // place bob under cursor if mouse button is down
@@ -84,14 +54,11 @@ void main(){
 		bPos = p+m;
 	}
  
-  float v = (atan(p.y,p.x)+PI) /PI;
 	float i = step(cSDF(bPos, 0.25), 0.);
 
-  gl_FragColor = vec4(swingMag, i ,i, 1.);
+  gl_FragColor = vec4(i, i ,i, 1.);
 
   if (abs(p.x) < 0.01 || abs(p.y) < 0.01){
     gl_FragColor = vec4(1.);
   }
-  
-  // gl_FragColor.xyz += vec3( 1., 0.);
 }
