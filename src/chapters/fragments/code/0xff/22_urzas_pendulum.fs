@@ -77,6 +77,6 @@ void main(){
   float v = (atan(p.y,p.x)+PI) /PI;
 	float i = step(cSDF(bPos, 0.25), 0.);
 
-  gl_FragColor = vec4(vec3(i), 1.);
-  gl_FragColor.xyz += vec3(v, 1., 0.5);
+  gl_FragColor = vec4(theta/PI, i ,i, 1.);
+  // gl_FragColor.xyz += vec3( 1., 0.);
 }
