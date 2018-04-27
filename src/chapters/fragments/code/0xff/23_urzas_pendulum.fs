@@ -6,13 +6,6 @@ uniform vec3 u_mouse;
 uniform vec2 u_lastMouseDown;
 #define PI 3.141592658
 #define TAU PI * 2.
-
-// TODO:
-// - add light
-
- 
-
-
 // capsule definition source from book of shaders
 float capsule(vec2 p, vec2 a, vec2 b, float r) {
   vec2 pa = p - a, ba = b - a;
@@ -48,9 +41,11 @@ void main(){
     bPos = p + m;
   }
 
-	float i = smoothstep(0.01, 0.001, cSDF(bPos, 0.25)) +
+	float i = smoothstep(0.01, 0.001, cSDF(bPos, 0.25)) -
+            2.*smoothstep(0.01, 0.001, cSDF(bPos, 0.24)) +
+            2.*smoothstep(0.01, 0.001, cSDF(bPos, 0.23)) +
             smoothstep(0.01, 0.001, cSDF(p, 0.05)) + 
-            smoothstep(0.01, 0.001, capsule(p, vec2(0.), p-bPos, 0.005));
+            smoothstep(0.01, 0.001, capsule(p, vec2(0.), p - bPos, 0.005));
 
   gl_FragColor = vec4(vec3(i), 1.);
 }
