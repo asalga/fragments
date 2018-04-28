@@ -1,7 +1,7 @@
 mixin card(glsl, title, blurb, authorName, quote)
   div.row
     div.col-sm-4
-      textarea.glsl-code(data-params='{"width":300,"height":450,"loop": "true","CodeMirror":{"lineNumbers":"false"}}' data-example=glsl)
+      textarea.glsl-code(data-params='{"width":300,"height":450,"loop": "false","CodeMirror":{"lineNumbers":"false"}}' data-example=glsl)
     div.col-sm-4
       h2=title
       p.
@@ -17,11 +17,17 @@ mixin card(glsl, title, blurb, authorName, quote)
       
 block cards
 
-  +card('code/0xff/23_urzas_pendulum.fs',
-  'Urza\'s Pendulum',
+  +card('code/0xff/24_voronoi.fs',
+  'The Window of the High Priestess',
   '',
-  'Urza\'s Pendulum traces the time of several universes. And there are some who look forward to an event in time. Time? What a joke. I saw that pendulum at rest for years and those beings didn\'t even know it.',
+  '',
   '')
+
+  //- +card('code/0xff/23_urzas_pendulum.fs',
+  //- 'Urza\'s Pendulum',
+  //- '',
+  //- 'Urza\'s Pendulum traces the time of several universes. And there are some who look forward to an event in time. Time? What a joke. I saw that pendulum at rest for years and those beings didn\'t even know it.',
+  //- '')
   
 
   //- +card('code/0xff/22.fs',
