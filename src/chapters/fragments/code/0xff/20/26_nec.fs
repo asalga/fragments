@@ -1,5 +1,7 @@
 precision mediump float;
+#define PI 3.141592658
 uniform vec2 u_res;
+
 void main(){
   vec2 a = vec2(1., u_res.y/u_res.x);
   vec2 p = a * (gl_FragCoord.xy/u_res*2.-1.);
@@ -8,12 +10,24 @@ void main(){
   vec2 BLCorner = floor(p*numCircles)/numCircles;
 
   vec2 pToC = p-BLCorner;
-  float grid = step(pToC.x, 0.015) + step(pToC.y, 0.015);  
+  float cartGrid = step(pToC.x, 0.015) + step(pToC.y, 0.015);  
   // i += grid;
 
   vec2 closestCorner = (floor(p*numCircles)/numCircles)+r;
   float circles = step(length(p-closestCorner),r);
-  i += circles;
+  // i += circles;
+
+  float polarGrid = atan(p.y,p.x)/PI;
+  float closestAngle = floor(polarGrid*4.)/4.;
+
+  if(polarGrid-closestAngle < 0.005){
+    i = 1.;    
+  }
+  // snap to closest
+  // polarGrid = 
+  //step(pToC.x, 0.015) + step(pToC.y, 0.015);  
+  
+  // i += closestAngle;
 
   gl_FragColor = vec4(vec3(i), 1.);
 }

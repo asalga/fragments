@@ -46,7 +46,8 @@ q {
 
 canvas {
   border: 2px solid #fff !important;
-  border-radius: 15px;
+  /*border-radius: 15px;*/
+   border-radius: 50%;
   box-shadow: 1px 1px 5px grey;
   position: absolute;
   transition: .35s ease all;
@@ -107,6 +108,7 @@ em {
   display:none;
   transition: 0.8s ease all;
   box-shadow: 1px 1px 5px #aaa;
+
   min-width: 300px !important;
   max-width: 300px !important;
 }
