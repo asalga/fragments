@@ -1,7 +1,7 @@
 precision mediump float;
 uniform vec2 u_res;
 uniform vec3 u_mouse;
-#define CNT 140
+#define CNT 40
 #define COS_30 0.866
 float random (vec2 st) {
   return fract(sin(dot(st.xy,vec2(12.9898,78.233)))*43758.5453123);
