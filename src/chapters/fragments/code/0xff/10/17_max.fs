@@ -1,7 +1,9 @@
+// 17 - 
 precision mediump float;
 uniform vec2 u_res;
 uniform float u_time;
 #define TAU 3.141592658 *2.
+#define NUM_STRIPS 10.
 
 void main(){
   vec2 a = vec2(1., u_res.y/u_res.x);
