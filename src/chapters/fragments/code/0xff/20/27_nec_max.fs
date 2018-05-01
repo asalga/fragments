@@ -6,8 +6,10 @@ void main(){
   vec2 p = a * (gl_FragCoord.xy/u_res*2.-1.);
   float gridThickness = 0.01;
   // number of circles we want per side of y axis
-  float numCircles = u_mouse.x/10.;
+  float numCircles = clamp(u_mouse.x/20.,.5,20.);
   float circleRad = 1./(numCircles*2.);
+  p += circleRad;
+
   // snap to closest bottom corner
   vec2 BLCorner = floor(p*numCircles)/numCircles;
   
