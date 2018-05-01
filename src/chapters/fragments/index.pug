@@ -1,7 +1,7 @@
 mixin card(glsl, title, blurb, authorName, quote)
   div.row
     div.col-sm-4
-      textarea.glsl-code(data-params='{"width":300,"height":300,"loop": "false","CodeMirror":{"lineNumbers":"false"}}' data-example=glsl)
+      textarea.glsl-code(data-params='{"width":300,"height":450,"loop": "false","CodeMirror":{"lineNumbers":"false"}}' data-example=glsl)
     div.col-sm-4
       h2=title
       p.
@@ -16,8 +16,8 @@ mixin card(glsl, title, blurb, authorName, quote)
 
 block cards
 
-  +card('code/0xff/20/26_nec.fs',
-       'NEC',
+  +card('code/0xff/20/27_nec1.fs',
+       '',
        '',
         '',
         '')

@@ -18,8 +18,10 @@ void main(){
   // p.y += 0.08;
 
   vec2 cp = p;
+  
   // cp.y += 0.1;
   // p.y -= 0.1;
+
   vec2 closestCorner = (floor(cp*cnt)/cnt)+r;
   float len = length(p-closestCorner);
   gl_FragColor = vec4(vec3(smoothstep(r/1., r/1.1,len)),1.);

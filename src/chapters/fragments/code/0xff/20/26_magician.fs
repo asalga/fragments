@@ -1,7 +1,7 @@
 precision mediump float;
 #define PI 3.141592658
 uniform vec2 u_res;
-
+uniform float u_time;
 void main(){
   vec2 a = vec2(1., u_res.y/u_res.x);
   vec2 p = a * (gl_FragCoord.xy/u_res*2.-1.);
@@ -17,17 +17,14 @@ void main(){
   float circles = step(length(p-closestCorner),r);
   // i += circles;
 
-  float polarGrid = atan(p.y,p.x)/PI;
-  float closestAngle = floor(polarGrid*4.)/4.;
+  float theta = atan(p.y/p.x)/PI;
+  // theta += 0.02;
+  theta += length(p) * 2.0;// + u_time;
+  float closestAngle = floor(theta*3.)/3.;
+  float polarGrid = step(theta-closestAngle, 0.05);
+  i += polarGrid;
 
-  if(polarGrid-closestAngle < 0.005){
-    i = 1.;    
-  }
-  // snap to closest
-  // polarGrid = 
-  //step(pToC.x, 0.015) + step(pToC.y, 0.015);  
-  
-  // i += closestAngle;
+  //step(pToC.x, 0.015) + step(pToC.y, 0.015); 
 
   gl_FragColor = vec4(vec3(i), 1.);
 }
