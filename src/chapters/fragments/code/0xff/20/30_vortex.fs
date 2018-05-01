@@ -1,0 +1,2 @@
+ vortex
+        //- 'To call it a vortex,tunnel,portal...It is irrelevant. It cannot be assigned a name. And to even try to explain what it feels to be on the other side. Freedom, liberation and a Death of an old self.',

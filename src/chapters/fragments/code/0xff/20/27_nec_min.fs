@@ -3,7 +3,7 @@ uniform vec2 u_res;
 uniform vec3 u_mouse;
 void main(){
   vec2 a=vec2(1.,u_res.y/u_res.x);
-  vec2 p=a * (gl_FragCoord.xy/u_res*2.-1.);
+  vec2 p=a*(gl_FragCoord.xy/u_res*2.-1.);
   float cnt=u_mouse.x/20.;
   float r=1./(cnt*2.);
   vec2 blCorner=floor(p*cnt)/cnt;

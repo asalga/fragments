@@ -42,24 +42,22 @@ function makeSketch(fs, params) {
       if (params.tex0) {
         img0 = p.loadImage(params.tex0);
       }
+      
+
     };
 
     p.setup = function() {
       w = params.width || DefaultSketchWidth;
       h = params.height || DefaultSketchHeight;
       sketchTime = 0;
-      tracking = [0,0];
+      tracking = [0, 0];
 
       var c = p.createCanvas(w, h, p.WEBGL);
       p.pixelDensity(1);
 
       // reset anim
-      c.mouseClicked(e=>{
-        start = p.millis();
-      });
-      c.mousePressed(e=>{
-        mouseIsDown = 1;
-      });
+      c.mouseClicked(e=>{  start = p.millis();   });
+      c.mousePressed(e=>{  mouseIsDown = 1;      });
       c.mouseReleased(e=>{
         mouseIsDown = 0;
 
