@@ -24,7 +24,7 @@ void main(){
 
 
   //NES
-  // float t = u_time;
+  float t = u_time;
   vec3 ldir = vec3(0., 0., 1.);
   // ldir = vec3(cos(t), .0, sin(t));
 
@@ -61,7 +61,7 @@ p -= BLCorner  - circleRad*1.;
   xzVec = normalize(xzVec);
   // vec3 yzVec = vec3(n.y, 0., n.z);
   // yzVec = normalize(yzVec);
-  float anY = atan(xzVec.x/xzVec.z)/TAU;//+ (t*.1);
+  float anY = atan(xzVec.x/xzVec.z)/TAU + (t*1.);
   // float anX = (atan(yzVec.x/yzVec.z) + PI/2.) / PI;
   float div = 1.;
   float horizSlices = 0.4;

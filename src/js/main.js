@@ -18,7 +18,7 @@ function makeSketch(fs, params) {
   const DefaultSketchWidth = 320;
   const DefaultSketchHeight = 240;
   let sh, w, h;
-  let img0;
+  let img0, img1;
 
   let timeVal = { t: 0 };
   let sketchTime;
@@ -39,10 +39,9 @@ function makeSketch(fs, params) {
                 }`;
       sh = p.createShader(vs, fs);
 
-      if (params.tex0) {
-        img0 = p.loadImage(params.tex0);
-      }
-      
+      if (params.tex0) {img0 = p.loadImage(params.tex0);}
+      if (params.tex1) {img1 = p.loadImage(params.tex1);}
+
 
     };
 
@@ -120,6 +119,10 @@ function makeSketch(fs, params) {
       // TODO: Add for loop here
       if (fs.match(/uniform\s+sampler2D\s+u_texture0/)) {
         sh.setUniform('u_texture0', img0);
+      }
+
+      if (fs.match(/uniform\s+sampler2D\s+u_texture1/)) {
+        sh.setUniform('u_texture1', img1);
       }
 
       if (fs.match(/uniform\s+vec3\s+u_mouse/)) {

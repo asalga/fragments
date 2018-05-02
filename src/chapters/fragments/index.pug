@@ -2,7 +2,7 @@
 mixin card(glsl, title, blurb, authorName, quote)
   div.row
     div.col-sm-4
-      textarea.glsl-code(data-params='{"tex0":"tex/diffuse_lg.png","width":300,"height":450,"loop": "false","CodeMirror":{"lineNumbers":"false"}}' data-example=glsl)
+      textarea.glsl-code(data-params='{"tex0":"tex/diffuse_lg.png","tex1":"tex/normal_lg.png","width":300,"height":450,"loop": "false","CodeMirror":{"lineNumbers":"false"}}' data-example=glsl)
     div.col-sm-4
       h2=title
       p.
@@ -17,7 +17,7 @@ mixin card(glsl, title, blurb, authorName, quote)
 
 block cards
 
-  +card('code/0xff/20/__never_ending_spheres.fs',
+  +card('code/0xff/20/28_the_wall.fs',
        '',
        '',
        '',
