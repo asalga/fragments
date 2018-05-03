@@ -10,9 +10,10 @@ void main(){
   vec2 a = vec2(1., u_res.y/u_res.x);
   vec2 p = a*(gl_FragCoord.xy/u_res*2.-1.);
   vec2 m = u_tracking * vec2(1., -1.)/3.;
+  // m = clamp(m, 0. 1.);
   
   float t = u_time*.5;
-  float dispScale = .014;
+  float dispScale = .02;
 
   vec2 diffUV = mod(p/3.,1.);
   vec2 dispUV = mod(p+m*t,1.);

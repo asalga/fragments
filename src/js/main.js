@@ -44,7 +44,7 @@ function makeSketch(fs, params) {
       if (params.tex1) {img1 = p.loadImage(params.tex1);}
       if (params.tex2) {img2 = p.loadImage(params.tex2);}
 
-
+      console.log('preload done');
     };
 
     p.setup = function() {
@@ -84,6 +84,8 @@ function makeSketch(fs, params) {
       //     .onComplete(() => p.noLoop())
       //     .start();
       // });
+
+      $(p.canvas).appendTo($('#target'));
 
       p.loop();
     };
@@ -242,9 +244,8 @@ function makeSketch(fs, params) {
               let relPath = el.attr('data-lys-relPath');
               let params = strParams ? JSON.parse(strParams) : {};
 
-              let test = new p5(makeSketch(fragCode, params), relPath);
-              let target = $(test.canvas).parent().parent().parent().find('#target');
-              $(test.canvas).appendTo(target);
+              // we need to make this async.
+              let sketch = new p5(makeSketch(fragCode, params), relPath);
             }
           });
         });
