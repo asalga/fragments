@@ -4,21 +4,21 @@ mixin card(glsl, title, blurb, authorName, quote)
   div.row
     div.col-sm-4
       textarea.glsl-code(data-params='{"tex0":"tex/diffuse_lg.png","tex1":"tex/ripple_input_clouds.png","tex2":"tex/caustics.png","width":300,"height":450,"loop": "true","CodeMirror":{"lineNumbers":"false"}}' data-example=glsl)
-    div.col-sm-4
-      h2=title
-      p.
-        !{blurb}
-      if quote
-        q=quote
-      if authorName
-        p.author-name=("―"+authorName)
+    //- div.col-sm-4
+      //- h2=title
+      //- p.
+        //- !{blurb}
+      //- if quote
+        //- q=quote
+      //- if authorName
+        //- p.author-name=("―"+authorName)
     div.col-sm-4.test
       div#target
   hr
 
 block cards
 
-  +card('code/0xff/30/30_may_4.fs',
+  +card('code/0xff/30/31_check.fs',
        '',
        '',
        '',
