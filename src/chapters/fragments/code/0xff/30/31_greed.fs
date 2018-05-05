@@ -1,19 +1,14 @@
 precision mediump float;
 uniform vec2 u_res;
-uniform float u_time;
-
-#define BLACK vec3(0.)
-#define WHITE vec3(1.)
 #define YELLOW vec3(1.,.6,.33)
 #define ORANGE vec3(1.,.2,.01)
-#define X(n) (f0[n] = BLACK);
+#define X(n) (f0[n] = vec3(0.));
 #define _(n) (f0[n] = YELLOW);
 #define U(n) (f0[n] = ORANGE);
-#define K(n) (f0[n] = WHITE);
-
+#define K(n) (f0[n] = vec3(1.));
 void main(){
   vec2 a = vec2(1., u_res.y/u_res.x);
-  vec2 p = gl_FragCoord.xy/u_res * 8.;
+  vec2 p = gl_FragCoord.xy/u_res * vec2(8., 16.);
   vec3 f0[8*16];
 
   X(0x0)X(0x1)X(0x2)        _(  3)_(  4)          X(  5)X(  6)X(  7)
@@ -35,10 +30,13 @@ void main(){
 
   vec3 col = f0[19];
 
-  for(int i = 0; i < 8; i++){
+  for(int i = 0; i < 8*16; i++){
     col = f0[i];
 
-    if (int(floor(p.x)) == i){
+    int y = int(floor(p.y));
+    int x = int(floor(p.x));
+
+    if ( y + x == i ){
     	break;
     }
   }
