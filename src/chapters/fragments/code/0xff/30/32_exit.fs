@@ -1,5 +1,4 @@
 precision mediump float;
-uniform vec2 u_res;
 void main(){
   vec2 p = gl_FragCoord.xy;
   float pxSz = 2.;
