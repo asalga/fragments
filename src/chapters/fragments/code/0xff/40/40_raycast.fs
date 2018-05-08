@@ -75,22 +75,20 @@ void main(){
 	// For x, note that the base length of the triangle
 	// formed from one step to the other will have length = 1
 
-	float dirStepY;
-
 	// We're trying to get the length of the ray from one x edge
-	// to the next
-	// We know the x distance is 1
+	// to the next.  We know the x distance is 1.
 	// Since our ray is normalized, the x will be less than 1 meaning
 	// we can 'stretch' it so it reaches the next x-edge. Of course,
 	// we'll need to do the same for the y to maintain the ray direction
-
 	float magBetweenEdgeX = length(rayDir * (1./rayDir.x));
 	float magBetweenEdgeY = length(rayDir * (1./rayDir.y));
 
+	vec2 magToEdge = (vec2(1.) - playerPos) * vec2(magBetweenEdgeX, magBetweenEdgeY);
 
+	dirStepX = step(0., rayDir.x)*2. -1.;
+	dirStepY = step(0., rayDir.y)*2. -1.;
 
-
-
+	
 
 	// Run the DDA
 	// ...
