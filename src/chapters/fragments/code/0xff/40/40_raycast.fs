@@ -1,28 +1,25 @@
 precision mediump float;
 
-// resource 
-// https://andorsaga.wordpress.com/2014/01/22/understanding-raycasting-step-by-step/
+// resources
+// andorsaga.wordpress.com/2014/01/22/understanding-raycasting-step-by-step/
+// en.wikipedia.org/wiki/Digital_differential_analyzer_%28graphics_algorithm%29	
+// andorsaga.files.wordpress.com/2014/01/raycast-distortion-fix.jpg
 
-#define PI 3.141592658
-#define DEG_TO_RAD PI/180.
-#define TAU PI*2.
-
-#define FOV 45.0
-
-uniform vec2 u_res;
-
-// TODO:
-// - review DDA algorithm
-// - add 1 wall
-// - use texture for level data
-// - add kb input
-
-// Theory:
 // Cast 'width' number of rays into the scene
 // But since we're working with a frag shader
 // we'll have some added benefits of working with Y
 // so later on texture mapping will be straightforward
 
+#define PI 3.141592658
+#define DEG_TO_RAD PI/180.
+#define TAU PI*2.
+#define FOV 45.0
+#define MAX_STEPS 10.
+#define ONE 1.
+
+#define NORM(v) (v*2.-1.)
+
+uniform vec2 u_res;
 
 float background(vec2 p){
   return step(0., p.y);
@@ -32,25 +29,21 @@ void main(){
 	vec2 a = vec2(1., u_res.y/u_res.x);
 
 	// Normalize the screen coords
-	vec2 p = a*(gl_FragCoord.xy/u_res*2.-1.);
+	vec2 p = a*( NORM(gl_FragCoord.xy/u_res));
 
 	// The FOV determines the angle the rays shoot into the scene.
 	// the center ray then will be the player's direction.
 	// float FOV = .5;
 
-	vec2 playerPos = vec2(0.);
-	vec2 playerDir = vec2(0.,1.);
-	vec2 playerRight = vec2(1.,0.);
-	// vec2 right = vec2(-forward.y, forward.x);
+	vec2 playerPos = vec2(ZERO);
+	vec2 playerDir = vec2(ZERO,ONE);
+	vec2 playerRight = vec2(-playerDir.y, playerDir.x);
 
 	// We need to calculate the camera line magnitude
-	// so that we can calculate the magnitude of the
-	// ray vectors.
+	// so that we can calculate the magnitude of the ray vectors.
 
 	// Calculate the base of the viewing 
 	// triangle so that we know how far the rays span
-
-	// andorsaga.files.wordpress.com/2014/01/raycast-distortion-fix.jpg
 
 	float camRatio = (FOV/2. * DEG_TO_RAD);
 
@@ -79,27 +72,32 @@ void main(){
 	// to the next.  We know the x distance is 1.
 	// Since our ray is normalized, the x will be less than 1 meaning
 	// we can 'stretch' it so it reaches the next x-edge. Of course,
-	// we'll need to do the same for the y to maintain the ray direction
-	float magBetweenEdgeX = length(rayDir * (1./rayDir.x));
-	float magBetweenEdgeY = length(rayDir * (1./rayDir.y));
+	// we'll need to do the same for the y to maintain the ray direction.
+	// - Also you can think of this as the diagonal length between edges
+	// float magBetweenEdgeX = length(rayDir * (1./rayDir.x));
+	// float magBetweenEdgeY = length(rayDir * (1./rayDir.y));
 
-	vec2 magToEdge = (vec2(1.) - playerPos) * vec2(magBetweenEdgeX, magBetweenEdgeY);
+	vec2 magBetweenEdges = vec2(length(rayDir * (1./rayDir.x)),
+								length(rayDir * (1./rayDir.y)));
 
-	dirStepX = step(0., rayDir.x)*2. -1.;
-	dirStepY = step(0., rayDir.y)*2. -1.;
+	vec2 magToEdge = (vec2(ONE) - playerPos) * magBetweenEdges;
 
-	
+	// Calculating Starting Mag/Offset
+	// components will be -1 or 1
+	vec2 dirStep = NORM(step(0., rayDir));
 
-	// Run the DDA
-	// ...
-	
+	// Run the DDA (Digital Differential Analyzer)
 
+	// X and Y values 'race'. We compare each and increase the lesser value.
+	// Loop terminates on reaching a non-empty cell.
+	// We're in GLSL so we require a constant expression 
+	// in the comparison part of our loop--just break out early.
+	for(float s = 0.; s < MAX_STEPS; s+=1.){
 
-
-	float background = background(p);
+	}
 
 	float i =   0.0 +
-				background +  
+				background(p) +
 				0.0;
 
 	gl_FragColor = vec4(vec3(i), 1.);
