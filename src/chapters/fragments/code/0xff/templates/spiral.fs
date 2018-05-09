@@ -10,48 +10,47 @@ void main(){
   float density = 1.5;
   float thickness = 0.25;
 
-  float a = atan(p.y,p.x)/3.141592;
+  float a =((atan(p.y,-p.x)/PI)+1.)/2.;
   float r = length(p)*density + a/4.;
 
-  float t = mod(u_time/10., 1.);
+  float t = u_time/420.;
+  // t = 0.5;
+  float len = length(p);
 
-  float len = length(p);// * mod(a, 1.);
+  float timeAround = ((1.-len)*a) - mod(len, 0.1)*a;
 
-  if(len > 0.45){
-  	// discard;
+  // float progress = ((length(p))) + (a/10.);
+  if(timeAround < 0.015){
+    discard;
   }
 
-  if(a < .90){
-    // discard;
+  if(timeAround < t){
+    discard;
   }
 
-  // r *= t;
+  float progress = timeAround;
+  //0.4;//(length(p)/1.) * (a/3.);
 
-  float i = mod(r, .5);
-  i = step(thickness, i);
-  // i = smoothstep(thickness/20., thickness/30. , i);  
+  float i = mod(r, .15);
 
-  float red;
-  if(r * .5 < 0.30){
-     // red = 1.;
-  }
-
-  red += step(length(p)- 0.5, 0.);
   
-  // gl_FragColor = vec4(vec3(red,i,i),1.);
+  float c = ((atan(p.y,-p.x)/PI)+1.)/2.;
 
-  vec2 right = vec2(1., 0.);
-  vec2 point = normalize(vec2(p));
+  t = mod(t*10.,4.) ;
+  c = step(c, t);
+  c = 1.;
 
-  float test =  dot(right, point);
-
-  //float angle = atan(p.y,p.x)/PI;
-
-  // float test = 1.;
-  float c;
-  if(test < .5){
-    c = 0.5;
+  if(progress < t){
+    c = 0.;
   }
+
 
   gl_FragColor = vec4(vec3(c), 1.);
 }
+
+
+
+
+
+
+
