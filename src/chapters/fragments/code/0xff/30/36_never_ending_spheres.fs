@@ -1,7 +1,7 @@
 // Andor
 // The magic of repeating a shape is mostly done with the mod
 // function as we modulate the coordinates.
-//
+
 precision mediump float;
 uniform vec2 u_res;
 
@@ -13,11 +13,16 @@ void main(){
   vec2 a = vec2(1., u_res.y/u_res.x);
   vec2 p = a * (gl_FragCoord.xy/u_res*2.-1.);
   
-  vec2 lineWidthInPx = vec2(.01);
-  vec2 cellSize = vec2(.25); 
+  vec2 lineWidthInPx = vec2(0.01);
+  vec2 cellSize = vec2(.5); 
+  float circleRad = 0.25/2.;
 
-  // float c = step(cSDF(p, 0.5), 0.);
-  vec2 i = step(mod(p, cellSize), lineWidthInPx);
+  vec2 modp = mod(p, cellSize);
+  modp -= cellSize/2.;
 
-  gl_FragColor = vec4(vec3(i.x+i.y), 1.);
+  float c = step(cSDF(modp, circleRad), 0.);
+  
+  vec2 grid = vec2(0.);//step(mod(p, cellSize), lineWidthInPx);
+  float col = (grid.x + grid.y) + c;
+  gl_FragColor = vec4(vec3(col), 1.);
 }
