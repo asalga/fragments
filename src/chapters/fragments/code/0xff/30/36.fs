@@ -16,6 +16,10 @@ void main(){
   float t = u_time/10.;
   float sp = r + theta;
 
+  // r,theta
+  // r =  b * theta
+  
+
   float i = step(mod(sp, 1.), 0.5);
 
   vec2 path = vec2(r+t, 1.);
