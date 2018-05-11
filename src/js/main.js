@@ -4,6 +4,10 @@
 
 'use strict';
 
+
+
+
+
 Number.prototype.clamp = function(min, max) {
   return Math.min(Math.max(this, min), max);
 };
@@ -86,6 +90,32 @@ function makeSketch(fs, params) {
       // });
 
       $(p.canvas).appendTo($('#target'));
+
+// add an image element
+//gif.addFrame(imageElement);
+
+// or a canvas element
+// gif.addFrame(canvasElement, {delay: 200});
+var gif = new GIF({
+  workers: 2,
+  quality: 10
+});
+
+// // or copy the pixels from a canvas context
+ gif.addFrame(p.canvas, {delay:200});
+  //ctx, {copy: true});
+gif.render();
+gif.on('finished', function(blob) {
+  console.log('finished!');
+  window.open(URL.createObjectURL(blob));
+});
+
+// gif.render();
+
+
+
+
+
 
       p.loop();
     };
@@ -246,6 +276,10 @@ function makeSketch(fs, params) {
 
               // we need to make this async.
               let sketch = new p5(makeSketch(fragCode, params), relPath);
+
+// console.log(sketch);
+
+
             }
           });
         });

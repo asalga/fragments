@@ -24,6 +24,7 @@
     {
         "$": true,
         "p5": true,
+        "GIF": true,
         "jQuery": true,
         "CodeMirror": true,
         "TWEEN": true
