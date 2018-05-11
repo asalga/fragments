@@ -51,7 +51,7 @@ function makeSketch(fs, params) {
     };
 
     p.setup = function() {
-      p.frameRate(20);
+      // p.frameRate(20);
 
       w = params.width || DefaultSketchWidth;
       h = params.height || DefaultSketchHeight;
@@ -171,12 +171,19 @@ function makeSketch(fs, params) {
       p.quad(-1, -1, 1, -1, 1, 1, -1, 1);
 
       if(gify){
-        if(p.frameCount <= 100){
-          gif.addFrame(p.canvas,
-          {
-            copy: true,
-            delay:0
-          });
+        // just figure out how long it takes
+        // for the sketch to loop and use that
+        // as a marker.
+        if(p.frameCount <= 750){
+
+          if(p.frameCount % 5 == 0){
+            gif.addFrame(p.canvas,
+            {
+              copy: true,
+              delay: 25
+            });
+          }
+
         }
         else{
           gif.render();
