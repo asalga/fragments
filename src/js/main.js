@@ -4,9 +4,8 @@
 
 'use strict';
 
-
-
-
+let gify = true;
+let gif;
 
 Number.prototype.clamp = function(min, max) {
   return Math.min(Math.max(this, min), max);
@@ -52,6 +51,8 @@ function makeSketch(fs, params) {
     };
 
     p.setup = function() {
+      p.frameRate(20);
+
       w = params.width || DefaultSketchWidth;
       h = params.height || DefaultSketchHeight;
       sketchTime = 0;
@@ -91,35 +92,27 @@ function makeSketch(fs, params) {
 
       $(p.canvas).appendTo($('#target'));
 
-// add an image element
-//gif.addFrame(imageElement);
+      gif = new GIF({
+        debug: true,
+        repeat: 0,
+        workers: 4,
+        quality: 10
+      });
 
-// or a canvas element
-// gif.addFrame(canvasElement, {delay: 200});
-var gif = new GIF({
-  workers: 2,
-  quality: 10
-});
-
-// // or copy the pixels from a canvas context
- gif.addFrame(p.canvas, {delay:200});
-  //ctx, {copy: true});
-gif.render();
-gif.on('finished', function(blob) {
-  console.log('finished!');
-  window.open(URL.createObjectURL(blob));
-});
-
-// gif.render();
-
-
-
-
-
+      gif.on('finished', function(blob) {
+        let img = document.createElement('img');
+        img.src = URL.createObjectURL(blob);
+        document.body.appendChild(img);
+        p.noLoop();
+      });
 
       p.loop();
     };
 
+
+    /**
+          Draw
+    */
     p.draw = function() {
       // for tweening in animation
       sketchTime += (1 / 60) * timeVal.t;
@@ -176,7 +169,24 @@ gif.on('finished', function(blob) {
       // sh.setUniform('u_lastMouseDown', lastMouseDown);
 
       p.quad(-1, -1, 1, -1, 1, 1, -1, 1);
-    };
+
+      if(gify){
+        if(p.frameCount <= 100){
+          gif.addFrame(p.canvas,
+          {
+            copy: true,
+            delay:0
+          });
+        }
+        else{
+          gif.render();
+          gify = false;
+        }
+      }
+    };//end draw
+
+
+
   };
   return sketch;
 }
