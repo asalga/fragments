@@ -92,7 +92,7 @@ em {
 }
 
 .CodeMirror-scroll {
-  height: 500px;
+  height: 450px;
   overflow: none !important;
 }
 
@@ -105,7 +105,6 @@ em {
 .CodeMirror,
 .CodeMirror .cm-s-default {
   display: block;
-  position: absolute;
   /*display:none;*/
   transition: 0.8s ease all;
   box-shadow: 1px 1px 5px #aaa;
