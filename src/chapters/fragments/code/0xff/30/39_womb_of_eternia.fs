@@ -28,7 +28,7 @@ void main(){
   // float th = mod(atan(p.y / p.x)/TAU, 1.);
   float i =0.;// step(ringSDF(p*1.,.5, .01), 0.);
 
-  i = rectSDF(p+ (1./length(p)), vec2(0.3, 0.5));
+  i = rectSDF(p (1./length(p)), vec2(0.3, 0.5));
 
   p *= mod( .8/(length(p)*1.3) + t, 1.4);
 
