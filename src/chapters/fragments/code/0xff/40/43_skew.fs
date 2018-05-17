@@ -5,31 +5,68 @@ uniform float u_time;
 float squareSDF(vec2 p){
   return max(abs(p).x, abs(p).y);
 }
-vec3 tile(vec2 p){
+vec3 tile(vec2 p, float debug){
   vec2 p0 = vec2(p.x-SZ, p.y);
   			// p0.y -= p0.x;
   vec2 p1 = vec2(p.x+SZ, p.y);
   			// p1.y += p1.x;
-
-  return vec3(0.25) * step(squareSDF(p0), 0.25) + 
-  		 vec3(1.) * step(squareSDF(p1), 0.25);
+  vec3 c = vec3(.25) * step(squareSDF(p0), .25) + 
+  		     vec3(.75) * step(squareSDF(p1), .25);
+  c.r += debug;
+  return c;
 }
 
 void main(){
   vec2 a = vec2(1., u_res.y/u_res.x);
   vec2 p = a * (gl_FragCoord.xy/u_res*2.-1.);
   
+  // move set of blocks down based on time
+  vec3 droppedRow;
+  // p *= 2.5;
+  // p.y += mod(u_time, 1.);
 
-  p *= 2.5;
-  p.y += mod(u_time, 2.);
+  float test = 0.;
 
-  if(p.y > 3. ){discard;}
+  // if(p.y > 0. ){
+  	// test = 1.;
+  // }
 
   vec2 pt = vec2(0.);
-  float X = step(mod(p.y,2.),1.)*.5;
-  pt.x = mod(p.x + X, 1.);
-  pt.y = mod(p.y, 1.);
+  // float X = step(mod(p.y,2.),1.)*.5;
 
-  vec3 c = tile(pt+vec2(-.5));
+  if(p.y < 0.){
+    pt.x = mod(p.x + 0., 1.);
+    pt.y = mod(p.y, 1.);
+  }
+
+  vec3 c = tile(pt+vec2(-.5), 0.);
+
+  vec2 dt = pt;
+
+  vec2 fin = vec2(0., -1.4);
+  vec2 v = fin * (1.-mod(u_time, 1.));
+  droppedRow = vec3(1.) * 1.-step(0.25,squareSDF(p+v));
+
+  //tile(dt+vec2(-.5), .3) * step(3., p.y);
+
+  // dt.y *= u_time*2.;// * mod(u_time, 1.7);
+  // droppedRow = tile(dt+vec2(-.5), .3) * 
+  				// step(3., p.y);
+
+  // for(int i= 0; i < 2; i++){
+  // 	float Y = pt.y + 3.;
+  // 	float X = pt.x;
+  // 	vec2 _ = p - vec2(X, Y );
+  // 	droppedRow = tile(_, 0.3);
+  // 		//dt+vec2(-.5), .3); 
+  // }
+
+
+  if(test == 1.){
+  	c = vec3(0.);
+  }
+
+  c += droppedRow;
+
   gl_FragColor = vec4(vec3(c), 1.);
 }
