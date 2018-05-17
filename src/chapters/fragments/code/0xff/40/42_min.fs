@@ -35,16 +35,13 @@ void main(){
   p *= r2d(time*2.);
   float theta = atan(p.y,p.x);
   
-  float T = 1.-mod(time,1.) * 
-            step( mod(time, 2.), 1.);
-
   float pers = 1./(mod(1.-time, 1.) * 
                 step(mod(time+1., 2.) , 0.75 ));
   vec2 orig_p = p;
 
-  i += step(cSDF(p*pers, LG_C), 0.);// LARGE CIRCLE
-  i += step(cSDF(p, .25), 0.); // SMALL CIRCLE
-  i += step(ringSDF(p, 1.6, 0.01), 0.);// RING
+  i += smoothstep(0.01, 0.001, cSDF(p*pers, LG_C));// LARGE CIRCLE
+  i += smoothstep(0.01, 0.001, cSDF(p, .25)); // SMALL CIRCLE
+  i += smoothstep(0.01, 0.001, ringSDF(p, 1.6, 0.01));// RING
 
   float idx = floor( ((theta+PI) / PI) * count);
   float snapped = -PI + (idx * sliceSize) + sliceSize/2.;
@@ -53,10 +50,11 @@ void main(){
   float triRot = (idx-1.) * -(DEG_TO_RAD*CC);
   
   p = (p-v) * r2d(triRot);
+  float T = 1.-mod(time,1.) * step( mod(time, 2.), 1.);
   p -= (v*r2d(triRot) * T); // move outwards
   
   // BLADES
   i +=  step(cSDF(orig_p, LG_C), 0.) * 
-        step(((blade(p, .4, .5))), 0.);
+        smoothstep(0.01, 0.001, ((blade(p, .4, .5))));
   gl_FragColor = vec4(vec3(i,i,i),1.);
 }
