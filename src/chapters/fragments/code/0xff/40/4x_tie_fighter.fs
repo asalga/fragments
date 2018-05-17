@@ -15,38 +15,45 @@ mat2 r2d(float a){
 float triSDF(vec2 p, float s, float sc){
   vec2 a = abs(p);
   float distToSide = a.x * COS_30;
-  float u = p.y * sc;
+  float u = p.y * sc * 1.;
   return max(distToSide + u, -u) - s;
 }
-float t(vec2 p, vec2 v, float sz){
-  return step(((triSDF(p+v, sz, .5))), 0.);
-}
+
 void main(){
   vec2 a = vec2(1., u_res.y/u_res.x);
   vec2 p = a*(gl_FragCoord.xy/u_res*2.-1.);
-  float count = 1.5;
+  float count = 3.;
   float sliceSize = PI/count;
   float CC = 180./(count);
   float theta = atan(p.y,p.x);
   float lenp = length(p);
   float i;
   float T = abs(sin(1.8))*2.;
+  // i = step(cSDF(p, .8), 0.);
 
-  float sz = 0.13;
+  float TH = theta;// + ((1.-lenp));
 
-  float t0 = t(p, vec2(0., -sz*2.), sz);
-  float ct = t(p*vec2(1., -1.), vec2(0., -sz*2.), sz);
+  //                   0..TAU      0..1   [0,1,..c-1]
+  float idx = floor( ((TH+PI) / PI) * count);
+
+  float snapped = -PI + (idx * sliceSize) + sliceSize/2.;
+
+  // Test
+  // snapped += (1.-lenp);
+
+  vec2 v = vec2(cos(snapped), sin(snapped)) * .8;
+
+  // remap 0..2 to 1..-1
+  float triRot = (idx-1.) * -(DEG_TO_RAD*CC);
   
-  vec2 rest = vec2(sz*2.3, sz*2.);
-  vec2 pp = 2.*rest + -normalize(rest) *  
-                     mod(u_time, 1.) *
-                     step(mod(u_time, 1.), 0.5);
+  p = (p-v);// * r2d(triRot);
+  // p *= -r2d(1.-lenp);
+  p *= r2d(triRot);
 
-  float t1 = t(p, pp, sz);
-  float t2 = t(p, vec2(-sz*2.3, sz*2.), sz);
-
-  // vec p1 = p - (v*r2d(triRot) * .013); 
-  i = t0 + t1 + t2;// + ct;  
-
+  // move outwards
+  // p = p - (v*r2d(triRot) * T); 
+  // p += (1.-lenp) * (op*r2d(0.4));
+  // i = (triSDF(p, .13, .5));
+  i = step(((triSDF(p, .3, .5))), 0.);
   gl_FragColor = vec4(vec3(i,i,i),1.);
 }
