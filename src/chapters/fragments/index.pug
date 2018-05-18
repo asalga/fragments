@@ -6,7 +6,7 @@ mixin card(glsl, title, blurb, authorName, quote)
   div.row
     div.col-sm-4
       textarea.glsl-code(data-params='{"tex0":"tex/diffuse_lg.png","tex1":"tex/ripple_input_clouds.png","tex2":"tex/caustics.png","width":300,"height":450,"loop": "true","CodeMirror":{"lineNumbers":"false"}}' data-example=glsl)
-    //- div.col-sm-4
+    div.col-sm-4
       h2=title
       p.
         !{blurb}
@@ -20,7 +20,7 @@ mixin card(glsl, title, blurb, authorName, quote)
 
 block cards
 
-  +card('code/0xff/40/44_shapeshift.fs','','','','')
+  +card('code/0xff/40/44_shapeshift.fs','Time-Shifting','','','I time-travelled to my youth as a ghost. I saw my vicreal self sitting with the other children. He touched the carpet, pulling threads, my finger tingled. I felt both our experiences. For some time, nothing. Children chattering. Then, singled out, one child stood up to shamed me. I felt my tiny weak heart tremble. Lost of confusion and terrible pain. completely helpless. Afraid. Alone. But I was not alone. I knelt down before him. Cradeling my small body in his arms. I knew his pain--I wept. I sent him love that transenced time and space.')
   
   //- +card('code/0xff/40/43_2.fs','','','','')
 

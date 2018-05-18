@@ -1,4 +1,4 @@
-// Shapeshifting & timetravelling
+// Timeshifting
 precision mediump float;
 #define PI 3.141592658
 #define SZ .35
