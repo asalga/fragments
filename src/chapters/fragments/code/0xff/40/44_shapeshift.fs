@@ -4,6 +4,9 @@ precision mediump float;
 #define SZ .35
 uniform vec2 u_res;
 uniform float u_time;
+float cSDF(vec2 p, float r){
+  return length(p)-r;
+}
 mat2 r2d(float a){
   return mat2(cos(a),sin(a),sin(a),-cos(a));
 }
@@ -26,6 +29,7 @@ void main(){
   float i = smoothstep(0.01, 0.001,mix(c,r,(sin(t)+1.)/2.));
   p.y -= a.y;
   p *= r2d(theta);
-  i += smoothstep(0.01, 0.001, rSDF(p, vec2(0.005, a.y-0.3)));
+  i+= smoothstep(0.01, 0.001, cSDF(p, 0.08));
+  i += smoothstep(0.01, 0.001, rSDF(p, vec2(0.005, a.y-0.35)));
   gl_FragColor = vec4(vec3(i), 1.);
 }
