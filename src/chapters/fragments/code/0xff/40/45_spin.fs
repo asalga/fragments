@@ -16,9 +16,9 @@ void main(){
   p = mod(p, 1./C);
   p /= (1./C)*.5;
   p -= vec2(1.); //center
-  p/= (sin(t/1. - idx.x*1.2 + idx.y*2.)+1.5)/2.;
+  p/= (sin(t - idx.x + idx.y*2.)+1.5)/2.;
   float i = smoothstep(.1, .01, ringSDF(p, 1., .04));
-  p *= r2d(t*1.2 + idx.x + idx.y);
-  i += smoothstep(0.01, 0.001, ringSDF(p+vec2(.33), .3, .2)); 
+  p *= r2d(t + idx.x + idx.y);
+  i += smoothstep(0.1, .01, ringSDF(p+vec2(.3), .25, .2)); 
   gl_FragColor = vec4(vec3(i),1.);
 }
