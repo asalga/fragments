@@ -1,6 +1,11 @@
-
+// Tower
 precision mediump float;
 uniform vec2 u_res;
+uniform float u_time;
+#define PI 3.141592658
+float random (vec2 st) {
+  return fract(sin(dot(st.xy,vec2(12.9898,178.233)))*43758.5453123);
+}
 float cSDF(vec2 p, float r){
   return length(p) - r;
 }
@@ -25,7 +30,22 @@ float eye(vec2 p){
   i += step(cSDF(p-vec2(0.,0.7), 0.2), 0.);
   return i;
 }
+float moon(vec2 p){
+  p += vec2(0.45, -1.);
+  p/=0.3;
+  float t = mod(u_time*0.05, 2.*PI);
+  vec3 s = vec3(cos(t), .0, sin(t));
+  float z = sqrt(1. - pow(p.x,2.) - pow(p.y,2.));
+  vec3 v = normalize(vec3(p.x, p.y, z));
+  vec3 i = vec3(smoothstep(.1,.11,dot(v, s)) + 
+  				smoothstep(.48, .49, 1.-cSDF(p, .5)) -
+  				smoothstep(.38, .39, 1.-cSDF(p, .37)));
+return i.x;
+}
 
+float specks(vec2 p ){
+  return smoothstep(0., .1, 2.*random(p));
+}
 float tower(vec2 p, vec2 towerPos){
   float i = 0.;
   // tower body
@@ -51,7 +71,8 @@ void main(){
 
   i += tower(p, towerPos);
   i += eye(p);
-  // i += moon
+  i += moon(p);
+  i *= specks(p);
 
   gl_FragColor = vec4(vec3(i),1.);
 }
