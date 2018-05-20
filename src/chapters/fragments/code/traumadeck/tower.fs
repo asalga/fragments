@@ -1,8 +1,12 @@
 // Tower
 precision mediump float;
+
 uniform vec2 u_res;
 uniform float u_time;
+
 #define PI 3.141592658
+
+
 float random (vec2 st) {
   return fract(sin(dot(st.xy,vec2(12.9898,178.233)))*43758.5453123);
 }
@@ -72,7 +76,7 @@ void main(){
   i += tower(p, towerPos);
   i += eye(p);
   i += moon(p);
-  i *= specks(p);
+  // i *= specks(p);
 
   gl_FragColor = vec4(vec3(i),1.);
 }
