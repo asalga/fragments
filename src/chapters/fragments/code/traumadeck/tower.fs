@@ -6,7 +6,6 @@ uniform float u_time;
 
 #define PI 3.141592658
 
-
 float random (vec2 st) {
   return fract(sin(dot(st.xy,vec2(12.9898,178.233)))*43758.5453123);
 }
@@ -46,11 +45,10 @@ float moon(vec2 p){
   				smoothstep(.38, .39, 1.-cSDF(p, .37)));
 return i.x;
 }
-
 float specks(vec2 p ){
   return smoothstep(0., .1, 2.*random(p));
 }
-float tower(vec2 p, vec2 towerPos){
+float towerShape(vec2 p, vec2 towerPos){
   float i = 0.;
   // tower body
   vec2 towerBodySz = vec2(0.3, .7);
@@ -58,24 +56,37 @@ float tower(vec2 p, vec2 towerPos){
 
   // tower top bricks
   float topBrickSz = 0.15;
-  i += step(mod(p.x-0.15, topBrickSz), topBrickSz/2.)*
-  	   step(rectSDF(p-vec2(0., 0.14), vec2(0.5, 0.05)), 0.);
+  // i += step(mod(p.x-0.15, topBrickSz), topBrickSz/2.)*
+  	   // step(rectSDF(p-vec2(0., 0.14), vec2(0.5, 0.05)), 0.);
 
   // tower top
   vec2 towerTopSz = vec2(0.5, .12);
-  i += step(rectSDF(towerPos-vec2(0.,.1), towerTopSz), 0.);
+  // i += step(rectSDF(towerPos-vec2(0.,.1), towerTopSz), 0.);
   return i;
 }
+
+float bricks(vec2 p, vec2 sz, float morterSz){
+  float xOffset = step(mod(p.y, sz.y*2.), sz.y) * .5;
+  float x = step(mod(p.x + xOffset, sz.x), sz.x-morterSz);
+  float y = step(mod(p.y, sz.y), sz.y-morterSz);
+  return x*y;
+}
+
 
 void main(){
   vec2 a = vec2(1., u_res.y/u_res.x);
   vec2 p = a * (gl_FragCoord.xy/u_res*2.-1.);
-  vec2 towerPos = p+ vec2(0.0, 0.1);
+  vec2 towerPos = p + vec2(0.0, 0.1);
   float i = 0.;
 
-  i += tower(p, towerPos);
-  i += eye(p);
-  i += moon(p);
+  float brickH = 0.1;
+  float brickW = brickH*2.;
+  float brickSpacing = 0.01;
+
+  i += towerShape(p, towerPos) * 
+      bricks(p, vec2(brickW, brickH), brickSpacing);
+  // i += eye(p);
+  // i += moon(p);
   // i *= specks(p);
 
   gl_FragColor = vec4(vec3(i),1.);
