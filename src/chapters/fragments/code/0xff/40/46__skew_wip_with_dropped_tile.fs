@@ -7,11 +7,16 @@ float squareSDF(vec2 p){
 }
 vec3 tile(vec2 p, float debug){
   vec2 p0 = vec2(p.x-SZ, p.y);
-  			// p0.y -= p0.x;
+  p0.y -= p0.x;//skew
   vec2 p1 = vec2(p.x+SZ, p.y);
-  			// p1.y += p1.x;
-  vec3 c = vec3(.25) * step(squareSDF(p0), .25) + 
-  		     vec3(.75) * step(squareSDF(p1), .25);
+  p1.y += p1.x;//skew
+
+  float fq = 0.07;
+  vec3 darkShade = vec3(1.) * step(mod(p.x, fq), fq/2.);
+  vec3 lightShade = vec3(1.) * step(mod(p.y, fq), fq/2.);
+
+  vec3 c = darkShade * step(squareSDF(p0), .25) + 
+  		     lightShade * step(squareSDF(p1), .25);
   c.r += debug;
   return c;
 }
@@ -22,8 +27,8 @@ void main(){
   
   // move set of blocks down based on time
   vec3 droppedRow;
-  // p *= 2.5;
-  // p.y += mod(u_time, 1.);
+  p *= 2.5;
+  p.y += mod(u_time, 1.);
 
   float test = 0.;
 
@@ -47,7 +52,7 @@ void main(){
   vec2 v = fin * (1.-mod(u_time, 1.));
   droppedRow = vec3(1.) * 1.-step(0.25,squareSDF(p+v));
 
-  //tile(dt+vec2(-.5), .3) * step(3., p.y);
+  tile(dt+vec2(-.5), .3) * step(3., p.y);
 
   // dt.y *= u_time*2.;// * mod(u_time, 1.7);
   // droppedRow = tile(dt+vec2(-.5), .3) * 
@@ -63,10 +68,10 @@ void main(){
 
 
   if(test == 1.){
-  	c = vec3(0.);
+  	// c = vec3(0.);
   }
 
-  c += droppedRow;
+  // c += droppedRow;
 
   gl_FragColor = vec4(vec3(c), 1.);
 }
