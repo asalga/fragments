@@ -12,7 +12,7 @@ float checkerSphere(vec2 p, vec2 origP){
   float t = u_time;
   vec3 lightDir = vec3(0., 0., 1.);
   // Get the z value on the sphere
-  float z = sqrt(1.-(p.x*p.x)-(p.y*p.y));
+  float z = sqrt(1.-(p.x*p.x)-(0.));
   // Now we can create the normal
   vec3 n = vec3(p, z);
   float theta = acos(dot(n,lightDir));
