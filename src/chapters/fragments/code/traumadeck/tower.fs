@@ -22,10 +22,6 @@ float random (vec2 st) {
   return fract(sin(dot(st.xy,vec2(12.9898,178.233)))*43758.5453123);
 }
 
-float random1D(float v) {
-  // return fract(sin(v*12.9898),178.233);
-  return fract(sin(v));
-}
 
 // from IQ
 float impulse(float k, float x){
@@ -145,7 +141,7 @@ void main(){
   i += moon(p);
   // i *= specks(p);
 
-  // if( random1D(u_time) > 0.01){
+  
   float r = random(vec2(u_time/1000.));
 
   // if( r > .98 ){
