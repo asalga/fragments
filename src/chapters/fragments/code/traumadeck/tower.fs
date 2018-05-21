@@ -1,6 +1,8 @@
 // Tower
 // TODO:
 // - warp space for bricks
+// - move eye into tower
+// - add stars
 
 precision mediump float;
 
@@ -9,13 +11,26 @@ uniform float u_time;
 
 #define PI 3.141592658
 
+float udRoundBox(vec2 p, vec2 b, float r){
+  return length(max(abs(p)-b,0.0))-r;
+}
+
+vec2 flipX(vec2 v){
+  return v * vec2(-1., 1.);
+}
+float random (vec2 st) {
+  return fract(sin(dot(st.xy,vec2(12.9898,178.233)))*43758.5453123);
+}
+
+float random1D(float v) {
+  // return fract(sin(v*12.9898),178.233);
+  return fract(sin(v));
+}
+
+// from IQ
 float impulse(float k, float x){
   float h = k * x;
   return h * exp(1. - h);
-}
-
-float random (vec2 st) {
-  return fract(sin(dot(st.xy,vec2(12.9898,178.233)))*43758.5453123);
 }
 float cSDF(vec2 p, float r){
   return length(p) - r;
@@ -35,6 +50,21 @@ float rectSDF(vec2 p, vec2 size) {
   return min(max(d.x, d.y), 0.0) + length(max(d,0.0));
 }
 
+float srectSDF(vec2 p, vec2 size){
+  return step(rectSDF(p, size), 0.);
+}
+
+float bolt(vec2 p, vec2 pos){
+  float i;
+  p += pos;
+  p.x -= p.y*1.0;
+  float W = 0.1;
+  float H = 0.3;
+  i += srectSDF(p, vec2(W,H));
+  i += srectSDF(p - vec2(W, -H), vec2(W/2.,H/2.));
+  i += srectSDF(p - vec2(W*1.5, -H*1.5), vec2(W/3.,H/3.));
+  return i;
+}
 
 float eye(vec2 p, vec2 pos){
   p/= 0.5;
@@ -54,13 +84,11 @@ float moon(vec2 p){
   vec3 i = vec3(smoothstep(.1,.11,dot(v, s)) + 
   				smoothstep(.48, .49, 1.-cSDF(p, .5)) -
   				smoothstep(.38, .39, 1.-cSDF(p, .37)));
-return i.x;
-}
-float specks(vec2 p ){
-  return smoothstep(0., .1, 2.*random(p));
+  return i.x;
 }
 float towerShape(vec2 p, vec2 towerPos){
   float i = 0.;
+
   // tower body
   vec2 towerBodySz = vec2(0.4, .8);
   i += step(rectSDF(towerPos+ vec2(0., 0.7), towerBodySz), 0.);
@@ -78,8 +106,6 @@ float towerShape(vec2 p, vec2 towerPos){
   // tower top
   vec2 towerTopSz = vec2(0.5, .12);
   // i += step(rectSDF(towerPos-vec2(0.,.1), towerTopSz), 0.);
-
-
 
   // TOWER SLOPE LEFT
   float slopeAmt = 12.;
@@ -104,7 +130,7 @@ float bricks(vec2 p, vec2 sz, float morterSz){
 void main(){
   vec2 a = vec2(1., u_res.y/u_res.x);
   vec2 p = a * (gl_FragCoord.xy/u_res*2.-1.);
-  vec2 towerPos = p + vec2(0.0, 0.1);
+  vec2 towerPos = p + vec2(0., 0.0);
   float i = 0.;
 
   // Tower shape + bricks
@@ -119,9 +145,18 @@ void main(){
   i += moon(p);
   // i *= specks(p);
 
+  // if( random1D(u_time) > 0.01){
+  float r = random(vec2(u_time/1000.));
 
-  i += eye((p+vec2(-.0,-1.4)) * vec2(1., -1.), vec2(0.));
+  // if( r > .98 ){
+    i += bolt(p-vec2(1.4, 0.), vec2(0.5, 0.5));
+    i += bolt( flipX(p)-vec2(1.4, 0.)  , vec2(0.5, 0.5));
+  // }
+  // i += eye((p+vec2(-.0,-1.4)) * vec2(1., -1.), vec2(0.));
 
+
+  p.x *= u_time/1000000.;
+  i += step(random(p), 0.0008);
 
   gl_FragColor = vec4(vec3(i),1.);
 }
