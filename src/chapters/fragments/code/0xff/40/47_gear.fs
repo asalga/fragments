@@ -36,37 +36,47 @@ float gear(vec2 p){
   //                   0..TAU   ->   0..1  ->   [0,1,..c-1]
   float idx = floor(( (theta+PI) / PI) * COUNT);
   float snapped = -PI + (idx * SLICE_SIZE) + SLICE_SIZE/2.;  
-  i += step(ringSDF(p, SPACING*2.4, 0.015), 0.);
+  i += step(ringSDF(p, SPACING*1., 0.015), 0.);
   p -= vec2(cos(snapped), sin(snapped))*.9;// away from center
   p *= r2d(-snapped + PI/2.);// rotate the points away from the center 
-  // i += spoke(p, .1, .25);
+  i += spoke(p, .1, .25);
   return i;
 }
 void main(){
   vec2 a = vec2(1., u_res.y/u_res.x);
   vec2 p = a*(gl_FragCoord.xy/u_res*2.-1.);  
   float i;
-  float t = u_time*0.;
-  // mat2 r = r2d(-u_time + SLICE_SIZE/2.);
-  float sc = 1.;
-  float m = mod(t, a.x);
+  float t = u_time;
+  // mat2 r = r2d(-0. + SLICE_SIZE/2.)
+  // float sc = 1.5;
+  // float m = mod(t,a.x);
+  float sz = 0.5;
 
-  // center
-  vec2 g1_t = (p + vec2(0. - m, 0.));// * r2d(u_time ); 
-  float g1 = gear(g1_t * sc);
+  p.x = mod(p.x, sz*2.);
 
-  // left
-  vec2 g0_t = (p + vec2(a.x + SPACING - m, 0.));// *r2d(-u_time + SLICE_SIZE/2.);
-  float g0 = gear(g0_t * sc);
+  vec2 c = vec2(-sz, 0.);
+  
+  // i = step(cSDF(p + c, sz/2.), 0.);
+  p = (p+c) * r2d(PI/3.);
+  i = step(rectSDF(p, vec2(sz/1.1)), 0.);
 
-  // right
-  vec2 g2_t = (p + vec2(-a.x - SPACING - m, 0.));// * r2d(-u_time + SLICE_SIZE/2.);
-  float g2 = gear(g2_t * sc);
+  // float rot = t * step(mod(t,a.x/2.),a.x)*2.-1.;
 
-  i = g0 + g1 + g2;
+  // float rot = t * step(m/4.,a.x)*2.-1.;
+
+  // vec2 g2_t = (p + vec2(-a.x - m, 0.)) * r2d(-rot + 0.);
+  // float g2 = gear(g2_t * sc);
+
+  // vec2 g1_t = (p + vec2(0. - m, 0.)) * r2d(rot + 0.);
+  // float g1 = gear(g1_t * sc);
+
+  // vec2 g0_t = (p + vec2(a.x - m, 0.)) *r2d(-rot + 0.);
+  // float g0 = gear(g0_t * sc);
+
+  // vec2 g3_t = (p + vec2(a.x*2. - m, 0.)) * r2d(-rot + 0.);
+  // float g3 = gear(g3_t *sc);
+
+  // i = g0 + g1 + g2 + g3;
 
   gl_FragColor = vec4(vec3(i),1.);
 }
-
-  // vec2 g3_t = (p + vec2(a.x*2. - m, 0.)) * r2d(u_time); 
-  // float g3 = gear(g3_t *sc);
