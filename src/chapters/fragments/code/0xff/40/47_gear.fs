@@ -39,7 +39,11 @@ float gear(vec2 p, float rad){
   //                   0..TAU   ->   0..1  ->   [0,1,..c-1]
   float idx = floor(( (theta+PI) / PI) * COUNT);
   float snapped = -PI + (idx * SLICE_SIZE) + SLICE_SIZE/2.;  
-  i += step(ringSDF(p, rad/2., 0.24), 0.);
+  
+  // ring is not worth the trouble
+  i += step(cSDF(p, 0.8), 0.);
+  i -= step(cSDF(p, 0.4), 0.);
+
   p -= vec2(cos(snapped), sin(snapped));// away from center
   p *= r2d(-snapped + PI/2.);// rotate the points away from the center 
   i += spoke(p, .1, .25);
@@ -52,7 +56,7 @@ void main(){
   float t = u_time;
   
   // divisions per side
-  float div = 1.;
+  float div = 1.5;
   p.x = mod(p.x, div);
   vec2 c = vec2(-div/2., 0.);
   float halfSlice = SLICE_SIZE/2.;
