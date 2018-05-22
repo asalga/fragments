@@ -30,14 +30,17 @@ float spoke(vec2 p, float s, float sc){
   float rect = rectSDF(p-vec2(0., -.15), vec2(s*2.5,s*1.3));
   return step(tri,0.) * step(rect, 0.);
 }
-float gear(vec2 p){
+float gear(vec2 p, float rad){
+  // 2 would give us no overlap, but we need the teeth to 
+  // cross over so use a smaller number
+  p *= rad * 1.75;
   float theta = atan(p.y,p.x);
   float i;
   //                   0..TAU   ->   0..1  ->   [0,1,..c-1]
   float idx = floor(( (theta+PI) / PI) * COUNT);
   float snapped = -PI + (idx * SLICE_SIZE) + SLICE_SIZE/2.;  
-  i += step(ringSDF(p, SPACING*1., 0.015), 0.);
-  p -= vec2(cos(snapped), sin(snapped))*.9;// away from center
+  i += step(ringSDF(p, rad/2., 0.24), 0.);
+  p -= vec2(cos(snapped), sin(snapped));// away from center
   p *= r2d(-snapped + PI/2.);// rotate the points away from the center 
   i += spoke(p, .1, .25);
   return i;
@@ -47,36 +50,19 @@ void main(){
   vec2 p = a*(gl_FragCoord.xy/u_res*2.-1.);  
   float i;
   float t = u_time;
-  // mat2 r = r2d(-0. + SLICE_SIZE/2.)
-  // float sc = 1.5;
-  // float m = mod(t,a.x);
-  float sz = 0.5;
-
-  p.x = mod(p.x, sz*2.);
-
-  vec2 c = vec2(-sz, 0.);
   
-  // i = step(cSDF(p + c, sz/2.), 0.);
-  p = (p+c) * r2d(PI/3.);
-  i = step(rectSDF(p, vec2(sz/1.1)), 0.);
+  // divisions per side
+  float div = 1.;
+  p.x = mod(p.x, div);
+  vec2 c = vec2(-div/2., 0.);
+  float halfSlice = SLICE_SIZE/2.;
 
-  // float rot = t * step(mod(t,a.x/2.),a.x)*2.-1.;
+  i = step(cSDF(p, div/2.), 0.);
+  float scaleRad = 1./div * 2.;
 
-  // float rot = t * step(m/4.,a.x)*2.-1.;
-
-  // vec2 g2_t = (p + vec2(-a.x - m, 0.)) * r2d(-rot + 0.);
-  // float g2 = gear(g2_t * sc);
-
-  // vec2 g1_t = (p + vec2(0. - m, 0.)) * r2d(rot + 0.);
-  // float g1 = gear(g1_t * sc);
-
-  // vec2 g0_t = (p + vec2(a.x - m, 0.)) *r2d(-rot + 0.);
-  // float g0 = gear(g0_t * sc);
-
-  // vec2 g3_t = (p + vec2(a.x*2. - m, 0.)) * r2d(-rot + 0.);
-  // float g3 = gear(g3_t *sc);
-
-  // i = g0 + g1 + g2 + g3;
-
+  float r = gear(p * r2d(t + halfSlice), scaleRad );  // center
+  float g = gear((p + (c*2.)) * r2d(t+halfSlice), scaleRad); // right
+  float b = gear((p + c) * r2d(-t), scaleRad); // right
+  i = r + g+ b;
   gl_FragColor = vec4(vec3(i),1.);
 }
