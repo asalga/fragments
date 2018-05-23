@@ -46,10 +46,14 @@ void main(){
   float i;
   float r = 0.5;
 
-  // float pupil = step(cSDF(p, 0.05), 0.);
-  // float outerCirc = step(ringSDF(p, r, 0.01), 0.);
-
+  p/=2.5;
   i += eye(p,vec2(0.));
+  p*=2.5;
+  i -= eye(p,vec2(0.));
+  p*=2.5;
+  i += eye(p,vec2(0.));
+  p*=2.5;
+  i -= eye(p,vec2(0.));
 
   gl_FragColor = vec4(vec3(i),1.);
 }
