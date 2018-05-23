@@ -11,7 +11,7 @@ mat2 r2d(float a){
 float triSDF(vec2 p, float s, float sc){
   vec2 a = abs(p);
   float distToSide = a.x * COS_30;
-  float u = p.y * sc * 1.;
+  float u = p.y * sc;
   return max(distToSide + u, -u) - s;
 }
 void main(){
@@ -24,7 +24,7 @@ void main(){
   float TH = theta - (1.-lenp);
   float idx = floor( ((TH+PI) / PI) * COUNT); 
   float snapped = -PI + (idx * sliceSize) + sliceSize/2.;
-  vec2 v = vec2(cos(snapped), sin(snapped)) * -1.;
+  vec2 v = -vec2(cos(snapped), sin(snapped));
   float triRot = (idx-1.) * -(DEG_TO_RAD*(180./COUNT));
   p = (p-v) * r2d(triRot) * r2d(lenp);
   float i = triSDF(p, .3, .5);
