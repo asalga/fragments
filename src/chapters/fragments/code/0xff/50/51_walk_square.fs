@@ -13,36 +13,21 @@ mat2 r2d(float a){
 void main(){
   vec2 a = vec2(1., u_res.y/u_res.x);
   vec2 p = a * (gl_FragCoord.xy/u_res*2.-1.);
-  float t = u_time*4.;
+  float t = u_time*8.;
   float modt = mod(t, PI/2.);
+  float i;
 
-  float ground = step(rectSDF(p+vec2(0., .1), vec2(2., 0.1)), 0.);
+  float groundCol = step(mod( (p.x+p.y*2.) + t/3., 0.25), .25/2.);
+  float ground = groundCol * step(rectSDF(p+vec2(0.,.1), vec2(2.,.1)), 0.);
+  float topBar = step(rectSDF(p, vec2(2.,0.01)), 0.);
+  float bottomBar = step(rectSDF(p+vec2(0., 0.2), vec2(2.,0.01)), 0.);
+  ground +=topBar + bottomBar;
+
   p.x += modt * PI/10.;
-  p *= -r2d( modt + PI/2.);// rotate first
+  p *= -r2d( modt + PI/2.);
   p -= vec2(0.25);
-
   
-
-
-  float i = step(rectSDF(p, vec2(0.25)), 0.);
-  vec4 cube = vec4(vec3(i), 1.);
-
-  // GRID
-  vec2 pp = gl_FragCoord.xy;
-  vec2 lineWidthInPx = vec2(1.);
-  vec2 cellSize = vec2(50.);
-  vec2 g = step(mod(pp, cellSize), lineWidthInPx);
-  vec4 grid = vec4(vec3(g.x+g.y), 1.);
-
-  gl_FragColor = ground+cube;
+  float box = step(rectSDF(p, vec2(0.25)), 0.);
+  i += ground + box;
+  gl_FragColor = vec4(vec3(i), 1.);
 }
-
-
-
-// void main(){
-//   vec2 p = gl_FragCoord.xy;
-//   vec2 lineWidthInPx = vec2(1.);
-//   vec2 cellSize = vec2(50.);
-//   vec2 i = step(mod(p, cellSize), lineWidthInPx);
-//   gl_FragColor = vec4(vec3(i.x+i.y), 1.);
-// }
