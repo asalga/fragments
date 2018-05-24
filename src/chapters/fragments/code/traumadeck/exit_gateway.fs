@@ -39,44 +39,32 @@ void main(){
   float t = u_time;
   float i;
   float len = length(p);
-
-
-  p*= r2d(t*.7);
-
   float spin = 1.;
+  p *= r2d(t*.7);
+
   vec2 spiralPos = p;
-  // spiralPos *= r2d(-PI/8.);
-  // spiralPos *= r2d(0.4);
   float th = atan(spiralPos.y,spiralPos.x)/PI + PI/8.7;
-  float splen = length(spiralPos);
-  
+  float splen = length(spiralPos);  
   float spiral;
 
   th += step(splen,spin) * pow((spin-splen),1.);
   float ca = floor(th * COUNT)/COUNT;
   spiral += smoothstep(0.21, 0.215,th-ca);
 
-
   float circle = step(cSDF(p, 0.5), 0.);
 
   for(float it = 0.; it < 4.; it +=1.){
     vec2 sp0 = p;
     mat2 rot = r2d(it*PI/2.);
-
-    sp0 =   vec2(.45, 0.) + (p * rot    );
-     // float col = step(0.5, (length(sp0-vec2(.5, 0.)) ));
-
+    sp0 = vec2(.45, 0.) + (p * rot);
     sp0.x *= 1.3;
     // position defines phase of wave
-    float fac =   sp0.x;
-
-    float shfitwave = (fac * 2. * sin(it+(fac + (2.*t + it/5.) + it ) * 4.)) /4.;  
+    float shfitwave = (sp0.x * 2. * sin(it+(sp0.x + (2.*t + it/5.) + it ) * 4.)) /4.;  
     float squiggle0 = circInter(sp0 + vec2(.0, shfitwave) , 1.2, 1.);
     i += clamp(squiggle0-circle, 0., 1.);
   }
 
   i += step(ringSDF(p, 1., 0.01), 0.0);
   i += spiral * circle;
-
   gl_FragColor = vec4(vec3(i), 1.);
 }
