@@ -47,7 +47,7 @@ void main(){
   vec2 spiralPos = p;
   // spiralPos *= r2d(-PI/8.);
   // spiralPos *= r2d(0.4);
-  float th = atan(spiralPos.y,spiralPos.x)/PI + PI/9.5;
+  float th = atan(spiralPos.y,spiralPos.x)/PI + PI/8.7;
   float splen = length(spiralPos);
   
   float spiral;
@@ -66,15 +66,14 @@ void main(){
     sp0 =   vec2(.45, 0.) + (p * rot    );
      // float col = step(0.5, (length(sp0-vec2(.5, 0.)) ));
 
-    // sp0.x *= 2.3;
+    sp0.x *= 1.3;
     // position defines phase of wave
     float fac =   sp0.x;
 
-    float shfitwave = (fac * 2. * sin((fac + t + (it) ) * 4.)) /4.;  
+    float shfitwave = (fac * 2. * sin(it+(fac + (2.*t + it/5.) + it ) * 4.)) /4.;  
     float squiggle0 = circInter(sp0 + vec2(.0, shfitwave) , 1.2, 1.);
     i += clamp(squiggle0-circle, 0., 1.);
   }
-
 
   i += step(ringSDF(p, 1., 0.01), 0.0);
   i += spiral * circle;
