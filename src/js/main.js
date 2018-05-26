@@ -175,9 +175,9 @@ function makeSketch(fs, params) {
         // just figure out how long it takes
         // for the sketch to loop and use that
         // as a marker.
-        if(p.frameCount <= 230){
+        if(p.frameCount <= 30){
 
-          if(p.frameCount % 2 === 0){
+          if(p.frameCount % 1 === 0){
             gif.addFrame(p.canvas,
             {
               copy: true,
