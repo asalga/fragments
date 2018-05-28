@@ -13,6 +13,6 @@ void main(){
   float theta = abs(atan(p.y,p.x))/PI;
   float i = smoothstep(0.01,0.001,cSDF(p,.45)) * 
   			step(.25,theta+(sin(t*PI*2.)+1.)/2.*.25);
-  i += step(cSDF(p+vec2(mod(t,1.)-1., 0.),.08) ,0.);
+  i += step(cSDF(p+vec2(mod(t,1.)-1.,0.),.08),0.);
   gl_FragColor = vec4(vec3(i),1.);
 }
