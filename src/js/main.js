@@ -4,7 +4,7 @@
 
 'use strict';
 
-let YesMakeGif = true;
+let YesMakeGif = false;
 let gif;
 
 Number.prototype.clamp = function(min, max) {
