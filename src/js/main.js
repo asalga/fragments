@@ -4,7 +4,7 @@
 
 'use strict';
 
-let YesMakeGif = false;
+let YesMakeGif = true;
 let gif;
 
 Number.prototype.clamp = function(min, max) {
@@ -175,9 +175,9 @@ function makeSketch(fs, params) {
         // just figure out how long it takes
         // for the sketch to loop and use that
         // as a marker.
-        if(p.frameCount <= 180){
+        if(p.frameCount <= 118){
 
-          if(p.frameCount % 4 === 0){
+          if(p.frameCount % 2 === 0){
             gif.addFrame(p.canvas,
             {
               copy: true,
