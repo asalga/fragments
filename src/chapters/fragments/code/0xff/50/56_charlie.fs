@@ -22,7 +22,7 @@ void main(){
   v[2] = vec2( 1., 0.); v[3] = vec2(0.,-1.);
   for(int it=0;it<4;it++){// ROT
     v[it] *= r2d(u_time*PI);
-    v[it].y = v[it].y * 0.25;
+    v[it].y = (v[it].y * 0.25) + sin(u_time*3.)/2.;
   }
   vec2 offset = vec2(0.,.5);// TOP  += and macro = :(
   float i = LINE(0,1,offset);  i += LINE(1,2,offset);
