@@ -1,5 +1,4 @@
 // 58 - "No bounce, no play"
-// TODO: bounce to right edge
 // add Y direction
 // add random positions
 precision mediump float;
@@ -16,7 +15,7 @@ void main(){
   float i;
   for(int it = 0; it < NUM_BALLS; it++){
 	vec2 pos = vec2(u_time, 0.);
-    // 8 other "screens" surround the canvas.
+    // 8 other "screens" surround the canvas
     float screenIdx = floor(mod(pos.x, 2.));// 0..1
  	float dir = screenIdx*2.-1.;// remap to  -1..+1
   	vec2 finalPos = vec2(  (1.-screenIdx) + dir * mod(pos.x, 1.), 0.);
