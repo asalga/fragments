@@ -38,7 +38,7 @@ void main(){
 
   mat2 rotLeft = r2d(t);
 
-  vec2 off = vec2(div/2., 0.);
+  // vec2 off = vec2(div/6., 0.);
 
   vec2 orbCenterPt = (p * r2d(-xIdx)) - vec2(SZ/2., 0.);
   vec2 orbRightPt = (p * orbRightRot) + vec2(SZ/2., 0.);
