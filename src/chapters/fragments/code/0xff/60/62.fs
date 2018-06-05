@@ -1,7 +1,4 @@
-// TODO:
-// - fix width of sinwave
-// - calc derivative of sinwave
-// - add many lines
+// 62 - kitchen tiles
 precision mediump float;
 #define PI 3.141592658
 #define TAU PI*2.
@@ -22,24 +19,21 @@ float capsule(vec2 p, vec2 a, vec2 b, float r) {
 void main(){
   vec2 a = vec2(1., u_res.y/u_res.x);
   vec2 p = a * (gl_FragCoord.xy/u_res*2.-1.);
-  float ti = u_time*TAU * 0.1;
-  float lineLen = 0.25;
+  float ti = u_time;
+  float lineLen = 0.5;
   p.x = (p.x+1.)*.5;// adjust only x, not y
-  float i;
+  float i = step(p.y, sin(p.x*TAU)) - 
+  	  		step(p.y+0.05, sin(p.x*TAU));
 
-  i = step(p.y, sin(p.x*TAU)) - 
-  	  step(p.y+0.05, sin(p.x*TAU));
-
-  for(int it=0;it<20;it++){
+  for(int it=0;it<15;it++){
     float fit = float(it);
-    ti += pow(fit,.01);
+    ti += pow(fit,.011);
     float mti = mod(ti,1.);
-    // convert slope to angle
     float tx = mti * TAU;
     vec2 t = vec2(-mti, -sin(ti*TAU));
     float d = cos( mti * TAU)*1.4;//bit shitty right here
-    vec2 circPos = (p+t) * r2d(d);
-    i += step(capsule(circPos, vec2(-lineLen, 0.),vec2(lineLen,0.), 0.009), 0.);
+    vec2 pos = (p+t) * r2d(d);
+    i += step(capsule(pos, vec2(-lineLen, 0.),vec2(lineLen,0.), 0.009), 0.);
   }
   gl_FragColor = vec4(vec3(i),1.);
 }
