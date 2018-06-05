@@ -22,7 +22,7 @@ float capsule(vec2 p, vec2 a, vec2 b, float r) {
 void main(){
   vec2 a = vec2(1., u_res.y/u_res.x);
   vec2 p = a * (gl_FragCoord.xy/u_res*2.-1.);
-  float ti = u_time*4.;
+  float ti = u_time*TAU * 0.1;
   float lineLen = 0.25;
   p.x = (p.x+1.)*.5;// adjust only x, not y
   float i;
@@ -30,16 +30,16 @@ void main(){
   i = step(p.y, sin(p.x*TAU)) - 
   	  step(p.y+0.05, sin(p.x*TAU));
 
-  // convert slope to angle
-  float tx = mod(ti/PI/2., 1.);
-  vec2 t = vec2(-tx, -sin(ti));
-  float d = cos(tx * TAU/4.5);
-  d = cos(tx);
-  
-  vec2 circPos = (p + t) * r2d(d);
-  // i += circ(circPos,.1);  
-
-  i += step(capsule(circPos, vec2(-lineLen, 0.),vec2(lineLen,0.), 0.009), 0.);
-
+  for(int it=0;it<20;it++){
+    float fit = float(it);
+    ti += pow(fit,.01);
+    float mti = mod(ti,1.);
+    // convert slope to angle
+    float tx = mti * TAU;
+    vec2 t = vec2(-mti, -sin(ti*TAU));
+    float d = cos( mti * TAU)*1.4;//bit shitty right here
+    vec2 circPos = (p+t) * r2d(d);
+    i += step(capsule(circPos, vec2(-lineLen, 0.),vec2(lineLen,0.), 0.009), 0.);
+  }
   gl_FragColor = vec4(vec3(i),1.);
 }
