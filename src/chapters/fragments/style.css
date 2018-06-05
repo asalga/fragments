@@ -104,11 +104,11 @@ em {
 
 .CodeMirror,
 .CodeMirror .cm-s-default {
-  display: block;
-  /*display:none;*/
   transition: 0.8s ease all;
   box-shadow: 1px 1px 5px #aaa;
 
   min-width: 300px !important;
   max-width: 300px !important;
+   /*display: block;*/
+  display:none;
 }
