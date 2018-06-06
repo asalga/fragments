@@ -46,9 +46,10 @@ void main(){
   // c: amount of change (end - start)
   // d: total animation time/steps
 
-  // float modt = step(mod(t, 2.), 1.);
-  float e = easeInOutBack(fract(t), 0., .05, .5);
-  float offset = step(1., mod(t, 2.));
+  // rotate only every second
+  float modt = step(1., mod(t, 2.));
+  float e = easeInOutBack( modt * fract(t), 0., .05, .5);
+  float offset = step(mod(t, 4.), 2.);
   // float offset = 0.;
   colorInv *= r2d(e*PI + offset*PI);
   
@@ -62,5 +63,5 @@ void main(){
   i = step(mix(tri, circ, remap(sin(t*2.5))), 0.);
 
   if(colorInv.y < 0.){i = 1. - i;}
-  gl_FragColor = vec4(vec3(i, colorInv.y/2., i),1.);
+  gl_FragColor = vec4(vec3(i, i, i),1.);
 }
