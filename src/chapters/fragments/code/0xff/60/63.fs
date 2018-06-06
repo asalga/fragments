@@ -43,7 +43,7 @@ void main(){
   vec2 a = vec2(1., u_res.y/u_res.x);
   vec2 p = a * (gl_FragCoord.xy/u_res*2.-1.);
   float i;
-  float t = u_time * 1.0;
+  float t = u_time * 3.;
   vec2 colorInv = p;
 
   // rotate only every second
@@ -55,15 +55,16 @@ void main(){
   // float offset = 0.;
   colorInv *= r2d(e*PI + offset*PI);
   
-  p *= r2d(e*PI + offset*PI);//rotate view
-  // p.y = (e + offset) *2. -1.;
-  p.y += 1. + (modt * sin(PI/2. + t*PI/2.));// move up/down
-  // p *= r2d(-t*10.);//spin in-place
+  p *= r2d(e*PI + offset*PI);//rotate 'camera'
+  p.y += sin(t*PI/2.);
+  float blendShape = (sin(t*PI/2.)+1.)/2.;
+  // p.y += 1. + (modt * sin(PI/2. + t*PI/2.));// move up/down
+  p *= r2d(t*5.);//spin in-place
 
   float sz = .15;
   float circ = sdCircle(skew(p, .7), 0.25);
   float tri = sdTri(p-vec2(0.,sz/2.), sz, 0.5);
-  i = step(mix(tri, circ, (0.) ), 0.);
+  i = step(mix(tri, circ, blendShape), 0.);
 
   if(colorInv.y < 0.){i = 1. - i;}
   gl_FragColor = vec4(vec3(i, i, i),1.);
