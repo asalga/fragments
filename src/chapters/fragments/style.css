@@ -8,7 +8,7 @@
 }
 
 body {
-  background-color: #000;
+  background-color: #aaa;
   background-image: none;
   color: #fff;
   font-family: cursive;
@@ -45,10 +45,10 @@ q {
 }
 
 canvas {
-  border: 2px solid #fff !important;
-  border-radius: 15px;
+  border: 0px solid #fff !important;
+  border-radius: 0px;
    /*border-radius: 50%;*/
-  box-shadow: 1px 1px 5px grey;
+  /*box-shadow: 1px 1px 5px grey;*/
   position: absolute;
   transition: .35s ease all;
 }
