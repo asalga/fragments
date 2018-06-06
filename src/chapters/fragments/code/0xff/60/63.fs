@@ -49,7 +49,7 @@ void main(){
   p *= r2d(e*PI + offset*PI);//rotate 'camera'
   e = easeInOutBack( modt * fract(t), 0., 1., 1.);
   p.y += .6*sin(t*PI/2.);// move up/down
-  p *= r2d(t*8.);//spin in-place
+  p *= r2d(t*4.);//spin in-place
 
   float circ = sdCircle(skew(p, .7), 0.25);
   float tri = sdTri(p-vec2(0.,sz/2.), sz, 0.5);
