@@ -68,6 +68,15 @@ module.exports = function(grunt) {
           dest: `${app}/`,
           filter: 'isFile'
         }]
+      },
+      demos: {
+        files: [{
+          expand: true,
+          cwd: `${src}/chapters/fragments/code/0xff/60/`,
+          src: ['**'],
+          dest: `${app}/`,
+          filter: 'isFile'
+        }]
       }
     },
 
@@ -134,7 +143,7 @@ module.exports = function(grunt) {
           `${src}/**/*.*`
         ],
         tasks: [
-          'copy',
+          'copy:demos',
           'pug',
           'processhtml'
         ],

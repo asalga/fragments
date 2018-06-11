@@ -4,18 +4,18 @@ uniform vec2 u_res;
 uniform float u_time;
 
 // From shadertoy.com/view/4sSSzG
-float sdTriangle(vec2 p, vec2 p0, vec2 p1, vec2 p2){
+float sdTriangle(vec2 p, vec2 a, vec2 b, vec2 c){
   vec3 e0, e1, e2;
 
   vec2 t = vec2(1., -1.);
 
-  e0.xy = normalize(p1 - p0).yx * t;
-  e1.xy = normalize(p2 - p1).yx * t;
-  e2.xy = normalize(p0 - p2).yx * t;
+  e0.xy = normalize(b - a).yx * t;
+  e1.xy = normalize(c - b).yx * t;
+  e2.xy = normalize(a - c).yx * t;
 
-  e0.z = dot(e0.xy, p0);
-  e1.z = dot(e1.xy, p1);
-  e2.z = dot(e2.xy, p2);
+  e0.z = dot(e0.xy, a);
+  e1.z = dot(e1.xy, b);
+  e2.z = dot(e2.xy, c);
 
   float a = max(0.0, dot(e0.xy, p) - e0.z);
   float b = max(0.0, dot(e1.xy, p) - e1.z);
