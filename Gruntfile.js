@@ -72,7 +72,7 @@ module.exports = function(grunt) {
       demos: {
         files: [{
           expand: true,
-          cwd: `${src}/chapters/fragments/code/0xff/60/`,
+          cwd: `${src}/chapters/fragments/code/0xff/`,
           src: ['**'],
           dest: `${app}/`,
           filter: 'isFile'
