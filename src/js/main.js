@@ -106,7 +106,7 @@ function makeSketch(fs, params) {
         p.noLoop();
       });
 
-      p.noLoop();
+      p.loop();
     };
 
 
