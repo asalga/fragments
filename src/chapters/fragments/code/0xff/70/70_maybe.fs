@@ -43,21 +43,37 @@ mat2 r2d(float a){
 void main(){
   vec2 a = vec2(1., u_res.y/u_res.x);
   vec2 p = a * (gl_FragCoord.xy/u_res*2.-1.);
-  float t = u_time * 1.025;
+  float t = u_time * 4.00025;
   float fractTime = fract(t);
   float i;
   float r = 0.25;
   float startX = .25;
-  vec2 trans;
 
-  float buttonState = min(mod(t, 2.), 1.);
- 
-  p *= r2d(PI*step(2., mod(t,4.)));
- 
-  i += radio(p, r, buttonState);
- 
-  float inv = step(1.,mod(t,3.));// 0 | 1 
-  i = abs(inv - i);
+  float t2 = t + 1.;
 
-  gl_FragColor = vec4(vec3(i),1.);
+  float buttonPos1 = min(mod(t, 2.), 1.);
+  float buttonPos2 = min(mod(t2, 2.), 1.);
+
+  //  _|``|_
+  float buttonState1 = step(1.,mod(t,4.)) * step(mod(t,4.), 3.);
+  float buttonState2 = step(1.,mod(t2,4.)) * step(mod(t2,4.), 3.);
+ 
+  mat2 rot1 = r2d(PI*step(2., mod(t,4.)));
+  mat2 rot2 = r2d(PI*step(2., mod(t2,4.)));
+ 
+ 
+
+  i += radio(p*rot1, r, buttonPos1);
+  i += radio((p+ vec2(0., 0.5))*rot2, r, buttonPos2);
+ 
+
+
+
+  float inv = buttonState1 + buttonState2;
+  // i = abs(inv - i);
+  if(mod(inv, 2.)== 0.){
+  	i = 1. - i;
+  }
+
+  gl_FragColor = vec4(vec3(i,i,i),1.);
 }
