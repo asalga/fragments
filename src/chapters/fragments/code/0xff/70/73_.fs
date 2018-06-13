@@ -12,6 +12,6 @@ void main(){
   vec3 l = vec3(cos(t), 0., sin(t));
   float z = sqrt(1. - p.x*p.x - p.y*p.y);
   vec3 v = normalize(vec3(p.x, p.y, z));
-  float c = step(random(p),dot(v,l));
+  float c = step(sin(u_time*50.+ dot(v,l)*50.), 0.);
   gl_FragColor = vec4(vec3(c), 1.);
 }
