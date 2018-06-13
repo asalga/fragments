@@ -2,7 +2,7 @@
 precision mediump float;
 #define PI 3.141592658
 #define TAU 2.*PI
-#define NUM_BTNS 10
+#define NUM_BTNS 8
 
 uniform vec2 u_res;
 uniform float u_time;
@@ -30,8 +30,8 @@ float radio(vec2 p, float rad, float state){
 	p.x += rad; // center button
 
 	float button;
-	button = smoothstep(0.01, 0.0001, capsule(p, vec2(0.), vec2(rad*2., 0.), rad));
-	button -= smoothstep(0.01, 0.0001, capsule(p, vec2(0.), vec2(rad*2., 0.), rad-0.03));
+	button = smoothstep(0.03, 0.0001, capsule(p, vec2(0.), vec2(rad*2., 0.), rad));
+	button -= smoothstep(0.03, 0.0001, capsule(p, vec2(0.), vec2(rad*2., 0.), rad-0.03));
 	
 	p.x -= state*rad*2.;
 	button += circle(p, rad-0.01); // subtract a tiny bit, otherwise the circle  'peeks' out of the outline.
@@ -40,6 +40,7 @@ float radio(vec2 p, float rad, float state){
 	if(state == 1.){
 		button -= circle(p, rad-0.04);
 	}
+
 	return button;
 }
 
@@ -56,6 +57,8 @@ void main(){
   float r = 0.25;
   float isLightOn;
 
+  p *= r2d(PI/2.);
+
   for(int it = 0; it < NUM_BTNS; ++it){
   	vec2 _p = p* 3.;// scale down
 
@@ -63,7 +66,7 @@ void main(){
   	_p *= r2d(an);
   	_p += vec2(1.5, 0.);
   	
-  	float _t = t + an/20.;
+  	float _t = t + an/5.;
   	float buttonPos = min(mod(_t, 2.), 1.);
 		float buttonState = step(1.,mod(_t,4.)) * step(mod(_t,4.), 3.);
  		mat2 rot1 = r2d(PI*step(2., mod(_t,4.)));
@@ -72,8 +75,9 @@ void main(){
   	isLightOn += buttonState;
   }
 
-  if(mod(isLightOn, 2.)== 0.){
-  	// i = 1. - i;
-  }
+  float innerCircleSub = circle(p, 0.2 * (isLightOn/float(NUM_BTNS)+.1));
+  float innerCircle = circle(p, 0.25);
+  
+  i +=(innerCircle - innerCircleSub);
   gl_FragColor = vec4(vec3(i,i,i),1.);
 }
