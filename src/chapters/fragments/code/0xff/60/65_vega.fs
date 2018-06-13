@@ -1,4 +1,4 @@
-// 65 - Betelgeuse
+// 65 - Vega
 precision mediump float;
 
 uniform vec2 u_res;
