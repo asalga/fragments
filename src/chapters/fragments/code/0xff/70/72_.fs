@@ -34,7 +34,8 @@ void main(){
   vec2 p = a * (gl_FragCoord.xy/u_res*2.-1.);
   float i;
   float r = 0.08;
-  float time = u_time*.000001;
+  float time = u_time*.0000001;
+  float flipSpeed = u_time*4.;
   vec2 origP = p;
 
   p.y = mod(p.y, 0.2);
@@ -42,19 +43,18 @@ void main(){
 
   for(int it=0;it<10;++it){
     float _i = ((float(it))/10.)*2.-1.;
-
-    float Xidx = floor(  ((origP.x+1.)/2.) *10.)/20.;
-    float Yidx = floor(  ((origP.y+1.)/2.) *10.)/10.;
-
+    // fix
+    float Xidx = floor( ((origP.x+1.)/2.) *10.)/10.;
+    float Yidx = floor( ((origP.y+1.)/2.) *10.)/10.;
     vec2 idx = vec2(Xidx + time, Yidx);
-    vec2 rv = idx;
-
-    if(rand(rv) < 0.5){
-      i += circle(p + vec2(_i + 0.1, 0.), r);
+    
+    if(rand(idx) < (sin(flipSpeed)+1.)/2.){
+      i += circle(p + vec2(_i + 0.1, 0.), r) - 
+           square(p + vec2(_i + 0.1, 0.), r/2.);
     }else{
-      i += square(p + vec2(_i + 0.1, 0.), r);
+      i += square(p + vec2(_i + 0.1, 0.), r) -
+           circle(p + vec2(_i + 0.1, 0.), r/2.);
     }
   }
-
   gl_FragColor = vec4(vec3(i),1.);
 }
