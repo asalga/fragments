@@ -26,11 +26,11 @@ void main(){
   vec2 p = a * (gl_FragCoord.xy/u_res*2.-1.);
   float i;
 
-  i = rect(p, vec2(.8)) - rect(p, vec2(.7));
+  // i = rect(p, vec2(.8)) - rect(p, vec2(.7));
   float pLen = length(p*10.)*5.;
-  i *= step(sin(u_time* -12. + pLen), .0);
+  i = step(sin(u_time* -12. + pLen), .0);
 
-  i += circle(p, 0.6) * ;
+  // i += circle(p, 0.6) * ;
 
   gl_FragColor = vec4(vec3(i),1.);
 }
