@@ -32,49 +32,41 @@ void main(){
   vec2 a = vec2(1., u_res.y/u_res.x);
   vec2 p = a * (gl_FragCoord.xy/u_res*2.-1.);
   float i;
-  float t = u_time * 1.0;
-  const float cnt = 4.;
-
-  float mvX = every(t     , 1., 2., 1.);
-  float mvY = every(t + 1., 1., 2., 0.);
-
-  float flip = step(mod(t, 4.),2.)*2.-1.;
-  p *= flip;
+  // float t = u_time * 2.;
+  const float cnt = 10.;
 	float sz = .25;
 
-  
-  for(float it=0.;it < cnt;it++){
-  	float pct = (it/(cnt));
-  
-	  mvX = impulse(1., mvX);
-	  mvY = impulse(1., mvY);
+  vec2 border = p;
+  i += step(0.9, border.x) + step(0.9, border.y);
+  border *= -1.;
+  i += step(0.9, border.x) + step(0.9, border.y);
 
-	  vec2 pos = vec2(.5-mvX, -.5+mvY);
+	for(int sqIt=0;sqIt<2;sqIt++){
+		float t = u_time * 2.;
 
-  
-  	float alpha = 0.25;
-  	i += step(sdSquare(p+pos, sz),0.) * alpha;
+	  float _sqIt = float(sqIt);
+	  t += _sqIt*.5;
+
+	  float flip = step(mod(t, 4.),2.)*2.-1.;
+	  if(sqIt == 0){
+			p *= flip;
+		}
+
+	  float mvX = every(t     , 1., 2., 1.);
+    float mvY = every(t + 1., 1., 2., 0.);
+
+	  for(float it=0.;it < cnt;it++){
+	  	// accum impulse  
+		  mvX = impulse(2., mvX*0.5);
+		  mvY = impulse(2., mvY*0.5);
+
+		  vec2 pos = vec2(.5-mvX, -.5+mvY);
+	  	float alpha = 1./cnt;
+	  	vec2 finalTrans = p+pos;
+	  	finalTrans *= r2d( (mvX+mvY) *PI);
+	  	i += smoothstep(0.01, 0.001, sdSquare( finalTrans , sz)) * alpha;
+		}
 	}
-
+	
   gl_FragColor = vec4(vec3(i),1.);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
