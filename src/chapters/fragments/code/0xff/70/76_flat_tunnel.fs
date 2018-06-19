@@ -14,9 +14,8 @@ void main(){
   float i;
   float t = u_time*3.;
 
-  float x = fract(p.x / length(p.y*2.) + t/20.);
-  float y = fract(abs(1./p.y)+t);
-
+  float x = fract(p.x / abs(p.y*2.) + t/20.);
+  float y = fract(abs(1./p.y) + t);
   i = sampleChecker(vec2(x,y));
 
   // fog to hide artefacts @ center
