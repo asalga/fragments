@@ -1,3 +1,4 @@
+// 78 - Blobby exchange
 precision mediump float;
 
 uniform vec2 u_res;
@@ -20,7 +21,7 @@ float ringSDF(vec2 p, float r, float w){
   return abs(length(p) - r * 0.5) - w;
 }
 void main(){
-	const float NUM_BANDS = 3.;
+	const float NUM_BANDS = 1.;
 
   vec2 a = vec2(1., u_res.y/u_res.x);
   vec2 p = a * (gl_FragCoord.xy/u_res*2.-1.);
@@ -61,6 +62,11 @@ void main(){
   	float _b = .07 / distance(pp + vec2( 0.5, 0.), vec2(time, 0.));	
   	balls += _b;
   } 
+
+  // balls += pow(.05 / distance(p, vec2(0.)), 1.13) ;	
+
+  p*= r2d(PI/4.);
+	// balls += 0.04 / max(rectSDF(p, vec2(0.015, 0.015)), 0.);
 
   // float b1 = .025 / distance(p + vec2( 0.5, 0.), vec2(fract(t)*15. - 7., 0.));	
   // float b2 = .025 / distance(p + vec2( 0.5, 0.), vec2(fract(t)*15. - 7., 0.));	
