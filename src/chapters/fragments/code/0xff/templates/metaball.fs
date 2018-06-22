@@ -9,9 +9,9 @@ void main(){
 
   float x = sin(u_time) / 2.;
   float m = 0.85 / distance(uv, vec2(-x, 0.));	
-  float f = 0.5 / distance(uv, vec2(x, .3));
+  float f = 0.5  / distance(uv, vec2(x, .3));
   float c = 0.2 * (pow(m, 1.) + pow(f, 1.));
 
-  
+
   gl_FragColor = vec4(vec3(smoothstep(0.7, 0.72,c)),1.);
 }
