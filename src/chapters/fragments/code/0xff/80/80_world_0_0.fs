@@ -30,30 +30,19 @@ float smoothValueNoise(vec2 p){
 
   return mix(b,t,lv.y);
 }
-
-float bricks(vec2 p, vec2 sz, float morterSz){
-  float i;
-  // morter lines for y
-  // repeat SDF?
-
-  // if y % 2 ==0
-  float xOffset = step( mod(p.y, sz.y*2.), sz.y);// * .85;
-
-  float x = step(mod(p.x + xOffset, sz.x), sz.x-morterSz);
-  float y = step(mod(p.y, sz.y), sz.y-morterSz);
-
-  return x*y;
-}
+ 
 void main(){
   vec2 p = (gl_FragCoord.xy/u_res);
-  float t = u_time * .1;
+  float t = u_time * 1.1;
   float i;
   vec3 col;
   float ROWS = u_res.y/16.;
 
   float NUM_BRICK_LINES = 4.;
-  float noiseScale = 0.1;
+  float noiseScale = 0.08;
   
+  p.x += t;
+
   float idx = floor(p.x*ROWS) * noiseScale;
   float n;
   n += smoothValueNoise(vec2(idx,0.)*2.)*0.5;
@@ -77,48 +66,9 @@ void main(){
 
   // shift x every other row inside the tile
   float shift = SEVEN_EIGHTS *2.* (step(fract(p.y*ROWS*2.), SEVEN_EIGHTS/2.));
-  float vertLines = step(fract( (p.x+shift/16.) * ROWS*2.), SEVEN_EIGHTS);
+  float vertLines = step(fract( (p.x+shift/ROWS) * ROWS*2.), SEVEN_EIGHTS);
   n *= vertLines;
 
-  
-  // float vertLines = step(fract( (p.x+shift) * ROWS * NUM_BRICK_LINES/2.), (7./8.));
-  //floor(n*ROWS* NUM_BRICK_LINES) * .96 ;
-  // n = floor(n*ROWS* NUM_BRICK_LINES) * .96 ;
-  // n = 1.-step(n, p.y);
-  // n *= bricks(p+vec2(t/20., 0.), vec2(.7, .3) / ROWS*2., 1./ROWS/4./2.);
-
-  // col.rg = vec2(n);
-  // col.b = fract(p*ROWS);
   col = vec3(n);
-  // col.b = shift;
   gl_FragColor = vec4(col,1);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
