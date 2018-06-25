@@ -2,7 +2,7 @@ precision mediump float;
 
 uniform vec2 u_res;
 uniform float u_time;
-#define BANDS 8.
+#define BANDS 9.
 
 float valueNoise(vec2 p){
   #define Y_SCALE 45343.
@@ -33,37 +33,23 @@ void main(){
   float i;
   float t = u_time;
 
-
-  //arbitrary value, trying to find a nice
-  // spot for the noise
-  p.y += 2.;
-  p.x += u_time * .2; //move camera
-  p *= .2; //zoom in like crazy, so it looks more organic
-  float jumpCut = floor(t/2.);
+  p.x += u_time * .02;
+  p *= 1.2;
 
   float n;
-  n += smoothValueNoise(p*2.+ jumpCut)*0.5;
+  n += smoothValueNoise(p*2.)*0.5;
   n += smoothValueNoise(p*4.)*0.25;
   n += smoothValueNoise(p*6.)*0.125;
-  n += smoothValueNoise(p*8.)*0.0625;
-  n /= 1.5;
+  n += smoothValueNoise(p*8.+t*8.)*0.0625;
+  // n /= 1.5;
   n = clamp(n,0.,1.);
-  
-  i = pow(i,6.);
-  float test = floor(n*BANDS);
-  if(mod(test,2.)== 0.){
-  	n += smoothValueNoise(p*8.+t*3.)*0.0625;
-  }
 
-	i = floor(n*BANDS)/BANDS;
+  i = floor(n*BANDS)/BANDS;
   i = 1.-i;
-  
-  vec3 final = vec3(0);
+  i = pow(i,7.);
 
-  if(mod(test,2.) == 0.){
-    vec3 rgb = vec3(0.2989, 0.5870, 0.1140);
-    final = vec3(dot(rgb,vec3(n,i,i)));
-  }
+  vec3 rgb = vec3(0.2989, 0.5870, 0.1140);
+  vec3 final = vec3(dot(rgb,vec3(n,i,i)));
 
   gl_FragColor = vec4(final,1.);
 }
