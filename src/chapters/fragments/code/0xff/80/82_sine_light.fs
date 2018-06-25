@@ -50,8 +50,8 @@ void main(){
   float i;
   float t = -u_time;
 
-  i =  rings(p,10. , t*5.);
-  i += rings(p,-12. ,t*8.);
+  i =  rings(p+vec2(0.5),10. , t*5.);
+  i += rings(p-vec2(0.5),-12. ,t*8.);
 
   gl_FragColor = vec4(vec3(i),1.);
 }
