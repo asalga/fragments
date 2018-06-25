@@ -33,25 +33,20 @@ vec3 rayDirection(float fieldOfView, vec2 size, vec2 fragCoord) {
 void main(){
   vec2 a = vec2(1., u_res.y/u_res.x);
   vec2 p = a * (gl_FragCoord.xy/u_res*2.-1.);
-  float t = u_time*.1;
+  float t = u_time*0.1;
   vec3 ldir = normalize(vec3(0, 0, 0));
 
   vec2 m2 = u_mouse.xy/u_res *2. -1.;
 
-
-
-
-p.x += 1.4;
-p *= .71;
-// p *= r2d(PI/2.);
+  
+  // p *= .75;
+  // p.y += 1.5;
 
 
   // we know the x len and y len we also 
   // know the hypotenuse so we can calc z
   float z = sqrt(1.-p.x*p.x-p.y*p.y);
-  vec3 n = normalize(vec3(p, z));
-
-  
+  vec3 n = normalize(vec3(p.y,p.x, z));
 
   // get angle between two vectors
   float theta = acos(dot(n,ldir));
@@ -64,7 +59,7 @@ p *= .71;
   xzVec = normalize(xzVec);
   // vec3 yzVec = vec3(n.y, 0., n.z);
   // yzVec = normalize(yzVec);
-  float anY = atan(xzVec.x/xzVec.z)/TAU*1. + (t*.0);
+  float anY = atan(xzVec.x/xzVec.z)/TAU + t;
   // float anX = (atan(yzVec.x/yzVec.z) + PI/2.) / PI;
   float div = .5;
 
@@ -72,14 +67,13 @@ p *= .71;
   // float horizSlices = 0.04;
   // float h = .25 * step(mod(p.y, horizSlices), horizSlices/2.);
   
-  vec3 vtest = rayDirection( DEG_TO_RAD * 90., u_res, gl_FragCoord.xy);
+  vec3 vtest = rayDirection( DEG_TO_RAD * 100., u_res, gl_FragCoord.xy);
 
   // contours
-  vec3 l = normalize(vec3(0, 1, 0 ));
+  vec3 l = normalize(vec3(1, 0, 0 ));
   
   vec3 v1 = normalize(vec3(p.x, p.y, z) - vtest);
-
-  float c = smoothstep(0.1, 0.0001, sin(  dot(v1,l)*100.));
+  float c = smoothstep(0.1, 0.0001, sin( dot(v1,l)*100.));
   // float c2 = smoothstep(0.1, 0.0001, sin(t*10. + dot(v2,l)*20.) )/2.;
 
   i = step(div/4., mod(anY,div/2.)) * step(length(p), 1.0);
