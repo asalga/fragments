@@ -8,7 +8,7 @@
 }
 
 body {
-  background-color: #aaa;
+  background-color: #fff;
   background-image: none;
   color: #fff;
   font-family: cursive;
@@ -47,8 +47,9 @@ q {
 canvas {
   border: 0px solid #fff !important;
   border-radius: 0px;
+  /*border-radius: 15px;*/
    /*border-radius: 50%;*/
-  /*box-shadow: 1px 1px 5px grey;*/
+  box-shadow: 1px 1px 5px grey;
   position: absolute;
   transition: .35s ease all;
 }
@@ -104,11 +105,12 @@ em {
 
 .CodeMirror,
 .CodeMirror .cm-s-default {
+  border:1px solid black;
   transition: 0.8s ease all;
-  box-shadow: 1px 1px 5px #aaa;
+  box-shadow: 2px 1px 5px #aaa;
 
   min-width: 300px !important;
   max-width: 300px !important;
-   /*display: block;*/
-  display:none;
+   display: block;
+  /*display:none;*/
 }
