@@ -7,10 +7,11 @@ precision mediump float;
 uniform vec2 u_res;
 uniform float u_time;
 
-#define MAX_MARCH_STEPS 100
+#define MAX_MARCH_STEPS 200
 #define MIN_DIST .08
 #define MAX_DIST 10.
-#define EPSILON .00001
+#define EPSILON .001
+const float N_EPSILON = 0.0001;
 
 float sdSphere(vec3 p) {
   return (length(p)/10.) - 1.;
@@ -37,17 +38,32 @@ float cubeSDF(vec3 p) {
 }
 
 
-float sdSphereSpace(vec3 p) {
+float sdScene(vec3 p) {
   vec3 np = mod(p, vec3(1.)) * 2. -1.;
-  np *= .69;
+  np *= 1.1;
 
-  float s = (length(np)*.5) - (.5)/2.5;
+  float sz = 10.;
+  float ss = 1.5;
 
-  float c = cubeSDF(np * vec3(4.,4.,1.4)) / 8.; 
+  // float s = (length(np)*.5) - (.5)/1.5;
+
+  float c = cubeSDF(np * ss) / sz;
+
+  vec3 _ = vec3(.25);
+  float c1 = cubeSDF(np*4. * (vec3(_.x,1,1)) )/sz;
+  float c2 = cubeSDF(np*4. * (vec3(1,_.y,1)) )/sz;
+  float c3 = cubeSDF(np*4. * (vec3(1,1,_.z)) )/sz;
+
+  float c4 = cubeSDF(np+vec3(0.5,0,0)*8. * (vec3(_.x,1,1)) )/sz;
 
 
-  // return max(s , -c);
-  return max(s , -c);
+
+  float res;
+  res = max(c, -c1);
+  res = max(res,-c2);
+  res = max(res, -c3);
+  res = max(res, -c4);
+  return res;
 }
 
 float rayMarch(vec3 eye, vec3 ray){
@@ -59,7 +75,7 @@ float rayMarch(vec3 eye, vec3 ray){
     vec3 p = eye + (ray*depth);
     
     // float d = sdSphere(p);
-    float d = sdSphereSpace(p);
+    float d = sdScene(p);
 
     // close enough to surface
     if(d < EPSILON){
@@ -86,28 +102,54 @@ vec3 rayDirection(float fieldOfView, vec2 size, vec2 fragCoord) {
     float z = size.y / tan(radians(fieldOfView) / 2.0);
     return normalize(vec3(xy, -z));
 }
+
+vec3 estimateNormal(vec3 p){
+  vec3 n;
+  n.x = sdScene( vec3(p.x + N_EPSILON, p.y, p.z) - vec3(p.x - N_EPSILON, p.y, p.z));
+  n.y = sdScene( vec3(p.x, p.y + N_EPSILON, p.z) - vec3(p.x, p.y - N_EPSILON, p.z));
+  n.z = sdScene( vec3(p.x, p.y, p.z + N_EPSILON) - vec3(p.x, p.y, p.z - N_EPSILON));
+  return normalize(n);
+}
+
 void main(){
   vec2 a = vec2(1., u_res.y/u_res.x);
   vec2 p = a * (gl_FragCoord.xy/u_res*2.-1.);
-  float t = u_time*1.;
-  
-  vec3 ray = normalize(vec3(p.x, p.y, -1.));
+  float t = u_time*.3;
+  vec3 light = normalize(vec3(0,1,0.));
 
-  // vec3 ray = rayDirection(45.0, u_res, gl_FragCoord.xy);
+   vec3 ray = normalize(vec3(p.x, p.y, -1.));
+
+    // vec3 ray = rayDirection(45.0, u_res, gl_FragCoord.xy);
+
+
    
    float forward = 14.*-t * step(mod(t+1., 2.), 1.);
    float left = 2.*t * step(mod(t+2., 4.), 2.);
-//t * step(mod(t, 2.), 1.)
-  vec3 eye = vec3(left+ .5, .5 , -t);
-    //forward);
-  float i = rayMarch(eye, ray);
+   //t * step(mod(t, 2.), 1.)
+   vec3 eye = vec3(.0, t+.5 , -t*2.);
 
+
+   float i = rayMarch(eye, ray);
+
+   
+
+  
   // no hit
-  if (i == MAX_DIST-EPSILON){i = 0.0;}
+  if (i == MAX_DIST){
+    i = 0.0;
+    // return;
+  }
+  else{
+    float fog = pow(1./ i, .91) * 4.;
+    // i *= fog * 12.;
+    i = fog;// -  (forward/200.);
 
-  float fog = pow(1./ i, 2.) * 2.;
-  // i *= fog * 12.;
-  i = fog;// -  (forward/200.);
+    vec3 n = estimateNormal(eye+i*ray);
+    vec3 p = eye+i*ray;
+    vec3 lp = normalize(light);
+    float _intensity = max(0.,dot(lp,n)) * .24;
+    i *= _intensity;
+  }
 
   // i *= fog;
   // i *= 2./pow(2.1, i);
