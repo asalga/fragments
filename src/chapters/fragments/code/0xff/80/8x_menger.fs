@@ -54,15 +54,12 @@ float sdScene(vec3 p) {
   float c2 = cubeSDF(np*4. * (vec3(1,_.y,1)) )/sz;
   float c3 = cubeSDF(np*4. * (vec3(1,1,_.z)) )/sz;
 
-  float c4 = cubeSDF(np+vec3(0.5,0,0)*8. * (vec3(_.x,1,1)) )/sz;
-
-
+  // float c4 = cubeSDF( ((np+vec3(1.,-.25,0))) * 4. * (vec3(_.x,1,.5)) )/sz;
 
   float res;
   res = max(c, -c1);
   res = max(res,-c2);
   res = max(res, -c3);
-  res = max(res, -c4);
   return res;
 }
 
@@ -147,8 +144,9 @@ void main(){
     vec3 n = estimateNormal(eye+i*ray);
     vec3 p = eye+i*ray;
     vec3 lp = normalize(light);
-    float _intensity = max(0.,dot(lp,n)) * .24;
+    float _intensity =max(0.,dot(lp,n)) * .24;
     i *= _intensity;
+    i = min(0.8, i);
   }
 
   // i *= fog;
