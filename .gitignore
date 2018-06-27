@@ -1,9 +1,10 @@
 .DS_Store
 
 .tmp
+
 # dirs
 node_modules/
 wip/
 app/
-
+src/chapters/fragments/code/raymarch
 
