@@ -9,7 +9,7 @@ uniform float u_time;
 
 #define EPSILON 0.001
 #define MAX_STEPS 255
-#define MAX_DIST 100.
+#define MAX_DIST 1000.
 #define MIN_DIST 0.
 
 #define NORM_EPSILON 0.0001
@@ -70,7 +70,9 @@ float rayMarch(vec3 eye, vec3 ray){
     depth += dist;
 
     // too far
-    if(depth > MAX_DIST){return -1.;}
+    if(depth >= MAX_DIST){
+      return MAX_DIST;
+    }
   }
 
   return MAX_DIST;
@@ -123,7 +125,11 @@ void main(){
   vec3 ray = createViewRay(DEG_TO_RAD(45.), u_res, gl_FragCoord.xy);
 
   // vec3 eye = vec3(0., 0., 5.);// why does 5 unit fill the entire canvas?
-  vec3 eye = vec3(0.0, 0.0, 5.0);
+  vec3 eye = vec3(0.0, 0.0, 15.0);
+
+  //ray = normalize(vec3(0.0, 0.05, -1));
+  // ray.z = -1.;
+  // ray.x = 0.;
 
   // mat4 viewToWorld = viewMatrix(eye, vec3(0), vec3(0,1,0));
   // vec3 worldDir = (viewToWorld * vec4(ray, 0.)).xyz;
@@ -138,11 +144,13 @@ void main(){
   // float dist = sdScene(scaledRay);
   // vec3 tp = eye + dist * worldDir;
 
+
   // no hit
-  if(dist == -1.){
-    i = 0.;
+  if(dist == MAX_DIST){
+  i = 0.;
   }
   else{
+      i = dist;
     // do illumination!
     // lambert
 
