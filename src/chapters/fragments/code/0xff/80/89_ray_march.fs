@@ -38,11 +38,11 @@ float udBox(vec3 p, vec3 b){
 
 float sdScene(vec3 p){
 
-  float box = udBox(p, vec3(0.5));
-  float sphere = sdSphere(p, .8);
+  float box = udBox(p, vec3(0.75));
+  float sphere = sdSphere(p, 1.);
 
   float i = intersect(box, sphere);
-
+return i;
   return sphere;
 }
 
@@ -123,22 +123,20 @@ void main(){
   vec3 ray = createViewRay(DEG_TO_RAD(45.), u_res, gl_FragCoord.xy);
 
   // vec3 eye = vec3(0., 0., 5.);// why does 5 unit fill the entire canvas?
-  vec3 eye = vec3(8.0, 5.0, 7.0);
+  vec3 eye = vec3(0.0, 0.0, 5.0);
 
-  mat4 viewToWorld = viewMatrix(eye, vec3(0), vec3(0,1,0));
-  vec3 worldDir = (viewToWorld * vec4(ray, 0.)).xyz;
+  // mat4 viewToWorld = viewMatrix(eye, vec3(0), vec3(0,1,0));
+  // vec3 worldDir = (viewToWorld * vec4(ray, 0.)).xyz;
 
 
   // mat4 vm = viewMatrix(eye+vec3(1,1,0), vec3(0.), vec3(0,1,0));
   // ray = (vec4(ray,1.)*vm).xyz;
 
-  float dist = rayMarch(eye, worldDir); 
+  float dist = rayMarch(eye, ray); 
 
-  vec3 ptest = eye + (ray * dist);
-
+  // vec3 ptest = eye + (ray * dist);
   // float dist = sdScene(scaledRay);
-
-  vec3 tp = eye + dist * worldDir;
+  // vec3 tp = eye + dist * worldDir;
 
   // no hit
   if(dist == -1.){
@@ -148,12 +146,13 @@ void main(){
     // do illumination!
     // lambert
 
-    vec3 dirLight = normalize(-vec3(1,0,0));
-    vec3 n = estimateNormal(ptest);
+    // vec3 dirLight = normalize(-vec3(1,0,0));
+    // vec3 n = estimateNormal(ptest);
 
-    float intensity = dot(n,dirLight-tp);
-    i = intensity;
+    // float intensity = dot(n,dirLight-tp);
+    // i = intensity;
     // i += n.g;
+    // i = 1.;
   }
   
   gl_FragColor = vec4(vec3(i),1.);

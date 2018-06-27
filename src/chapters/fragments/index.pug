@@ -5,7 +5,7 @@
 mixin card(glsl, title, blurb, authorName, quote)
   div.row
     div.col-sm-4
-      textarea.glsl-code(data-params='{"tex0":"tex/diffuse_lg.png","tex1":"tex/ripple_input_clouds.png","tex2":"tex/caustics.png","width":610,"height":610,"loop": "true","CodeMirror":{"lineNumbers":"false"}}' data-example=glsl)
+      textarea.glsl-code(data-params='{"tex0":"tex/diffuse_lg.png","tex1":"tex/ripple_input_clouds.png","tex2":"tex/caustics.png","width":300,"height":300,"loop": "true","CodeMirror":{"lineNumbers":"false"}}' data-example=glsl)
     //- div.col-sm-4
       // h2=title
       p.
@@ -20,14 +20,6 @@ mixin card(glsl, title, blurb, authorName, quote)
 
 block cards
 
-  // TRAUMA DECK
-  //- +card('code/traumadeck/ego_centered.fs','','','','')
-  //- +card('code/traumadeck/self_harm.fs','','','','')
-  //- +card('code/traumadeck/division.fs','','','','')
-  //- +card('code/traumadeck/setting_sun.fs','','','','')
-  //- +card('code/traumadeck/tower.fs','','','','')
-  //- +card('code/traumadeck/exit_gateway.fs','','','','')
-
   // MISC
   //- +card('code/misc/bricks.fs','','','','')
   //- +card('code/sdf/tri.fs','','','','')
@@ -36,7 +28,7 @@ block cards
   //- +card('code/tutorials/rect_sdf.fs','','','','')
   
   //- +card('code/0xff/80/84_sphere_contours_both sides.fs','','','','')
-  +card('code/0xff/80/83_tunnel_recurse.fs','','','','')
+  +card('code/0xff/_wip/raymarch/1.fs','','','','')
 
 
 
