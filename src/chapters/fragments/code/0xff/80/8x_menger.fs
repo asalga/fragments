@@ -37,10 +37,24 @@ float cubeSDF(vec3 p) {
     return insideDistance + outsideDistance;
 }
 
+mat4 rotateY(float theta) {
+    float c = cos(theta);
+    float s = sin(theta);
 
+    return mat4(
+        vec4(c, 0, s, 0),
+        vec4(0, 1, 0, 0),
+        vec4(-s, 0, c, 0),
+        vec4(0, 0, 0, 1)
+    );
+}
 float sdScene(vec3 p) {
+
+  vec3 space = floor(p)*2.-1.;
+
   vec3 np = mod(p, vec3(1.)) * 2. -1.;
   np *= 1.1;
+  np = (vec4(np, 1.) * rotateY(u_time* sin(space.y*10.)*4. )).xyz;
 
   float sz = 10.;
   float ss = 1.5;
@@ -100,6 +114,11 @@ vec3 rayDirection(float fieldOfView, vec2 size, vec2 fragCoord) {
     return normalize(vec3(xy, -z));
 }
 
+mat3 r3d(float a){
+  return mat3(-cos(a), 0, sin(a),
+              0, 1, 0,
+              sin(a), -sin(a), 1);
+}
 vec3 estimateNormal(vec3 p){
   vec3 n;
   n.x = sdScene( vec3(p.x + N_EPSILON, p.y, p.z) - vec3(p.x - N_EPSILON, p.y, p.z));
@@ -114,10 +133,11 @@ void main(){
   float t = u_time*.3;
   vec3 light = normalize(vec3(0,1,0.));
 
-   vec3 ray = normalize(vec3(p.x, p.y, -1.));
+   // vec3 ray = normalize(vec3(p.x, p.y, -1.));
 
-    // vec3 ray = rayDirection(45.0, u_res, gl_FragCoord.xy);
+    vec3 ray = rayDirection(130.0, u_res, gl_FragCoord.xy);
 
+  
 
    
    float forward = 14.*-t * step(mod(t+1., 2.), 1.);
@@ -125,6 +145,7 @@ void main(){
    //t * step(mod(t, 2.), 1.)
    vec3 eye = vec3(.0, t+.5 , -t*2.);
 
+// ray =  (vec4(ray,1.) * rotateY(u_time)).xyz;
 
    float i = rayMarch(eye, ray);
 
@@ -137,7 +158,7 @@ void main(){
     // return;
   }
   else{
-    float fog = pow(1./ i, .91) * 4.;
+    float fog = pow(1./ i, 1.91) * 4.;
     // i *= fog * 12.;
     i = fog;// -  (forward/200.);
 
