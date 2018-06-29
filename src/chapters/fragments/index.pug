@@ -5,7 +5,7 @@
 mixin card(glsl, title, blurb, authorName, quote)
   div.row
     div.col-sm-4
-      textarea.glsl-code(data-params='{"tex0":"tex/diffuse_lg.png","tex1":"tex/ripple_input_clouds.png","tex2":"tex/caustics.png","width":600,"height":600,"loop": "true","CodeMirror":{"lineNumbers":"false"}}' data-example=glsl)
+      textarea.glsl-code(data-params='{"tex0":"tex/diffuse_lg.png","tex1":"tex/ripple_input_clouds.png","tex2":"tex/caustics.png","width":300,"height":300,"loop": "true","CodeMirror":{"lineNumbers":"false"}}' data-example=glsl)
     //- div.col-sm-4
       // h2=title
       p.
@@ -28,8 +28,8 @@ block cards
   //- +card('code/tutorials/rect_sdf.fs','','','','')
   
   //- +card('code/0xff/60/64_samsara.fs','','','','')
-  +card('code/0xff/80/8x_menger.fs','','','','')
-  //- +card('code/0xff/_wip/raymarch/3.fs','','','','')
+  //- +card('code/0xff/80/8x_menger.fs','','','','')
+  +card('code/0xff/_wip/raymarch/4.fs','','','','')
 
 
 
