@@ -127,6 +127,7 @@ vec3 estimateNormal(vec3 p){
   return normalize(n);
 }
 
+
 void main(){
   vec2 a = vec2(1., u_res.y/u_res.x);
   vec2 p = a * (gl_FragCoord.xy/u_res*2.-1.);
