@@ -8,10 +8,10 @@ uniform float u_time;
 #define PI 3.141592658
 #define TAU (PI*2.)
 
-#define OFFSET PI/4.
+#define OFFSET PI/5.
 
-const int MaxStep = 300;
-const int MaxShadowStep = 200;
+const int MaxStep = 470;
+const int MaxShadowStep = 400;
 const float MaxDist = 1000.;
 const float Epsilon = 0.00001;
 const float NormEpsilon = 0.001;
@@ -59,13 +59,15 @@ float blobby(in vec3 p, float t, float to){
   // float x = (mod(t + to,2.)-1.)*15.;
   float sc = 1.7;
   
-  float tt = t * 10. + to;
+  float tt = t * 20. + to;
   float s = sin(tt) * sc;
   float c = cos(tt/2.) * sc*2.;
 
   // p = (rotateY(1.4) * vec4(p,1)).xyz;
-  vec3 pos = vec3(c, 2 ,s);
-  float s1 = sdSphere(p+vec3(pos), .35);
+  vec3 pos = vec3(c, 2.3 ,s);
+
+
+  float s1 = sdSphere(p+vec3(pos), .1);
   return s1;
 }
 
@@ -73,28 +75,26 @@ float sdScene(vec3 p){
   // vec3 mp = mod(p,1.)*2.-1.;
 
   vec3 np = p;
-  np /= 2.5;
-  np.y += 2.3;
+  np /= 8.;
+  np.y += 1.8 + sin(u_time*1.)/4.;
 
   // np = (rotateY(u_time*0.1) * vec4(np,1)).xyz;
+  // vec3 pp = (rotateY(0.4)*vec4(p,1)).xyz;
 
-  vec3 pp = (rotateY(0.4)*vec4(p,1)).xyz;
-  float c = .27/(cubeSDF(np*.85)*10.);
+  float c = .6/(cubeSDF(np*.85)*20.);
 
   // float s1 = 1./sdSphere(p+vec3(sin(u_time*2.)*5.,0,0), 1.);
-  float t = u_time * 1.;  
+  float t = u_time * 1.;
   
   float res = 0.;
   for(float it = 0.; it < PI; it += OFFSET){
     // float b = 1./blobby(p, t, it * 1.8);
-    float b = .75/(blobby(p, t, it * 2.001)*1.5);
+    float b = .15/(blobby(p, t, it *  sin(t)*2. ));
     res += b;
     // res = min(res,b);
   }
 
-  return 1./(res+c)-1.;
-
-  // return min(res, c);
+  return .3/(res+c)-.4;
 }
 
 vec3 estimateNormal(vec3 p) {
@@ -150,12 +150,12 @@ float shadowMarch(vec3 point, vec3 lightPos){
 
 float phong(vec3 p, vec3 n, vec3 lightPos){
   vec3 pToLight = vec3(lightPos - p);
-  float power = 27.;
+  float power = 25.;
   vec3 lightRayDir = normalize(pToLight);
   float d = length(pToLight);
   d *= d;
   
-  float nDotL = clamp(dot(n,lightRayDir), 0., 1.);
+  float nDotL = max(dot(n,lightRayDir), 0.);
 
   float ambient = .9;
   float diffuse = (nDotL*power) / d;
@@ -186,12 +186,13 @@ void main(){
     vec3 n = estimateNormal(point);
     if(visibleToLight == 1.){
       // i = phong(point, n, vec3(1,12,2));
-      i += phong(point, n, lightPos)+ .1;
+      i += phong(point, n, lightPos)+ .3;
+    // }
     }
     else{
-      // i += phong(point, n, lightPos)*1.;
-      // i = visibleToLight + 0.1;
-      i = .3;
+    //   // i += phong(point, n, lightPos)*1.;
+    //   // i = visibleToLight + 0.1;
+      i += .3;
     }
     
     // float intensity = ambient + max(0., dot(dirLight, n));
