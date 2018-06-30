@@ -64,7 +64,7 @@ float blobby(in vec3 p, float t, float to){
   float c = cos(tt/2.) * sc*2.;
 
   // p = (rotateY(1.4) * vec4(p,1)).xyz;
-  vec3 pos = vec3(c,1,s);
+  vec3 pos = vec3(c, 2 ,s);
   float s1 = sdSphere(p+vec3(pos), .35);
   return s1;
 }
@@ -79,19 +79,22 @@ float sdScene(vec3 p){
   // np = (rotateY(u_time*0.1) * vec4(np,1)).xyz;
 
   vec3 pp = (rotateY(0.4)*vec4(p,1)).xyz;
-  float c = cubeSDF(np*.85);
+  float c = .27/(cubeSDF(np*.85)*10.);
 
   // float s1 = 1./sdSphere(p+vec3(sin(u_time*2.)*5.,0,0), 1.);
-  float t = u_time * 1.;
+  float t = u_time * 1.;  
   
-  
-  float res = 1.;
+  float res = 0.;
   for(float it = 0.; it < PI; it += OFFSET){
-    float b = blobby(p, t, it * 1.8);
-    res = min(res,b);
+    // float b = 1./blobby(p, t, it * 1.8);
+    float b = .75/(blobby(p, t, it * 2.001)*1.5);
+    res += b;
+    // res = min(res,b);
   }
 
-  return min(res, c);
+  return 1./(res+c)-1.;
+
+  // return min(res, c);
 }
 
 vec3 estimateNormal(vec3 p) {
