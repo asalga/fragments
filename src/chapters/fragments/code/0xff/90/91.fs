@@ -45,17 +45,17 @@ float sdScene(vec3 v){
 
 	// float test = floor(nv.x*1.)*.99998;
 
-	if(mod( floor(nv.z), 4.) == 0.){
-		return 0.;
-	}
+	// if(mod( floor(nv.z), 4.) == 0.){
+		// return 0.;
+	// }
 
 	// if (test < 3.){return 0.;}
 	// if(mod(test, 2.) == 0. ){
 		// return 1.;
 	// }
 
-	nv.x = fract(nv.x);  
-	nv.z = fract(nv.z);  
+	// nv.x = fract(nv.x);  
+	// nv.z = fract(nv.z);  
 
 	float s = sdSphere(nv - vec3(.5, -1.8, 0.),.4);
 	float c = sdBox(nv- vec3(0.,-1.,0.), vec3(.7,0.012,.7));
