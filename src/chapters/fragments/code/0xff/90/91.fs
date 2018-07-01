@@ -3,14 +3,25 @@ precision highp float;
 uniform vec2 u_res;
 uniform float u_time;
 
-const int MaxSteps = 400;
+const int MaxSteps = 300;
 const float MaxDist = 1000.;
-const float Epsilon = 0.00001;
+const float Epsilon = 0.000001;
 
 float sdSphere(vec3 v, float r){
 	return length(v)-r;
 }
+
+vec3 rayDirection(float fieldOfView, vec2 size, vec2 fragCoord) {
+    vec2 xy = fragCoord - size / 2.0;
+    float z = size.y / tan(radians(fieldOfView) / 2.0);
+    return normalize(vec3(xy, -z));
+}
+
+
+
+
 float sdBox(vec3 p, vec3 sz){
+
 	vec3 d = abs(p) - sz;
 	float inside = min(max(d.x,max(d.y,d.z)), 0.);
 	float outside = length(max(d,0.));
@@ -30,24 +41,38 @@ mat4 rotateY(float theta) {
 }
 
 float sdScene(vec3 v){
-
 	vec3 nv = (vec4(v,1)*rotateY(u_time*0.)).xyz;
-	float s = sdSphere(v+ vec3(0,.0,0),.4);
 
-	float c = sdBox(nv-vec3(0.25, 0.23, 0.25), vec3(.25));
+	// float test = floor(nv.x*1.)*.99998;
 
-	vec3 test = vec3(-0.2) * step(mod(u_time,2.), 1.) * fract((u_time*1.)/2.)*8.; 
+	if(mod( floor(nv.z), 4.) == 0.){
+		return 0.;
+	}
 
+	// if (test < 3.){return 0.;}
+	// if(mod(test, 2.) == 0. ){
+		// return 1.;
+	// }
 
+	nv.x = fract(nv.x);  
+	nv.z = fract(nv.z);  
 
-	float c_ = max(
-		sdSphere(nv + test ,.4),
-		sdBox(nv - vec3(0.2, 0.23, 0.25) + test, vec3(.25)));
+	float s = sdSphere(nv - vec3(.5, -1.8, 0.),.4);
+	float c = sdBox(nv- vec3(0.,-1.,0.), vec3(.7,0.012,.7));
+
+	return min(c,s);
+	// float c = sdBox(nv-vec3(0.25, 0.23, 0.25), vec3(.25));
+
+	// vec3 test = vec3(-0.2) * step(mod(u_time,2.), 1.) * fract((u_time*1.)/2.)*8.; 
+
+	// float c_ = max(
+		// sdSphere(nv - vec3(.5,.5, 0.) + test ,.4),
+		// sdBox(nv - vec3(.5,.5, 0.) + vec3(0.2, 0.23, 0.25) + test, vec3(.25)));
 
 	// float c1 = max(s,c);
-	//sdBox(nv-vec3(0.25, 0.23, 0.25), vec3(.25));
+	// sdBox(nv-vec3(0.25, 0.23, 0.25), vec3(.25));
 	// return c_;
-	return min(max(s, -c), c_);
+	// return min(max(s, -c), c_);
 }
 
 
@@ -82,8 +107,10 @@ void main(){
 	float i;
 	vec2 p = (gl_FragCoord.xy/u_res)*2.-1.;
 
-	vec3 eye = vec3(vec2(p),1.);
-	vec3 ray = vec3(0,0,-1);
+	vec3 eye = vec3(vec2(p),1. - u_time);
+	// vec3 ray = normalize(  vec3(vec2(p)*.02 ,-1)  );
+	vec3 ray = rayDirection(130.0, u_res, gl_FragCoord.xy);
+
 	vec3 dirLight = normalize(vec3(sin(u_time*0.)*2.,3,4));
 
 	float d = rayMarch(eye, ray);
@@ -92,10 +119,15 @@ void main(){
 
 	float nDotL = max(dot(dirLight,n), 0.);
 	i = nDotL + 0.13;
+	// i = d;
 
 	if(d == MaxDist){
-		i = 0.;
+		// i = 0.;
 	}
+
+	// float fog = 1./pow(0.71,d);
+	float fog = pow(1./d, .391);
+	i *= fog;
 
 	gl_FragColor = vec4(vec3(i),1);
 }
