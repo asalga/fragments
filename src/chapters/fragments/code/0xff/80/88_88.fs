@@ -8,7 +8,7 @@ uniform float u_time;
 #define PI 3.141592658
 #define TAU (PI*2.)
 
-#define OFFSET PI/5.
+#define OFFSET PI/4.
 
 const int MaxStep = 470;
 const int MaxShadowStep = 400;
@@ -89,7 +89,7 @@ float sdScene(vec3 p){
   float res = 0.;
   for(float it = 0.; it < PI; it += OFFSET){
     // float b = 1./blobby(p, t, it * 1.8);
-    float b = .15/(blobby(p, t, it *  sin(t)*2. ));
+    float b = .15/(blobby(p, t, it * 2. ));
     res += b;
     // res = min(res,b);
   }
