@@ -102,8 +102,8 @@ float shadowMarch(vec3 point, vec3 lightPos){
 
 float phong(vec3 p, vec3 n, vec3 lightPos){
   vec3 pToLight = vec3(lightPos - p);
-  float power = 25.;
-  float gloss = 1000.;
+  float power = 16.;
+  float gloss = 500.;
 
   vec3 lightRayDir = normalize(pToLight);
   float d = length(pToLight);
