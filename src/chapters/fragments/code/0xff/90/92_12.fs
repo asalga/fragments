@@ -40,7 +40,7 @@ float cubeSDF(vec3 p, vec3 sz) {
 }
 
 float sdScene(vec3 p){
-  vec4 np = vec4(p,1) * rotateY(4. + u_time*0.);
+  vec4 np = vec4(p,1) * rotateY(3.5 + u_time*0.);
 
   float x = .25;
   float y = 0.5;
@@ -48,17 +48,49 @@ float sdScene(vec3 p){
     //vec3(.5, 0.25, 1.));
   mp -= vec3(x/2., y/2., 0.5);
 
-  float windows = cubeSDF(mp, vec3(.1, 0.1, .2));
+  float t =u_time;
+  float jut =   ((sin(t*3.)+1.)/2.)*.33;
+  float windows = cubeSDF(mp, vec3(.1, 0.1, jut));
 
-  float building = cubeSDF(np.xyz, vec3(.5, 1., .45));
+  float building = cubeSDF(np.xyz, vec3(.5, 100., .45 ));
 
   // if(mod(u_time, 4.) < 2.){
     return max(building, -windows);
+    // return max(windows, -building);
   // }
   
   return windows;
 
   // return building;
+}
+
+
+float ao(vec3 p, vec3 n)
+{
+  float stepSize = .01;
+  float t = stepSize;
+  float oc = 0.;
+  for(int i = 0; i < 10; ++i)
+  {
+    float d = sdScene(p+n * t);
+    oc += t - d;
+    t += stepSize;
+  }
+
+  return clamp(oc, 0., 1.);
+}
+
+float ambientOcclusion(vec3 p, float dist, vec3 n){
+  // March along the normal, get new sample point
+  vec3 newPoint = p + n*.001;
+  float testpoint = sdScene(newPoint);
+
+  // if newDistance > d were at open convex
+  // if( testpoint > dist ){
+    // return 0.;//testpoint - dist;
+  // }
+  return 1.-((testpoint+dist)*.025);
+  // return 1.;
 }
 
 vec3 estimateNormal(vec3 v){
@@ -112,14 +144,14 @@ float shadowMarch(vec3 point, vec3 lightPos){
 
 float phong(vec3 p, vec3 n, vec3 lightPos){
   vec3 pToLight = vec3(lightPos - p);
-  float power = 25.;
+  float power = 15.;
   vec3 lightRayDir = normalize(pToLight);
   float d = length(pToLight);
   d *= d;
   
   float nDotL = max(dot(n,lightRayDir), 0.);
 
-  float ambient = .3;
+  float ambient = .15;
   float diffuse = (nDotL*power) / d;
   
   return ambient + diffuse;
@@ -129,29 +161,33 @@ void main(){
   vec2 p = (gl_FragCoord.xy/u_res)*2.-1.;
   float i = 0.;
   float t = u_time;
-  vec3 eye = vec3(.5, 0, 2.);
-
-  vec3 ray = rayDirection(90.0, u_res, gl_FragCoord.xy);
-  float ambient = 0.3;
+  vec3 eye = vec3(.5, -u_time*0., 2.);
+  vec3 ray = rayDirection(100.0, u_res, gl_FragCoord.xy);
   float s = 10.;
   float d = rayMarch(eye, ray);
 
-  vec3 lightPos = vec3(0, 5. + sin(u_time)*1., 4. );
+  vec3 lightPos = vec3(2.+ sin(u_time), 0. + abs(sin(u_time*1.)*0.), 4.);
   
-  vec3 point = eye+ray*d;
+  vec3 point = eye+ray*d;  
 
   if(d < MaxDist){
     float visibleToLight = shadowMarch(eye+ray*(d-0.001), lightPos);
-  
 
     vec3 n = estimateNormal(point);
     float lambert = phong(point, n, lightPos);
 
+    float ao = ao(point, n);
+
+    i += lambert * (1.-ao)*0.82;
+
     if(visibleToLight == 1.){
-      i += lambert;
+      
+      // i = ao*2.;
     }
     else{
-      i += lambert * 0.4;
+      //i /= 12.;
+      i = 0.;
+      // i = 0.52;//ao - 0.81;
     }
   }
 
