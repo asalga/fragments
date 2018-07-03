@@ -8,7 +8,7 @@ mixin card(glsl, title, blurb, authorName, quote)
   //- div.row
     //- div.col-sm-4
 
-  textarea.glsl-code(data-params='{"tex0":"tex/diffuse_lg.png","tex1":"tex/ripple_input_clouds.png","tex2":"tex/caustics.png","width":410,"height":410,"loop": "true","CodeMirror":{"lineNumbers":"false"}}' data-example=glsl)
+  textarea.glsl-code(data-params='{"tex0":"tex/diffuse_lg.png","tex1":"tex/ripple_input_clouds.png","tex2":"tex/caustics.png","width":510,"height":510,"loop": "true","CodeMirror":{"lineNumbers":"false"}}' data-example=glsl)
     //- div.col-sm-4
       // h2=title
       p.
@@ -22,23 +22,8 @@ mixin card(glsl, title, blurb, authorName, quote)
   //- hr
 
 block cards
-
-  // MISC
-  //- +card('code/misc/bricks.fs','','','','')
-  //- +card('code/sdf/tri.fs','','','','')
-  //- +card('code/0xff/templates/sdfs.fs','','','','')
-
-
-  //- +card('code/0xff/80/87_.fs','','','','')
-
-  //- +card('code/tutorials/rect_sdf.fs','','','','')
-  
-  //- +card('code/0xff/60/64_samsara.fs','','','','')
-  +card('code/0xff/90/91_terrain.fs','','','','')
+  +card('code/0xff/90/92_12.fs','','','','')
   //- +card('code/0xff/_wip/raymarch/5.fs','','','','')
-
-
-
 
   //- +card('code/0xff/40/44_shapeshift.fs','Time-Shifting','','','I time-traveled to my youth as a ghost. I saw my self sitting with the other children. He touched the carpet, pulling threads, my fingers tingled. For some time, nothing. Children chattering. Then, singled out, one child stood up to shamed me. I felt my tiny weak heart tremble. Lost of confusion and terrible pain. Helpless. Afraid. Alone. But I was not alone. I knelt down before him. Cradling my small body in his arms. I knew his pain―I wept. I sent him love that transcended time and space.')
   
