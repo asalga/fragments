@@ -1,20 +1,38 @@
-// 92 - Menger
+// 91 - Terrain
 precision mediump float;
 
 uniform vec2 u_res;
 uniform float u_time;
 
 #define PI 3.141592658
+#define TAU (PI*2.)
 
-const int MaxStep = 200;
+const int MaxStep = 400;
 const int MaxShadowStep = 100;
 const float MaxDist = 1000.;
-const float Epsilon = 0.0001;
+const float Epsilon = 0.00001;
 
-mat4 rotateY(float a){
-  float c = cos(a);
-  float s = sin(a);
-  return mat4(c,0,-s,0,0,1,0,0,s,0,c,0,0,0,0,1);
+float valueNoise(vec2 p){
+  #define Y_SCALE 45343.
+  #define X_SCALE 37738.  
+  float x = p.x * X_SCALE;
+  float y = p.y * Y_SCALE;  
+  return fract( sin(x+y) * 23454.);
+}
+
+float smoothValueNoise(vec2 p){
+  vec2 lv = fract(p);
+  lv = smoothstep(0.,1.,lv);
+  vec2 id = floor(p);
+  float bl = valueNoise(vec2(id));
+  float br = valueNoise(vec2(id)+vec2(1,0));
+  float b = mix(bl,br,lv.x);
+
+  float tl = valueNoise(vec2(id)+vec2(0,1));
+  float tr = valueNoise(vec2(id)+vec2(1,1));
+  float t = mix(tl,tr,lv.x);
+
+  return mix(b,t,lv.y);
 }
 
 vec3 rayDirection(float fieldOfView, vec2 size, vec2 fragCoord) {
@@ -31,8 +49,30 @@ float cubeSDF(vec3 p, vec3 sz) {
 }
 
 float sdScene(vec3 p){
-  vec3 np = (vec4(p,1)*rotateY(u_time*1.)).xyz;
-  return cubeSDF(np, vec3(1.));
+  vec3 np = p;
+  float t = u_time;
+
+  vec2 nLookup = vec2(np.xz + vec2(10, -t));
+  float n;
+  n += smoothValueNoise(nLookup*2.) * 0.5000;
+  n += smoothValueNoise(nLookup*4.) * 0.2500;
+  n += smoothValueNoise(nLookup*8.) * 0.1250;
+  n/= 1.875;
+
+  vec2 nLookup2 = vec2(np.xz + vec2(2, -t));
+  float n2;
+  // n2 += smoothValueNoise(nLookup2*2.) * 0.500;
+  // n2 += smoothValueNoise(nLookup2*4.) * 0.250;
+  n2 += n + smoothValueNoise(nLookup2*8.) * 0.125;
+  // // n2/= 2.061;
+  n2/= 1.875;
+
+  // n = floor(n*50.)/50.;
+
+  float terrain = -n2 + cubeSDF(np.xyz  + vec3(0, -.851, 0), vec3(10., .01 ,10));
+  float terrain2 = -n + cubeSDF(np.xyz + vec3(0, +.851, 2), vec3(20., .01 ,20));
+
+  return min(terrain , terrain2);
 }
 
 vec3 estimateNormal(vec3 v){
@@ -63,6 +103,7 @@ float rayMarch(vec3 ro, vec3 rd){
 }
 
 float shadowMarch(vec3 point, vec3 lightPos){
+
   vec3 pToLight = lightPos-point;
   vec3 rd = normalize(pToLight);
   vec3 ro = point;
@@ -86,14 +127,14 @@ float shadowMarch(vec3 point, vec3 lightPos){
 
 float phong(vec3 p, vec3 n, vec3 lightPos){
   vec3 pToLight = vec3(lightPos - p);
-  float power = 20.;
+  float power = 5.;
   vec3 lightRayDir = normalize(pToLight);
   float d = length(pToLight);
   d *= d;
   
   float nDotL = max(dot(n,lightRayDir), 0.);
 
-  float ambient = 0.031;
+  float ambient = .2;
   float diffuse = (nDotL*power) / d;
   
   return ambient + diffuse;
@@ -103,18 +144,19 @@ void main(){
   vec2 p = (gl_FragCoord.xy/u_res)*2.-1.;
   float i = 0.;
   float t = u_time;
-  vec3 eye = vec3(0, 0, 5);
-  vec3 ray = rayDirection(70.0, u_res, gl_FragCoord.xy);
-  vec3 lightPos = vec3(0, 4, 4);
+  vec3 eye = vec3(0, 0, 0);
+  vec3 ray = rayDirection(85.0, u_res, gl_FragCoord.xy);
+  vec3 lightPos = vec3(0, 0, -4.);
 
-  float dist = rayMarch(eye, ray);
-  vec3 point = eye+ray * dist;
-  vec3 n = estimateNormal(point);
+  float test = rayMarch(eye, ray);
+  vec3 point = eye+ray*(test+0.001);
   
-  i += phong(point, n, lightPos);
+    vec3 n = estimateNormal(point);
+  
+      i += phong(point, n, lightPos);
 
-  // float fog = 1./pow( dist, .41);
-  // i *= fog;
+  float fog = 1./ pow( test, 1.8);
+  i *= fog;
 
   gl_FragColor = vec4(vec3(i),1);
 }

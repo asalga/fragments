@@ -1,38 +1,20 @@
-// 91 - Terrain
+// 92 - Menger
 precision mediump float;
 
 uniform vec2 u_res;
 uniform float u_time;
 
 #define PI 3.141592658
-#define TAU (PI*2.)
 
-const int MaxStep = 400;
+const int MaxStep = 300;
 const int MaxShadowStep = 100;
-const float MaxDist = 1000.;
-const float Epsilon = 0.00001;
+const float MaxDist = 3000.;
+const float Epsilon = 0.001;
 
-float valueNoise(vec2 p){
-  #define Y_SCALE 45343.
-  #define X_SCALE 37738.  
-  float x = p.x * X_SCALE;
-  float y = p.y * Y_SCALE;  
-  return fract( sin(x+y) * 23454.);
-}
-
-float smoothValueNoise(vec2 p){
-  vec2 lv = fract(p);
-  lv = smoothstep(0.,1.,lv);
-  vec2 id = floor(p);
-  float bl = valueNoise(vec2(id));
-  float br = valueNoise(vec2(id)+vec2(1,0));
-  float b = mix(bl,br,lv.x);
-
-  float tl = valueNoise(vec2(id)+vec2(0,1));
-  float tr = valueNoise(vec2(id)+vec2(1,1));
-  float t = mix(tl,tr,lv.x);
-
-  return mix(b,t,lv.y);
+mat4 rotateY(float a){
+  float c = cos(a);
+  float s = sin(a);
+  return mat4(c,0,-s,0,0,1,0,0,s,0,c,0,0,0,0,1);
 }
 
 vec3 rayDirection(float fieldOfView, vec2 size, vec2 fragCoord) {
@@ -48,31 +30,49 @@ float cubeSDF(vec3 p, vec3 sz) {
   return insideDistance + outsideDistance;
 }
 
+float cross(vec3 p, float sz, float m){
+
+  p *= m*1.;
+  p += 300.;
+
+  vec3 mp = mod(p, 1.);
+  mp -= 0.1;
+
+  // mp -= 0.5;
+  
+  float sc = sz;
+
+  float cX = cubeSDF(mp, vec3(100, sz, sz));
+  // float cY = cubeSDF(mp, vec3(.1, .1, 100));
+
+  // float cY = cubeSDF(mp + vec3(0, .5, 0.), vec3(sz*.3, sc*.3, sz*.3));
+  // float cY = cubeSDF(mp, vec3(sz*1.2, sc, sz*.2));
+  // float cZ = cubeSDF(mp, vec3(sz, sz, sc));
+  return cX;
+  // return min(min(cX, cY), cZ);
+  // return min(cX, cY);
+}
+
 float sdScene(vec3 p){
-  vec3 np = p;
-  float t = u_time;
+  vec3 np = (vec4(p,1)*rotateY(u_time*.0 + 1.4)).xyz;
 
-  vec2 nLookup = vec2(np.xz + vec2(10, -t));
-  float n;
-  n += smoothValueNoise(nLookup*2.) * 0.5000;
-  n += smoothValueNoise(nLookup*4.) * 0.2500;
-  n += smoothValueNoise(nLookup*8.) * 0.1250;
-  n/= 1.875;
+  // float c1 = cross(np, 0.33,        0.0);
+  // float c2 = cross(np, 0.15,  .66);
 
-  vec2 nLookup2 = vec2(np.xz + vec2(1, -t));
-  float n2;
-  n2 += smoothValueNoise(nLookup2*2.) * 0.500;
-  n2 += smoothValueNoise(nLookup2*4.) * 0.250;
-  n2 += smoothValueNoise(nLookup2*8.) * 0.125;
-  // n2/= 2.061;
-  n2/= 1.875;
+  float c2 = cross(np, .1,  2.);
+  float c3 = cross(np, .25,  3.);
 
-  // n = floor(n*50.)/50.;
+  // float c3 = cross(np, 0.3333*.125, 0.5);
 
-  float terrain = -n + cubeSDF(np.xyz  + vec3(0, -.851, 0), vec3(10., .01 ,10));
-  float terrain2 = -n2 + cubeSDF(np.xyz + vec3(0, +.851, 0), vec3(10., .01 ,10));
+  float mainCube = cubeSDF( np, vec3(.7));
+  
+  // return c2;
+  // return max(mainCube, -c2);
+  return max(max(mainCube, -c2), -c3);
 
-  return min(terrain , terrain2);
+  // return max(max(max(mainCube, -c1), -c2), -c3);
+  // return max(max(max(mainCube,-c3), -c2), -c1);
+  // return mainCube;
 }
 
 vec3 estimateNormal(vec3 v){
@@ -103,7 +103,6 @@ float rayMarch(vec3 ro, vec3 rd){
 }
 
 float shadowMarch(vec3 point, vec3 lightPos){
-
   vec3 pToLight = lightPos-point;
   vec3 rd = normalize(pToLight);
   vec3 ro = point;
@@ -127,14 +126,14 @@ float shadowMarch(vec3 point, vec3 lightPos){
 
 float phong(vec3 p, vec3 n, vec3 lightPos){
   vec3 pToLight = vec3(lightPos - p);
-  float power = 5.;
+  float power = 20.;
   vec3 lightRayDir = normalize(pToLight);
   float d = length(pToLight);
   d *= d;
   
   float nDotL = max(dot(n,lightRayDir), 0.);
 
-  float ambient = .2;
+  float ambient = 0.031;
   float diffuse = (nDotL*power) / d;
   
   return ambient + diffuse;
@@ -144,19 +143,18 @@ void main(){
   vec2 p = (gl_FragCoord.xy/u_res)*2.-1.;
   float i = 0.;
   float t = u_time;
-  vec3 eye = vec3(0, 0, 0);
-  vec3 ray = rayDirection(85.0, u_res, gl_FragCoord.xy);
-  vec3 lightPos = vec3(0, 0, -4.);
+  vec3 eye = vec3(0, 0, 3. -u_time*0.);
+  vec3 ray = rayDirection(70.0, u_res, gl_FragCoord.xy);
+  vec3 lightPos = vec3(0, 4, 2);
 
-  float test = rayMarch(eye, ray);
-  vec3 point = eye+ray*(test+0.001);
+  float dist = rayMarch(eye, ray);
+  vec3 point = eye+ray * dist;
+  vec3 n = estimateNormal(point);
   
-    vec3 n = estimateNormal(point);
-  
-      i += phong(point, n, lightPos);
+  i += phong(point, n, lightPos);
 
-  float fog = 1./ pow( test, 1.8);
-  i *= fog;
+  // float fog = 1./pow( dist, .941);
+  // i *= fog;
 
   gl_FragColor = vec4(vec3(i),1);
 }
