@@ -173,6 +173,7 @@ void main(){
   vec3 center = vec3(0,0,0);
   vec3 up = vec3(0,1,0);
   vec3 eye = vec3(-4.5, 4, 2);
+  vec3 center = eye + vec3(0,0,-1);
   mat3 viewWorld = viewMatrix(eye, center, up);
   vec3 worldDir = viewWorld * ray;
 
