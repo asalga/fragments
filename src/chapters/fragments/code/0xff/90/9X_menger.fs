@@ -11,12 +11,17 @@ const int MaxShadowStep = 100;
 const float MaxDist = 3000.;
 const float Epsilon = 0.001;
 
+
+
 mat4 rotateY(float a){
   float c = cos(a);
   float s = sin(a);
   return mat4(c,0,-s,0,0,1,0,0,s,0,c,0,0,0,0,1);
 }
 
+vec3 rep(vec3 p, vec3 r){
+  return mod(p,r)-0.5*r;
+}
 vec3 rayDirection(float fieldOfView, vec2 size, vec2 fragCoord) {
   vec2 xy = fragCoord - size / 2.;
   float z = size.y/tan(radians(fieldOfView)/2.);
@@ -29,47 +34,53 @@ float cubeSDF(vec3 p, vec3 sz) {
   float outsideDistance = length(max(d, 0.));
   return insideDistance + outsideDistance;
 }
+float sdSphere(vec3 p, float r){
+  return length(p)-r;
+}
 
-float cross(vec3 p, float sz, float m){
+float cross(vec3 p, float sz){
+  // float sz = 1.;
+  // sz *= 2.; 
 
-  p *= m*1.;
-  p += 300.;
+  float sc = 0.33 * sz;
+  sz*=2.;
 
-  vec3 mp = mod(p, 1.);
-  mp -= 0.1;
+  float cX = cubeSDF(p, vec3(sz, sc, sc));
+  float cY = cubeSDF(p, vec3(sc, sz, sc));
+  float cZ = cubeSDF(p, vec3(sc, sc, sz));
+  // return cX;
+  return min(min(cX, cY), cZ);
+}
 
-  // mp -= 0.5;
-  
-  float sc = sz;
-
-  float cX = cubeSDF(mp, vec3(100, sz, sz));
-  // float cY = cubeSDF(mp, vec3(.1, .1, 100));
-
-  // float cY = cubeSDF(mp + vec3(0, .5, 0.), vec3(sz*.3, sc*.3, sz*.3));
-  // float cY = cubeSDF(mp, vec3(sz*1.2, sc, sz*.2));
-  // float cZ = cubeSDF(mp, vec3(sz, sz, sc));
-  return cX;
-  // return min(min(cX, cY), cZ);
-  // return min(cX, cY);
+mat3 viewMatrix(vec3 eye, vec3 center, vec3 up) {
+  vec3 f = normalize(center - eye);
+  vec3 s = normalize(cross(f, up));
+  vec3 u = cross(s, f);
+  return mat3(s, u, -f);
 }
 
 float sdScene(vec3 p){
-  vec3 np = (vec4(p,1)*rotateY(u_time*.0 + 1.4)).xyz;
+  // vec3 np = (vec4(p,1)*rotateY(u_time*.0 + 2.4)).xyz;
+
+  float sz = 0.25;
+
+  float c0 = cross(rep(p, vec3(1.)), sz);
 
   // float c1 = cross(np, 0.33,        0.0);
   // float c2 = cross(np, 0.15,  .66);
-
-  float c2 = cross(np, .1,  2.);
-  float c3 = cross(np, .25,  3.);
-
+  // float c2 = cross(np, .1,  2.);
+  // float c3 = cross(np, .25,  3.);
   // float c3 = cross(np, 0.3333*.125, 0.5);
 
-  float mainCube = cubeSDF( np, vec3(.7));
+  float mainCube = cubeSDF( rep(p, vec3(1.)),vec3(sz));//.5 = full
+  // float mainCube = sdSphere(rep(p,vec3(1)), 1.);
+  // float mainCube = cubeSDF(p, vec3(.9));
   
-  // return c2;
-  // return max(mainCube, -c2);
-  return max(max(mainCube, -c2), -c3);
+  // return mainCube;
+  return max(mainCube, -c0);
+  // return c0;
 
+  // return max(mainCube, -c2);
   // return max(max(max(mainCube, -c1), -c2), -c3);
   // return max(max(max(mainCube,-c3), -c2), -c1);
   // return mainCube;
@@ -126,7 +137,7 @@ float shadowMarch(vec3 point, vec3 lightPos){
 
 float phong(vec3 p, vec3 n, vec3 lightPos){
   vec3 pToLight = vec3(lightPos - p);
-  float power = 20.;
+  float power = 30.;
   vec3 lightRayDir = normalize(pToLight);
   float d = length(pToLight);
   d *= d;
@@ -134,7 +145,7 @@ float phong(vec3 p, vec3 n, vec3 lightPos){
   float nDotL = max(dot(n,lightRayDir), 0.);
 
   float ambient = 0.031;
-  float diffuse = (nDotL*power) / d;
+  float diffuse = (nDotL*power) /d;
   
   return ambient + diffuse;
 }
@@ -143,12 +154,21 @@ void main(){
   vec2 p = (gl_FragCoord.xy/u_res)*2.-1.;
   float i = 0.;
   float t = u_time;
-  vec3 eye = vec3(0, 0, 3. -u_time*0.);
+  // vec3 eye = vec3(0, 0, 4);
   vec3 ray = rayDirection(70.0, u_res, gl_FragCoord.xy);
-  vec3 lightPos = vec3(0, 4, 2);
 
-  float dist = rayMarch(eye, ray);
-  vec3 point = eye+ray * dist;
+  vec3 center = vec3(0,0,0);
+  vec3 up = vec3(0,1,0);
+  vec3 eye = vec3(3, 3, u_time*1.);
+  mat3 viewWorld = viewMatrix(eye, center, up);
+  vec3 worldDir = viewWorld * ray;
+  float dist = rayMarch(eye, worldDir);
+  
+
+  vec3 lightPos = vec3(sin(u_time)*0., 4, 5);
+
+  // float dist = rayMarch(eye, ray);
+  vec3 point = eye+worldDir * dist;
   vec3 n = estimateNormal(point);
   
   i += phong(point, n, lightPos);

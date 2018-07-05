@@ -8,6 +8,30 @@ const int MaxStep = 100;
 const float MaxDistance = 100.;
 const float Epsilon = 0.0001;
 
+float valueNoise(vec2 p){
+  #define Y_SCALE 45343.
+  #define X_SCALE 37738.  
+  float x = p.x * X_SCALE;
+  float y = p.y * Y_SCALE;  
+  return fract( sin(x+y) * 23454.);
+}
+
+float smoothValueNoise(vec2 p){
+  vec2 lv = fract(p);
+  lv = smoothstep(0.,1.,lv);
+  vec2 id = floor(p);
+  float bl = valueNoise(vec2(id));
+  float br = valueNoise(vec2(id)+vec2(1,0));
+  float b = mix(bl,br,lv.x);
+
+  float tl = valueNoise(vec2(id)+vec2(0,1));
+  float tr = valueNoise(vec2(id)+vec2(1,1));
+  float t = mix(tl,tr,lv.x);
+
+  return mix(b,t,lv.y);
+}
+
+
 float sdSphere(vec3 p, float r){
 	return length(p)-r;
 }
@@ -19,19 +43,7 @@ float sdPlane(vec3 p, vec4 n){
 float sdScene(vec3 v){
 	float t = u_time*15.;
 	float s = sdSphere(v+ vec3(0,sin(t)/2.,0)*2., 1.);
-	
-	float m = 0.5;
-	// float d = step(mod(v.x/100., m), m/2.)* 2.;
-	// float dx = step(m/2., mod(v.x + u_time, m)) * .41;
-	// float dy = step(m/2., mod(v.z + 0.*u_time, m)) * .41;
-	//max(sin(v.x*2. + u_time*0.), 0.5);
-	// float dy = max(sin(v.y*2. + u_time*0.), 0.5);
-	float dx = sin(v.x + t)*2.;
-
-	float d = (dx)/2.;
-	// float d = dx;
-
-	float p = d + sdPlane(v+vec3(0,1,0), vec4(0,1,0,0));
+	float p = sdPlane(v+vec3(0,1,0), vec4(0,1,0,0));
 
   return min(s,p);
 }
