@@ -67,19 +67,27 @@ float sdScene(vec3 p){
 
   float c0 = cross(p);  //, 1., sz * thrd);
 
-  s = 3.;
+  s = 9.;
 
   // float c1 = cross( mod(p*4.,2.)-1.,  sz, 0.1);
-
-  float c1 = cross( mod(p*9., 2.)-1. )/9.;
+  float c1 = cross( mod(p*s, 2.) -1. )/s;
   // -1., sz*10., .125*sz);
 
   // float c2 = cross(rep(p, vec3(1./24.)), sz, 0.009);
   // float c1 = cross(np, 0.33,        0.0);
   float mainCube = cubeSDF(p , vec3( sz-0.11));//.5 = full
+
+  vec3 a = mod( p*s, 2.0 )-1.0;
+        s *= 3.0;
+        vec3 r = abs(1.0 - 3.0*abs(a));
+        float da = max(r.x,r.y);
+        float db = max(r.y,r.z);
+        float dc = max(r.z,r.x);
+        float c = (min(da,min(db,dc))-1.0)/s;
   
-  return c1;
-  return mainCube;
+  return c;
+  // return min(c1,c0);
+  // return mainCube;
   // return max(max(mainCube, -c0), -c1);
   // return max(mainCube, -c1);
   // return max(mainCube, -c1);

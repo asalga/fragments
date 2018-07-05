@@ -18,22 +18,26 @@ float sdPlane(vec3 p, vec4 n){
 
 float sdScene(vec3 v){
 	float t = u_time*15.;
-	float s = sdSphere(v+ vec3(0,sin(t)/2.,0)*2., 1.);
+	// float s = sdSphere((mod(v,1.)*2.-1.)*4.);
+  float c=2.;
+
+  float idx = floor(v.z/2.);
+
+  float mv= (sin(idx*1. + u_time*10.)+1.)/5.;
+
+
+  float s = sdSphere(  mod(v,2.) - (1.), mv);// + mv;
+   // + vec3(0,sin(t)/2.,0)*2., 1.);
 	
 	float m = 0.5;
-	// float d = step(mod(v.x/100., m), m/2.)* 2.;
-	// float dx = step(m/2., mod(v.x + u_time, m)) * .41;
-	// float dy = step(m/2., mod(v.z + 0.*u_time, m)) * .41;
-	//max(sin(v.x*2. + u_time*0.), 0.5);
-	// float dy = max(sin(v.y*2. + u_time*0.), 0.5);
 	float dx = sin(v.x + t)*2.;
 
 	float d = (dx)/2.;
-	// float d = dx;
 
 	float p = d + sdPlane(v+vec3(0,1,0), vec4(0,1,0,0));
 
-  return min(s,p);
+  return s;
+  // return min(s,p);
 }
 
 vec3 rayDirection(float fieldOfView, vec2 size, vec2 fragCoord) {
@@ -98,7 +102,7 @@ mat3 viewMatrix(vec3 eye, vec3 center, vec3 up) {
 
 float calcLight(vec3 n, vec3 lightPos, vec3 p){
   vec3 pToLight = vec3(lightPos - p);
-  float power = 20.;
+  float power = 30.;
   vec3 lightRayDir = normalize(pToLight);
   float d = length(pToLight);
   d *= d;
@@ -125,14 +129,14 @@ float calcLight(vec3 n, vec3 lightPos, vec3 p){
 void main(){
 	float i = 0.;
 	vec2 p = (gl_FragCoord.xy/u_res) * 2. -1.;
-	vec3 l = vec3(0,4,3);
+	vec3 l = vec3(0,0,5);
 	// vec3 ro = vec3(p,5);
 	vec3 rd = rayDirection(105.0, u_res, gl_FragCoord.xy);
 
 
   vec3 center = vec3(0,0,-4);
   vec3 up = vec3(0,1,0);
-  vec3 eye = vec3(0, 3, 6);
+  vec3 eye = vec3(0, 3, 1);
   mat3 viewWorld = viewMatrix(eye, center, up);
   vec3 worldDir = viewWorld * rd;
 
