@@ -40,22 +40,29 @@ float cubeSDF(vec3 p, vec3 sz) {
 }
 
 float sdScene(vec3 p){
-  float t = u_time * 2.;
+  float t = u_time * 1.;
   float modTime = 1.;
+  float sz = .49;
 
   float c0pos = mod(t, modTime);
 
-  float c0 = cubeSDF(p+vec3(0,0.00 + c0pos,0), vec3(.5));
-  float c1 = cubeSDF(p+vec3(0,1.01 + c0pos,0), vec3(.5));
-  float c2 = cubeSDF(p+vec3(0,2.01 + c0pos,0), vec3(.5));
+  float c0 = cubeSDF(p+vec3(0, 0. + c0pos,0), vec3(sz));
+  float c1 = cubeSDF(p+vec3(0, 1. + c0pos,0), vec3(sz));
+  float c2 = cubeSDF(p+vec3(0, 2. + c0pos,0), vec3(sz));
+  //
 
-  float c3pos = mod(5. -t*5., 5.);
-  float c3 = cubeSDF(p+ vec3(0,-c3pos,0), vec3(.5));
+  float dist = 1.;
+  float c3pos = mod(dist -t*dist, dist);
+  vec3 objPos = vec3(0,-c3pos,0);
+
+  float s = sdSphere(p+objPos, .5);
+  float c3 = cubeSDF(p+objPos, vec3(sz));
 
   float i = min(c0,c1);
   i = min(i,c2);
-  i = min(i,c3);
-  return i ;
+  // i = min(i,c3);
+  i = min(i, mix(c3, s, c3pos/dist));
+  return i;
 }
 
 // float ao(vec3 p, vec3 n)
@@ -71,19 +78,6 @@ float sdScene(vec3 p){
 //   }
 
 //   return clamp(oc, 0., 1.);
-// }
-
-// float ambientOcclusion(vec3 p, float dist, vec3 n){
-//   // March along the normal, get new sample point
-//   vec3 newPoint = p + n*.001;
-//   float testpoint = sdScene(newPoint);
-
-//   // if newDistance > d were at open convex
-//   // if( testpoint > dist ){
-//     // return 0.;//testpoint - dist;
-//   // }
-//   return 1.-((testpoint+dist)*.025);
-//   // return 1.;
 // }
 
 vec3 estNormal(vec3 p){
@@ -145,30 +139,24 @@ float phong(vec3 p, vec3 n, vec3 lightPos){
   
   float nDotL = max(dot(n,lightRayDir), 0.);
 
-  float ambient = .4;
+  float ambient = .01;
   float diffuse = (nDotL*power) / d;
-  
-  // if(nDotL > .55){return 0.;}
-
   return ambient + diffuse;
 }
 
 void main(){
   vec2 p = (gl_FragCoord.xy/u_res)*2.-1.;
   float i = 0.;
-  float t = u_time * 1. + 1.;
-  vec3 lightPos = vec3(3);
+  float t = u_time*0.04;
+  vec3 lightPos = vec3(2,4,2);
 
-  vec3 center = vec3(0);
+  vec3 center = vec3(0,-.25, 0);
   vec3 up = vec3(0,1,0);
-  vec3 eye = vec3(cos(t)*3., .2, sin(t)*3.);
+  vec3 eye = vec3(cos(t)*3., .5, sin(t)*3.);
   vec3 ray = rayDirection(100.0, u_res, gl_FragCoord.xy);
 
-  // float mv = u_time*1.1;
+
   float mv = 0.;
-
-  // mv = mod(mv, 1.);
-
   eye.y += mv;
   center.y += mv;
 
@@ -177,18 +165,21 @@ void main(){
   float d = rayMarch(eye, worldDir);
   
   if(d < MaxDist){
-    // float visibleToLight = shadowMarch(eye+ray*(d-0.001), lightPos);
+    float visibleToLight = shadowMarch(eye+worldDir*(d-0.001), lightPos);
 
     vec3 point = eye+worldDir*d;  
     vec3 n = estNormal(point);
     float lambert = phong(point, n, lightPos);
+    float lambert2 = phong(point, n, vec3(-lightPos.x, lightPos.y, -lightPos.z));
 
-    // float ao = ao(point, n);
-    i = lambert;// * (1.-ao)*0.8;
-
-    // if(visibleToLight == 0.){
-      // i = .3;
-    // }
+    if(visibleToLight == 1.){
+      // float ao = ao(point, n);
+      i = lambert2 + lambert;// * (1.-ao)*0.8;
+    }
+    else{  
+      i =  .2;
+      //lambert + lambert2 - .2;
+    }
   }
 
   gl_FragColor = vec4(vec3(i),1);
