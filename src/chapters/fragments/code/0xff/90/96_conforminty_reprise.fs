@@ -9,6 +9,14 @@ const int MaxShadowStep = 100;
 const float MaxDist = 1000.;
 const float Epsilon = 0.0001;
 
+// https://gist.github.com/girish3/11167208
+float eob(float t) {
+  if ((t/=1.0) < (1./2.75)) {return 1.*(7.5625*t*t);}
+  else if (t < (2./2.75)) {return 1.*(7.5625*(t-=(1.5/2.75))*t + .75);}
+  else if (t < (2.5/2.75)) {return 1.*(7.5625*(t-=(2.25/2.75))*t + .9375);}   
+  return 1.*(7.5625*(t-=(2.625/2.75))*t + .984375);
+}
+
 mat4 rotateY(float a){
   float c = cos(a);
   float s = sin(a);
@@ -40,28 +48,30 @@ float cubeSDF(vec3 p, vec3 sz) {
 }
 
 float sdScene(vec3 p){
-  float t = u_time * 1.;
+  float t = u_time * 2.1;
   float modTime = 1.;
-  float sz = .49;
+  float sz = .485;
 
   float c0pos = mod(t, modTime);
 
   float c0 = cubeSDF(p+vec3(0, 0. + c0pos,0), vec3(sz));
   float c1 = cubeSDF(p+vec3(0, 1. + c0pos,0), vec3(sz));
   float c2 = cubeSDF(p+vec3(0, 2. + c0pos,0), vec3(sz));
-  //
+  float c3 = cubeSDF(p+vec3(0, 3. + c0pos,0), vec3(sz));
 
-  float dist = 1.;
+  float dist = 5.;
   float c3pos = mod(dist -t*dist, dist);
   vec3 objPos = vec3(0,-c3pos,0);
 
-  float s = sdSphere(p+objPos, .5);
-  float c3 = cubeSDF(p+objPos, vec3(sz));
+  float s = sdSphere(p+vec3(0, eob(c0pos*.5),0), .5);
+  float _c4 = sdSphere(p + vec3(0,-eob( (objPos.y/dist) ),0) , sz);
 
-  float i = min(c0,c1);
+  float i;
+  i = mix(s, c0, c0pos);
+  i = min(i,c1);
   i = min(i,c2);
-  // i = min(i,c3);
-  i = min(i, mix(c3, s, c3pos/dist));
+  i = min(i,c3);
+  i = min(i,_c4);
   return i;
 }
 
@@ -139,7 +149,7 @@ float phong(vec3 p, vec3 n, vec3 lightPos){
   
   float nDotL = max(dot(n,lightRayDir), 0.);
 
-  float ambient = .01;
+  float ambient = .1;
   float diffuse = (nDotL*power) / d;
   return ambient + diffuse;
 }
@@ -177,7 +187,7 @@ void main(){
       i = lambert2 + lambert;// * (1.-ao)*0.8;
     }
     else{  
-      i =  .2;
+      i =  .25;
       //lambert + lambert2 - .2;
     }
   }
