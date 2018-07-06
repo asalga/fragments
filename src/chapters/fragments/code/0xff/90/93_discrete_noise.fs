@@ -1,4 +1,4 @@
-// 95 - "Discrete Noise"
+// 94 - "Discrete Noise"
 precision mediump float;
 
 uniform vec2 u_res;
