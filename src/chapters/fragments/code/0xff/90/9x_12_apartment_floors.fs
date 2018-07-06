@@ -44,35 +44,30 @@ float sdScene(vec3 p){
 
   float x = .25;
   float y = 0.5;
-  vec3 mp = mod(np.xyz*1., vec3(x, y, 1.));
+  vec3 mp = mod(np.xyz, vec3(x, y, 1.));
     //vec3(.5, 0.25, 1.));
   mp -= vec3(x/2., y/2., 0.5);
 
-  float t =u_time;
-  float jut =   ((sin(t*3.)+1.)/2.)*.33;
+
+
+  float t = u_time;
+  float jut = .1 + ((sin(t*3.+p.y*.7)+1.)/2.)*.3;
   float windows = cubeSDF(mp, vec3(.1, 0.1, jut));
 
   float building = cubeSDF(np.xyz, vec3(.5, 100., .45 ));
 
-  // if(mod(u_time, 4.) < 2.){
-    return max(building, -windows);
-    // return max(windows, -building);
-  // }
-  
-  return windows;
-
-  // return building;
+  return max(building, -windows);
 }
 
 
 float ao(vec3 p, vec3 n)
 {
-  float stepSize = .01;
+  float stepSize = .02;
   float t = stepSize;
   float oc = 0.;
-  for(int i = 0; i < 10; ++i)
+  for(int i = 0; i < 5; ++i)
   {
-    float d = sdScene(p+n * t);
+    float d = sdScene(p+n*t);
     oc += t - d;
     t += stepSize;
   }
@@ -163,10 +158,9 @@ void main(){
   float t = u_time;
   vec3 eye = vec3(.5, -u_time*0., 2.);
   vec3 ray = rayDirection(100.0, u_res, gl_FragCoord.xy);
-  float s = 10.;
   float d = rayMarch(eye, ray);
 
-  vec3 lightPos = vec3(2.+ sin(u_time), 0. + abs(sin(u_time*1.)*0.), 4.);
+  vec3 lightPos = vec3(2., 0. + abs(sin(u_time*1.)*0.), 4.);
   
   vec3 point = eye+ray*d;  
 
@@ -178,22 +172,12 @@ void main(){
 
     float ao = ao(point, n);
 
-    i += lambert * (1.-ao)*0.82;
+    i += lambert * (1.-ao)*0.8;
 
-    if(visibleToLight == 1.){
-      
-      // i = ao*2.;
-    }
-    else{
-      //i /= 12.;
-      i = 0.;
-      // i = 0.52;//ao - 0.81;
+    if(visibleToLight == 0.){
+      i = .3;
     }
   }
-
-if(mod(u_time, 2.) > 1.){
-  //i *= 1./pow(d, 1.1);
-}
 
   gl_FragColor = vec4(vec3(i),1);
 }
