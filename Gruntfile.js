@@ -150,7 +150,7 @@ module.exports = function(grunt) {
         ],
         tasks: [
           'copy:demos',
-          'pug',
+          // 'pug',
           'processhtml'
         ],
         options: {
@@ -167,7 +167,7 @@ module.exports = function(grunt) {
     'copy',
 
     // HTML process
-    'pug',
+    // 'pug',
     'processhtml',
     // html validation
 
