@@ -7,13 +7,30 @@
 let YesMakeGif = false;
 let gif;
 
+
+
+let demo = {
+  '0': {
+        src: '../fragments/code/0xff/90/99/1.fs',
+  },
+  '1': {
+        src: 'code/0xff/90/test/2.fs'
+  }
+};
+
+
+// 1) define shader package
+// 2) update gruntfile
+// 3) load shader
+// 4) 
+
 Number.prototype.clamp = function(min, max) {
   return Math.min(Math.max(this, min), max);
 };
 
 function animate(time) {
   requestAnimationFrame(animate);
-  TWEEN.update(time);
+  // TWEEN.update(time);
 }
 requestAnimationFrame(animate);
 
@@ -27,7 +44,7 @@ function makeSketch(fs, params) {
   let sketchTime;
   let tracking = [];
   let easing = 0.05;
-  let start =0;
+  let start = 0;
   let mouseIsDown = 0;
   let lastMouseDown= [120,200];
 
@@ -42,17 +59,24 @@ function makeSketch(fs, params) {
                 }`;
       sh = p.createShader(vs, fs);
 
-      // TODO: fix
-      if (params.tex0) {img0 = p.loadImage(params.tex0);}
-      if (params.tex1) {img1 = p.loadImage(params.tex1);}
-      if (params.tex2) {img2 = p.loadImage(params.tex2);}
+
+      // let _0 = demo['0'];
+      // console.log('>>', _0);
+
+      // fetch(relPath)
+//       .then(res => res.text())
+//       .then(fragShaderCode => {
+
+
+      // // TODO: fix
+      // if (params.tex0) {img0 = p.loadImage(params.tex0);}
+      // if (params.tex1) {img1 = p.loadImage(params.tex1);}
+      // if (params.tex2) {img2 = p.loadImage(params.tex2);}
 
       console.log('preload done');
     };
 
     p.setup = function() {
-      // p.frameRate(20);
-
       w = params.width || DefaultSketchWidth;
       h = params.height || DefaultSketchHeight;
       sketchTime = 0;
@@ -72,40 +96,7 @@ function makeSketch(fs, params) {
         lastMouseDown = [x,y];
       });
 
-      // c.mouseOver(e => {
-      //   TWEEN.removeAll();
-      //   new TWEEN.Tween(timeVal)
-      //     .to({ t: 1 }, 2500)
-      //     .easing(TWEEN.Easing.Quadratic.Out)
-      //     .start();
-      //   p.loop();
-      // });
-
-      // c.mouseOut(e => {
-      //   TWEEN.removeAll();
-      //   new TWEEN.Tween(timeVal)
-      //     .to({ t: 0 }, 2000)
-      //     .easing(TWEEN.Easing.Quadratic.In)
-      //     .onComplete(() => p.noLoop())
-      //     .start();
-      // });
-
       $(p.canvas).appendTo($('#target'));
-
-      gif = new GIF({
-        debug: true,
-        repeat: 0,
-        workers: 4,
-        quality: 10
-      });
-
-      gif.on('finished', function(blob) {
-        let img = document.createElement('img');
-        img.src = URL.createObjectURL(blob);
-        document.body.appendChild(img);
-        p.noLoop();
-      });
-
       p.loop();
     };
 
@@ -131,7 +122,7 @@ function makeSketch(fs, params) {
       }
       if(fs.match(/uniform\s+vec2\s+u_tracking/)){
         // target - currPos
-         let x = p.mouseX.clamp(0, w);
+        let x = p.mouseX.clamp(0, w);
         let y = p.mouseY.clamp(0, h);
 
         let delta = [(x/w) - tracking[0],
@@ -170,31 +161,49 @@ function makeSketch(fs, params) {
 
       p.quad(-1, -1, 1, -1, 1, 1, -1, 1);
 
-      // todo: clean
-      if(YesMakeGif){
-        // just figure out how long it takes
-        // for the sketch to loop and use that
-        // as a marker.
-        if(p.frameCount <= 158){
+      // // todo: clean
+      // if(YesMakeGif){
+      //   // just figure out how long it takes
+      //   // for the sketch to loop and use that
+      //   // as a marker.
+      //   if(p.frameCount <= 158){
 
-          if(p.frameCount % 2 === 0){
-            gif.addFrame(p.canvas,
-            {
-              copy: true,
-              delay: 30
-            });
-          }
+      //     if(p.frameCount % 2 === 0){
+      //       gif.addFrame(p.canvas,
+      //       {
+      //         copy: true,
+      //         delay: 30
+      //       });
+      //     }
 
-        }
-        else{
-          gif.render();
-          YesMakeGif = false;
-        }
-      }
+      //   }
+      //   else{
+      //     gif.render();
+      //     YesMakeGif = false;
+      //   }
+      // }
     };//end draw
   };
   return sketch;
 }
+
+
+
+
+
+(function load(){
+
+  let demoPath = demo[0].src;
+  let fragCode;
+  
+  fetch(demoPath)
+    .then(res => res.text())
+      .then(fragShaderCode => {
+        let relPath = '';
+        let sketch = new p5(makeSketch(fragShaderCode,{}), relPath);
+      });
+
+})();
 
 
 /*

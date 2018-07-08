@@ -149,6 +149,7 @@ module.exports = function(grunt) {
           `${src}/**/*.*`
         ],
         tasks: [
+          'copy:dev',
           'copy:demos',
           // 'pug',
           'processhtml'
