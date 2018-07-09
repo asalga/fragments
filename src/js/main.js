@@ -7,23 +7,6 @@
 let YesMakeGif = false;
 let gif;
 
-
-
-let demo = {
-  '0': {
-        src: '../fragments/code/0xff/90/99/1.fs',
-  },
-  '1': {
-        src: 'code/0xff/90/test/2.fs'
-  }
-};
-
-
-// 1) define shader package
-// 2) update gruntfile
-// 3) load shader
-// 4) 
-
 Number.prototype.clamp = function(min, max) {
   return Math.min(Math.max(this, min), max);
 };
@@ -34,10 +17,16 @@ function animate(time) {
 }
 requestAnimationFrame(animate);
 
+
+/*
+  fs - array of frag shaders
+*/
 function makeSketch(fs, params) {
   const DefaultSketchWidth = 320;
   const DefaultSketchHeight = 240;
-  let sh, w, h;
+  
+  let mainShader;
+  let w, h;
   let img0, img1, img2;
 
   let timeVal = { t: 0 };
@@ -50,25 +39,37 @@ function makeSketch(fs, params) {
 
   var sketch = function(p) {
 
+    let renderers = {};
+    let graphicsCtx = [];
+    let progObjects = [];
+
     p.preload = function() {
-      let vs = `precision highp float;
-                varying vec2 vPos;
-                attribute vec3 aPosition;
-                void main() {
-                  vPos = (gl_Position = vec4(aPosition,1.0)).xy;
-                }`;
-      sh = p.createShader(vs, fs);
 
+      // same vertex shader for each frag shader
+      let globalVs = `precision highp float;
+                    varying vec2 vPos;
+                    attribute vec3 aPosition;
+                    void main() {
+                      vPos = (gl_Position = vec4(aPosition,1.0)).xy;
+                    }`;
 
-      // let _0 = demo['0'];
-      // console.log('>>', _0);
+      let mainFs = `precision mediump float;
+                    uniform sampler2D lastBuffer;
+                    void main(){
+                      vec2 p = gl_FragCoord.xy/vec2(300.);
+                      vec4 col = texture2D(lastBuffer, p);
+                      gl_FragColor = vec4(col.rgb,1);
+                    }`;
+      
+      mainShader = p.createShader(globalVs, mainFs);
 
-      // fetch(relPath)
-//       .then(res => res.text())
-//       .then(fragShaderCode => {
+      fs.forEach( _fs => {
+        console.log('creating renderer', _fs);
+        graphicsCtx.push(p.createGraphics(w, h, p.WEBGL));
+        progObjects.push(p.createShader(globalVs,_fs));
+      });
 
-
-      // // TODO: fix
+      // TODO: fix
       // if (params.tex0) {img0 = p.loadImage(params.tex0);}
       // if (params.tex1) {img1 = p.loadImage(params.tex1);}
       // if (params.tex2) {img2 = p.loadImage(params.tex2);}
@@ -105,208 +106,137 @@ function makeSketch(fs, params) {
           Draw
     */
     p.draw = function() {
-      // for tweening in animation
-      sketchTime += (1 / 60) * timeVal.t;
-      //sketchTime = p.millis() / 1000 * 0.5;
 
-      // for resetting animation
-      sketchTime = (p.millis()-start) / 1000 * 0.5;
+      // CEL
+      // gfx3D.push();  
+      // gfx3D.translate(-width / 2, -height / 2);
+      // gfx3D.shader(celShader);
+      // celShader.setUniform('time', millis());
+      // celShader.setUniform('numShades', controls.celShades);
+      // celShader.setUniform('res', [width, height]);
+      // celShader.setUniform('mouse', [pmouseX, height - pmouseY, mouse[0], mouse[2]]);
+      // celShader.setUniform('texture0', gfx);
+      // gfx3D.rect(0, 0, windowWidth, windowHeight, 1, 1);
+      // gfx3D.pop();
 
-      p.shader(sh);
+      let x = 0;
+      progObjects.forEach( (progObj, i) =>{        
+        let ctx = graphicsCtx[i];
+        ctx.shader(progObj);
 
-      if (fs.match(/uniform\s+vec2\s+u_res/)) {
-        sh.setUniform('u_res', [w, h]);
-      }
-      if (fs.match(/uniform\s+float\s+u_time/)) {
-        sh.setUniform('u_time', sketchTime);
-      }
-      if(fs.match(/uniform\s+vec2\s+u_tracking/)){
-        // target - currPos
-        let x = p.mouseX.clamp(0, w);
-        let y = p.mouseY.clamp(0, h);
+        if(i !== 0){
+          progObj.setUniform('buff', graphicsCtx[i-1]);
+        }
 
-        let delta = [(x/w) - tracking[0],
-                     (y/h) - tracking[1]];
-        tracking = [tracking[0] + delta[0] * easing,
-                    tracking[1] + delta[1] * easing];
+        ctx.quad(-1, -1, 1, -1, 1, 1, -1, 1);
+      });
 
-
-        sh.setUniform('u_tracking', tracking);
-      }
-
-      // TODO: Add for loop here
-      if (fs.match(/uniform\s+sampler2D\s+u_texture0/)) {
-        sh.setUniform('u_texture0', img0);
-      }
-
-      if (fs.match(/uniform\s+sampler2D\s+u_texture1/)) {
-        sh.setUniform('u_texture1', img1);
-      }
-
-      if (fs.match(/uniform\s+sampler2D\s+u_texture2/)) {
-        sh.setUniform('u_texture2', img2);
-      }
-
-
-      if (fs.match(/uniform\s+vec3\s+u_mouse/)) {
-        let x = p.mouseX.clamp(0, w);
-        let y = p.mouseY.clamp(0, h);
-        sh.setUniform('u_mouse', [x, y, mouseIsDown]);
-      }
-
-      if (fs.match(/uniform\s+vec2\s+u_lastMouseDown/)) {
-        sh.setUniform('u_lastMouseDown', lastMouseDown);
-      }
-      // sh.setUniform('u_lastMouseDown', lastMouseDown);
-
+      // final
+      p.shader(mainShader);
+      mainShader.setUniform('lastBuffer', graphicsCtx[progObjects.length-1]);
       p.quad(-1, -1, 1, -1, 1, 1, -1, 1);
+      
+      // p.image(0, 0, w, h, graphicsCtx[0]);
 
-      // // todo: clean
-      // if(YesMakeGif){
-      //   // just figure out how long it takes
-      //   // for the sketch to loop and use that
-      //   // as a marker.
-      //   if(p.frameCount <= 158){
+      // for tweening in animation
+      // sketchTime += (1 / 60) * timeVal.t;
+      // //sketchTime = p.millis() / 1000 * 0.5;
 
-      //     if(p.frameCount % 2 === 0){
-      //       gif.addFrame(p.canvas,
-      //       {
-      //         copy: true,
-      //         delay: 30
-      //       });
-      //     }
+      // // for resetting animation
+      // sketchTime = (p.millis()-start) / 1000 * 0.5;
 
-      //   }
-      //   else{
-      //     gif.render();
-      //     YesMakeGif = false;
-      //   }
+      // if (fs.match(/uniform\s+vec2\s+u_res/)) {
+      //   sh.setUniform('u_res', [w, h]);
       // }
+      // if (fs.match(/uniform\s+float\s+u_time/)) {
+      //   sh.setUniform('u_time', sketchTime);
+      // }
+      // if(fs.match(/uniform\s+vec2\s+u_tracking/)){
+      //   // target - currPos
+      //   let x = p.mouseX.clamp(0, w);
+      //   let y = p.mouseY.clamp(0, h);
+
+      //   let delta = [(x/w) - tracking[0],
+      //                (y/h) - tracking[1]];
+      //   tracking = [tracking[0] + delta[0] * easing,
+      //               tracking[1] + delta[1] * easing];
+
+
+      //   sh.setUniform('u_tracking', tracking);
+      // }
+
+      // // TODO: Add for loop here
+      // if (fs.match(/uniform\s+sampler2D\s+u_texture0/)) {
+      //   sh.setUniform('u_texture0', img0);
+      // }
+
+      // if (fs.match(/uniform\s+sampler2D\s+u_texture1/)) {
+      //   sh.setUniform('u_texture1', img1);
+      // }
+
+      // if (fs.match(/uniform\s+sampler2D\s+u_texture2/)) {
+      //   sh.setUniform('u_texture2', img2);
+      // }
+
+
+      // if (fs.match(/uniform\s+vec3\s+u_mouse/)) {
+      //   let x = p.mouseX.clamp(0, w);
+      //   let y = p.mouseY.clamp(0, h);
+      //   sh.setUniform('u_mouse', [x, y, mouseIsDown]);
+      // }
+
+      // if (fs.match(/uniform\s+vec2\s+u_lastMouseDown/)) {
+      //   sh.setUniform('u_lastMouseDown', lastMouseDown);
+      // }
+      // // sh.setUniform('u_lastMouseDown', lastMouseDown);
+
     };//end draw
   };
   return sketch;
 }
 
+let demo = {
+  '0': {
+    src: '../fragments/code/0xff/90/99/0.fs'
+  },
+  '1': {
+    src: '../fragments/code/0xff/90/99/1.fs'
+  },
+  '2': {
+    src: '../fragments/code/0xff/90/99/2.fs'
+  }
+};
 
+
+function getFs0(){
+  return fetch('../fragments/code/0xff/90/99/0.fs')
+    .then(res => res.text())
+    .then(fragShaderCode => {
+      return fragShaderCode;
+    });
+}
+function getFs1(){
+  return fetch('../fragments/code/0xff/90/99/1.fs')
+    .then(res => res.text())
+    .then(fragShaderCode => {
+      return fragShaderCode;
+    });
+}
 
 
 
 (function load(){
+  Promise.all([getFs0(), getFs1()])
+    .then(fragShaders => {
+      let relPath;
+      let sketch = new p5(makeSketch(fragShaders,{}), relPath);
+    });
 
-  let demoPath = demo[0].src;
-  let fragCode;
-  
-  fetch(demoPath)
-    .then(res => res.text())
-      .then(fragShaderCode => {
-        let relPath = '';
-        let sketch = new p5(makeSketch(fragShaderCode,{}), relPath);
-      });
+  //   .then(res => res.text())
+  //     .then(fragShaderCode => {
+  //       let relPath = '';
+  //       let fragShaders = [fragShaderCode]
+  //       let sketch = new p5(makeSketch(fragShaders,{}), relPath);
+  //     });
 
 })();
-
-
-/*
-    Fill all the textareas with glsl shader code.
-    This keeps the html files smaller and makes the
-    glsl code more maintainable since there will only be
-    one place for each example.
-*/
-// (function populateTextAreas() {
-
-//   /*
-//       glsl-code - will have an assigned sketch canvas
-//       js-code - for js code, so no canvas
-//       glsl-snippet - not a complete shader, no canvas
-//   */
-//   let arr = Array.from($('.glsl-code,.js-code,.glsl-code-snippet,.glsl-snippet'));
-
-//   arr.forEach(t => {
-//     let path = $(t).attr('data-example');
-//     let strParams = $(t).attr('data-params');
-//     let params = strParams ? JSON.parse(strParams) : {};
-
-//     // If we have a textarea without a path, it means that textarea
-//     // only has some inline code that doesn't require CodeMirror
-//     if (!path) {
-//       CodeMirror.fromTextArea(t, {
-//         lineNumbers: false,
-//         readOnly: true
-//       });
-//       return;
-//     }
-
-//     // let relPath = '../' + path;
-//     let relPath = path;
-
-//     fetch(relPath)
-//       .then(res => res.text())
-//       .then(fragShaderCode => {
-//         let fs = t.innerHTML = fragShaderCode;
-
-//         // If it's a glsl example, add the rendered result:
-//         // Get the div immediately following the textarea,
-//         // this is where we'll load the sketch
-//         // But p5 expects it to have to have an ID, so assign it one.
-
-//         // Other snippets are for js or vert shaders
-//         // that we don't want to make sketches for
-
-//         // If we have a glsl-code AND it should render
-//         // we'll need to build up some meta data stuff.
-//         if ($(t).hasClass('glsl-code') && (params && params.render !== 'false')) {
-
-//           // Will contain the glsl CodeMirror and the canvas
-//           let divContainer = $('<div>')
-//             .insertAfter(t)
-//             .addClass('lazy')
-//             .attr({
-//               'id': relPath,
-//               'data-lys-code': fs,
-//               'data-lys-relPath': relPath,
-//               'data-lys-params': strParams,
-//               'data-loader': 'customLoaderName'
-//             });
-
-//           $(t).prependTo(divContainer);
-//         }
-
-
-//         let lines = true;
-//         if (params && params.CodeMirror && params.CodeMirror.lineNumbers) {
-//           lines = (params.CodeMirror.lineNumbers === 'true') ? true : false;
-//         }
-
-//         let cm = CodeMirror.fromTextArea(t, {
-//           lineNumbers: lines,
-//           readOnly: true
-//         });
-
-//         if (params.lines) {
-//           params.lines.forEach(l => {
-//             cm.addLineClass(l, null, 'line-highlight');
-//           });
-//         }
-//       })
-//       .then(() => {
-//         // Lazy loading canvases
-//         $(function() {
-//           $('.lazy').lazy({
-//             customLoaderName: function(el) {
-//               let fragCode = el.attr('data-lys-code');
-//               let strParams = el.attr('data-lys-params');
-//               let relPath = el.attr('data-lys-relPath');
-//               let params = strParams ? JSON.parse(strParams) : {};
-
-//               // we need to make this async.
-//               let sketch = new p5(makeSketch(fragCode, params), relPath);
-
-// // console.log(sketch);
-
-
-//             }
-//           });
-//         });
-//       });
-//   });
-// })();
