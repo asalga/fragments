@@ -3,7 +3,7 @@ precision mediump float;
 
 uniform vec2 u_res;
 uniform float u_time;
-const float NumSections = 50.;
+const float NumSections = 100.;
 
 float valueNoise(vec2 p){
 	return fract(sin(p.x * 7384. + p.y * 99331.)* 303412.);
@@ -33,52 +33,31 @@ float remap(float v, float low1, float high1, float low2, float high2){
 void main(){
 	vec2 p = (gl_FragCoord.xy/u_res);
 	float i;
-	float t = u_time * 1.;
+	float turnTime = 2.;
+	float t = u_time * (1./turnTime);
+	float turn = floor(t) * 20.;
 	t = fract(t);
-	float turn = floor(u_time) * 20.;
 
-	float porabolaInfluence = 1.-pow(p.x*2. -1. , 2.);
-	porabolaInfluence *= 1.5;
+	// ohhhhh yaaaaa
+	float porabolaInfluence = (1.5 - pow(p.x*2. -1. , 2.) ) * 1.5;
 
-	vec2 accSection = getSection(p.x + 4., 1.);
+	vec2 accSection = getSection(p.x * 18. + turn, 1.);
 	float a = smoothValueNoise(accSection);
-	a = remap(a, 0., 1., 0.2, 0.8);
+	a = remap(a, 0., 1., .8, 1.) * 1.5;
 	float deltaV = a * porabolaInfluence * t;
 
 	vec2 velSection = getSection(p.x + turn, 10.);
-	velSection.x = remap(velSection.x, 0., 1., 0.4, 0.8);
-	float v = smoothValueNoise(velSection) + deltaV;
+	velSection.x = remap(velSection.x, 0., 1., 0.2, 1.);
+	float v = smoothValueNoise(velSection) * 1. + deltaV;
+
+	float d = v*t;
+	turn = step(turnTime, mod(u_time, turnTime*2.));
 	
-	float d = v * t * 1.;
+	float c = step(p.y, (1. - d));
 
-	turn = step(1., mod(u_time, 2.));
-
-	// TODO: fix
-	if(turn == 1.){
-		i = step(p.y, 1.-d);
+	i = c;
+	if(turn == 0.){
+		i = 1.-c;
 	}
-	else{
-		i = 1.-step(p.y, 1.-d);
-	}
-
 	gl_FragColor = vec4(vec3(i),1);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
