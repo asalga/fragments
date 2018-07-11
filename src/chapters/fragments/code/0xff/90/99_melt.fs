@@ -1,12 +1,9 @@
-// 99 - melt
-// Add porabola influence
-// Change color every turn
-
+// 99 - "Melt"
 precision mediump float;
 
 uniform vec2 u_res;
 uniform float u_time;
-const float NumSections = 510.;
+const float NumSections = 50.;
 
 float valueNoise(vec2 p){
 	return fract(sin(p.x * 7384. + p.y * 99331.)* 303412.);
@@ -35,12 +32,8 @@ float remap(float v, float low1, float high1, float low2, float high2){
 
 void main(){
 	vec2 p = (gl_FragCoord.xy/u_res);
-	float i;
-	
-	float turn;
-	float porabolaInfluence;
-	
-	float t = u_time*1.;
+	float i, turn, porabolaInfluence;
+	float t = u_time;
 	t = fract(t);
 
 	vec2 accSection = getSection(p.x + 4., 1.);
@@ -48,14 +41,22 @@ void main(){
 	a = remap(a, 0., 1., 0.2, 0.8);
 	float deltaV = a * t;
 
-	vec2 velSection = getSection(p.x + turn, 35.);
-	velSection.x = remap(velSection.x, 0., 1., 0.4, 0.5);
+	vec2 velSection = getSection(p.x + turn, 10.);
+	velSection.x = remap(velSection.x, 0., 1., 0.4, 0.8);
 	float v = smoothValueNoise(velSection) + deltaV;
 	
-	float d = v * t;
+	float d = v * t * 2.;
 
-	// TODO: change color every turn
-	i = step(p.y, 1.-d);
+	turn = step(1., mod(u_time, 2.));
+
+	// TODO: fix
+	if(turn == 1.){
+		i = step(p.y, 1.-d);
+	}
+	else{
+		i = 1.-step(p.y, 1.-d);
+	}
+
 	gl_FragColor = vec4(vec3(i),1);
 }
 
