@@ -32,20 +32,24 @@ float remap(float v, float low1, float high1, float low2, float high2){
 
 void main(){
 	vec2 p = (gl_FragCoord.xy/u_res);
-	float i, turn, porabolaInfluence;
-	float t = u_time;
+	float i;
+	float t = u_time * 1.;
 	t = fract(t);
+	float turn = floor(u_time) * 20.;
+
+	float porabolaInfluence = 1.-pow(p.x*2. -1. , 2.);
+	porabolaInfluence *= 1.5;
 
 	vec2 accSection = getSection(p.x + 4., 1.);
 	float a = smoothValueNoise(accSection);
 	a = remap(a, 0., 1., 0.2, 0.8);
-	float deltaV = a * t;
+	float deltaV = a * porabolaInfluence * t;
 
 	vec2 velSection = getSection(p.x + turn, 10.);
 	velSection.x = remap(velSection.x, 0., 1., 0.4, 0.8);
 	float v = smoothValueNoise(velSection) + deltaV;
 	
-	float d = v * t * 2.;
+	float d = v * t * 1.;
 
 	turn = step(1., mod(u_time, 2.));
 
