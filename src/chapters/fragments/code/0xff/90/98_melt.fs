@@ -3,7 +3,7 @@ precision mediump float;
 
 uniform vec2 u_res;
 uniform float u_time;
-const float NumSections = 100.;
+const float NumSections = 400.;
 
 float valueNoise(vec2 p){
 	return fract(sin(p.x * 7384. + p.y * 99331.)* 303412.);
@@ -31,14 +31,13 @@ float remap(float v, float low1, float high1, float low2, float high2){
 }
 
 void main(){
-	vec2 p = (gl_FragCoord.xy/u_res);
+	vec2 p = gl_FragCoord.xy/u_res;
 	float i;
-	float turnTime = 2.;
-	float t = u_time * (1./turnTime);
+	float turnTime = 1.;
+	float t = u_time * 1. * (1./turnTime);
 	float turn = floor(t) * 20.;
 	t = fract(t);
 
-	// ohhhhh yaaaaa
 	float porabolaInfluence = (1.5 - pow(p.x*2. -1. , 2.) ) * 1.5;
 
 	vec2 accSection = getSection(p.x * 18. + turn, 1.);
