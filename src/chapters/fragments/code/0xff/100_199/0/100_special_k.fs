@@ -1,4 +1,4 @@
-// 100 - Kaleidoscope
+// 100 - Special K
 precision mediump float;
 uniform vec2 u_res;
 uniform float u_time;
@@ -33,22 +33,20 @@ float sdCircleStroke(vec2 p){
 }
 
 void main(){
-	float i = .5;
 	vec2 p = (gl_FragCoord.xy/u_res) * 2. -1.;
-	float t = u_time*1.;
-
-	float Sections = 5.;
+	float t = u_time* 0.5;
+	float Sections = 6.;
 	
 	float r = length(p) - mod(t, 2.);
-	float modAng = mod(atan(p.y, p.x),PI/Sections);
-	modAng = abs(modAng - PI/Sections) - t;
+	float modAng = mod(atan(p.y, p.x), TAU/Sections);
+	modAng = abs(modAng - TAU/Sections) - t;
 
-	vec2 polarCoords = vec2(r, modAng);
-	float x = cos(modAng) * r - t;
-	float y = sin(modAng) * r + t;
-
-	i = sdRectStroke(vec2(x,y));
-	i += sdCircleStroke(vec2(x,y));
+	vec2 v = vec2( cos(modAng) *r -t,
+								 sin(modAng) *r +t);
+	float i;
+	i = sdRectStroke(v);
+	i += sdCircleStroke(vec2(v.x+cos(t*1.), v.y-sin(t*2.)));
+	i += sdRectStroke(vec2(v.x+cos(t*1.)*2.,v.y-sin(t/2.)*0.2));
 
 	gl_FragColor = vec4(vec3(i),1);
 }
