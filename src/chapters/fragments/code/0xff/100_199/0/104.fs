@@ -57,8 +57,65 @@ vec3 rayDirection(float fieldOfView, vec2 size, vec2 fragCoord) {
   return normalize(vec3(xy, -z));
 }
 
+float cubeSDF(vec3 p, vec3 sz) {
+  vec3 d = abs(p) - sz;
+  float insideDistance = min(max(d.x, max(d.y, d.z)), 0.0);
+  float outsideDistance = length(max(d, 0.0));    
+  return insideDistance + outsideDistance;
+}
+
+mat4 r2dY(float a){
+	float c = cos(a);
+	float s = sin(a);
+
+	return mat4(-c, 0, s,  0,
+							0,  1, 0,  0,
+							s,  0, c,  0,
+							0,  0, 0,  1);
+}
+
+mat4 r2dZ(float a){
+	float c = cos(a);
+	float s = sin(a);
+
+	return mat4(c, -s, 0,  0,
+							s,  c, 0,  0,
+							0,  0, 1,  0,
+							0,  0, 0,  1);
+}
+
+
 float sdScene(vec3 p, out float col){
-	return sdSphere(p, 1.);
+	float s = sdSphere(p, 1.);
+	float t = u_time * 3.;
+
+	mat4 topRotMat = r2dZ(abs(cos(t)));
+	mat4 botRotMat = r2dZ(-abs(cos(t)));
+
+	vec3 topRotp = vec3(topRotMat * vec4(p, 1.));
+	vec3 botRotp = vec3(botRotMat * vec4(p, 1.));
+
+  float ctop = cubeSDF(topRotp + vec3(0,1,0), vec3(1., 1., 1.));
+  float cbot = cubeSDF(botRotp - vec3(0,1,0), vec3(1., 1., 1.));
+
+	float top = max( sdSphere(p - vec3(0,0,0), .9) , -ctop);
+	float bot = max( sdSphere(p + vec3(0,0,0), .9) , -cbot);
+
+	// return min(ctop, cbot);
+	// float bottom = sdSphere(p, 1.);
+	// return ctop;
+	// float res = min( max(top, -ctop), max(bottom, -cb));
+	//, + cubeSDF(p+vec3(0,0.5,0), vec3(1)) );
+
+
+	// return ctop;
+	return min(top, bot);
+	// return cbot;
+	// return bot;
+	// return top;
+	// return res;
+	// return top;
+	// return min(top, bottom);
 }
 
 vec3 estimateNormal(vec3 v){
@@ -114,9 +171,9 @@ void main(){
 	float i;
 	float t = u_time;
 
-	vec3 eye = vec3(0);
-	vec3 center = vec3(0,0,-10);
-	vec3 lightPos = eye + vec3(1,2,3);
+	vec3 eye = vec3(3,0,6);
+	vec3 center = vec3(0,0,0);
+	vec3 lightPos = eye + vec3(0,2,0);
 	vec3 up = vec3(0,1,0);
 
 	mat3 viewWorld = viewMatrix(eye, center, up);
@@ -130,11 +187,11 @@ void main(){
 		vec3 v = eye + worldDir*d;
 		vec3 n = estimateNormal(v);
 
-		float _ao;
+		
 		// _ao = ao(v, n);
-
+		// i = d;
 		float lights = lighting(v, n, lightPos);
-		i = col.x * lights - _ao;
+		i = d * lights;
 		
 		// i = intensity - _ao;
 		// float fog = 1./pow(d, 1.);
