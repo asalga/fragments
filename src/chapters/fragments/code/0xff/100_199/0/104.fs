@@ -7,6 +7,7 @@ const float Epsilon = 0.001;
 const float E = Epsilon;
 const float MaxDist = 10.;
 const int MaxSteps = 228;
+const float PI = 3.141592658;
 
 const vec3 lightGrey = vec3(1.);
 const vec3 darkGrey = vec3(0.4);
@@ -30,23 +31,23 @@ float sdCylinder(vec3 p, vec2 sz ){
 }
 
 float lighting(vec3 p, vec3 n, vec3 lightPos){
-	float ambient = .1;
+	float ambient = .05;
 	// ---
   vec3 pToLight = vec3(lightPos - p);
-  float power = 3.;
+  float power = 30.;
   vec3 lightRayDir = normalize(pToLight);
   float d = length(pToLight);
   d *= d;
   float nDotL = max(dot(n,lightRayDir), 0.);
   float diffuse = (nDotL*power) / d;
   // ---
-  // float gloss = 0.;
+  // float gloss = 30.;
   // vec3 H = normalize(lightRayDir + p);
   // float NdotH = dot(n, H);
   // vec3 r = reflect(lightRayDir, n);
   // float RdotV = dot(r, normalize(p));
   // float spec = pow( NdotH , gloss );
-  // float spec = pow(RdotV, gloss);
+  // float spec = pow(RdotV, gloss) / d;
   // ---
   return ambient + diffuse;// + spec;
 }
@@ -87,19 +88,19 @@ mat4 r2dZ(float a){
 
 float sdScene(vec3 p, out float col){
 	float s = sdSphere(p, 1.);
-	float t = u_time * 3.;
+	float t = u_time * 6.;
 
-	mat4 topRotMat = r2dZ(abs(cos(t)));
-	mat4 botRotMat = r2dZ(-abs(cos(t)));
+	mat4 topRotMat = r2dZ(abs(cos(t*2.)));
+	mat4 botRotMat = r2dZ(-abs(cos(t*2.)));
 
 	vec3 topRotp = vec3(topRotMat * vec4(p, 1.));
 	vec3 botRotp = vec3(botRotMat * vec4(p, 1.));
 
-  float ctop = cubeSDF(topRotp + vec3(0,1,0), vec3(1., 1., 1.));
-  float cbot = cubeSDF(botRotp - vec3(0,1,0), vec3(1., 1., 1.));
+  float ctop = cubeSDF(topRotp + vec3(0,1,0), vec3(1));
+  float cbot = cubeSDF(botRotp - vec3(0,1,0), vec3(1));
 
-	float top = max( sdSphere(p - vec3(0,0,0), .9) , -ctop);
-	float bot = max( sdSphere(p + vec3(0,0,0), .9) , -cbot);
+	float top = max( sdSphere(p, .9) , -ctop);
+	float bot = max( sdSphere(p, .9) , -cbot);
 
 	// return min(ctop, cbot);
 	// float bottom = sdSphere(p, 1.);
@@ -107,15 +108,16 @@ float sdScene(vec3 p, out float col){
 	// float res = min( max(top, -ctop), max(bottom, -cb));
 	//, + cubeSDF(p+vec3(0,0.5,0), vec3(1)) );
 
+	// food
+	vec3 repP = mod(p + t*1.0 - 0.3, PI*0.5) - 0.5;
+	repP.z = p.z;
+	repP.y = p.y;
+	if( p.x < 0.){
+		repP.x = p.x;
+	}
 
-	// return ctop;
-	return min(top, bot);
-	// return cbot;
-	// return bot;
-	// return top;
-	// return res;
-	// return top;
-	// return min(top, bottom);
+	float food = cubeSDF(repP, vec3(0.125));
+	return min(food, min(top, bot));
 }
 
 vec3 estimateNormal(vec3 v){
@@ -132,7 +134,6 @@ float rayMarch(vec3 ro, vec3 rd, out vec3 col){
 	for(int i = 0; i < MaxSteps; i++){
 		vec3 p = ro + rd * s;
 		
-		
 		float intensity;
 		float d = sdScene(p, intensity);
 		col = vec3(intensity);
@@ -140,7 +141,7 @@ float rayMarch(vec3 ro, vec3 rd, out vec3 col){
 		if(d < Epsilon){
 			return s;
 		}
-		s += d/2.;
+		s += d/1.;
 
 		if(d > MaxDist){
 			return MaxDist;
@@ -171,9 +172,10 @@ void main(){
 	float i;
 	float t = u_time;
 
-	vec3 eye = vec3(3,0,6);
-	vec3 center = vec3(0,0,0);
-	vec3 lightPos = eye + vec3(0,2,0);
+	float x =  + sin(t*1.) * .2;
+	vec3 eye = vec3(5. + x  , 1.2, 6. + sin(t*1.) * 2.);
+	vec3 center = vec3(2,0,0);
+	vec3 lightPos =   vec3(20,0,0);
 	vec3 up = vec3(0,1,0);
 
 	mat3 viewWorld = viewMatrix(eye, center, up);
@@ -183,28 +185,27 @@ void main(){
   vec3 col;
   float d = rayMarch(eye, worldDir, col);
 
+
+  i = 0.1;
 	if(d < MaxDist){
 		vec3 v = eye + worldDir*d;
 		vec3 n = estimateNormal(v);
 
-		
-		// _ao = ao(v, n);
-		// i = d;
 		float lights = lighting(v, n, lightPos);
-		i = d * lights;
+		i += d * lights;
 		
 		// i = intensity - _ao;
 		// float fog = 1./pow(d, 1.);
 		// i *= fog;
 	}
 
-	// if(mod(gl_FragCoord.y, 2.) < 1.){
-	// 	i = 0.;
-	// }
+	if(mod(gl_FragCoord.y, 3.) < 2.){
+		i *= .5;
+	}
 
-	// float vignette = 1.-smoothstep(0.9, 1., abs(p.x)) *  
-									 // 1.-smoothstep(0.9, 1., abs(p.y));
-	// i *= vignette;
+	float vignette = 1.-smoothstep(0.9, 1., abs(p.x)) *  
+									 1.-smoothstep(0.9, 1., abs(p.y));
+	i *= vignette;
 
 	gl_FragColor = vec4(vec3(i), 1);
 }
