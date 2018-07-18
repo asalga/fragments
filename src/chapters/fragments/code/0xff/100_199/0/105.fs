@@ -88,36 +88,44 @@ mat4 r2dZ(float a){
 
 float sdScene(vec3 p, out float col){
 	float s = sdSphere(p, 1.);
-	float t = u_time * 6.;
+	float t = u_time*5.;
 
-	mat4 topRotMat = r2dZ(abs(cos(t*2.)));
-	mat4 botRotMat = r2dZ(-abs(cos(t*2.)));
+	vec4 p4 = vec4(p, 1.);
+	vec3 np = (p4 * r2dZ(t)).xyz;
 
-	vec3 topRotp = vec3(topRotMat * vec4(p, 1.));
-	vec3 botRotp = vec3(botRotMat * vec4(p, 1.));
+	float c = cubeSDF(np + vec3(-1,1.,0), vec3(1));
+	return c;
 
-  float ctop = cubeSDF(topRotp + vec3(0,1,0), vec3(1));
-  float cbot = cubeSDF(botRotp - vec3(0,1,0), vec3(1));
+	// float t = u_time * 6.;
 
-	float top = max( sdSphere(p, .9) , -ctop);
-	float bot = max( sdSphere(p, .9) , -cbot);
+	// mat4 topRotMat = r2dZ(abs(cos(t*2.)));
+	// mat4 botRotMat = r2dZ(-abs(cos(t*2.)));
 
-	// return min(ctop, cbot);
-	// float bottom = sdSphere(p, 1.);
-	// return ctop;
-	// float res = min( max(top, -ctop), max(bottom, -cb));
-	//, + cubeSDF(p+vec3(0,0.5,0), vec3(1)) );
+	// vec3 topRotp = vec3(topRotMat * vec4(p, 1.));
+	// vec3 botRotp = vec3(botRotMat * vec4(p, 1.));
 
-	// food
-	vec3 repP = mod(p + t*1.0 - 0.3, PI*0.5) - 0.5;
-	repP.z = p.z;
-	repP.y = p.y;
-	if( p.x < 0.){
-		repP.x = p.x;
-	}
+ //  float ctop = cubeSDF(topRotp + vec3(0,1,0), vec3(1));
+ //  float cbot = cubeSDF(botRotp - vec3(0,1,0), vec3(1));
 
-	float food = cubeSDF(repP, vec3(0.125));
-	return min(food, min(top, bot));
+	// float top = max( sdSphere(p, .9) , -ctop);
+	// float bot = max( sdSphere(p, .9) , -cbot);
+
+	// // return min(ctop, cbot);
+	// // float bottom = sdSphere(p, 1.);
+	// // return ctop;
+	// // float res = min( max(top, -ctop), max(bottom, -cb));
+	// //, + cubeSDF(p+vec3(0,0.5,0), vec3(1)) );
+
+	// // food
+	// vec3 repP = mod(p + t*1.0 - 0.3, PI*0.5) - 0.5;
+	// repP.z = p.z;
+	// repP.y = p.y;
+	// if( p.x < 0.){
+	// 	repP.x = p.x;
+	// }
+
+	// float food = cubeSDF(repP, vec3(0.125));
+	// return min(food, min(top, bot));
 }
 
 vec3 estimateNormal(vec3 v){
@@ -170,7 +178,7 @@ float ao(vec3 p, vec3 n)
 void main(){
 	vec2 p = (gl_FragCoord.xy/u_res)*2. -1.;
 	float i;
-	float t = u_time;
+	float t = u_time*0.;
 
 	float x =  + sin(t*1.) * .2;
 	vec3 eye = vec3(5. + x  , 1.2, 6. + sin(t*1.) * 2.);
