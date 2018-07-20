@@ -1,4 +1,4 @@
-// 107 - The old classic square sin set
+// 107 - Glitchy
 precision highp float;
 uniform vec2 u_res;
 uniform float u_time;
