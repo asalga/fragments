@@ -165,7 +165,7 @@ module.exports = function(grunt) {
 
   grunt.registerTask('default', [
     // JS process
-    'jshint',
+    // 'jshint',
 
     'copy',
 
