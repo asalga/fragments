@@ -5,8 +5,8 @@ uniform float u_time;
 
 const float Epsilon = 0.0001;
 const float E = Epsilon;
-const float MaxDist = 100.;
-const int MaxSteps = 228;
+const float MaxDist = 400.;
+const int MaxSteps = 128;
 const float PI = 3.141592658;
 const float HALF_PI = PI*0.5;
 const int MaxShadowStep = 100;
@@ -43,10 +43,10 @@ float sdCylinder(vec3 p, vec2 sz ){
 
 
 float lighting(vec3 p, vec3 n, vec3 lightPos){
-	float ambient = .1;
+	float ambient = .2;
 	// ---
   vec3 pToLight = vec3(lightPos - p);
-  float power = 10.;
+  float power = 70.;
   vec3 lightRayDir = normalize(pToLight);
   float d = length(pToLight);
   d *= d;
@@ -97,11 +97,11 @@ mat4 r2dZ(float a){
 							0,  0, 0,  1);
 }
 
-
+// sss - just a marker
 float sdScene(vec3 p, out float col){
 	col = .4;
 	float d;
-	float t = u_time * 4.;
+	float t = u_time * 5.;
 
 	float c = 1.;
 	vec3 np = mod(p, vec3(c))-c *0.5;
@@ -111,45 +111,38 @@ float sdScene(vec3 p, out float col){
 	float xIdx = floor(p.x)/10.;
 	float zIdx = floor(p.z)/10.;
 
-	if( abs(p.x) >= 5. || abs(p.z) > 5. ){
+	float cnt = 9.;
+	if( abs(p.x) >= cnt || abs(p.z) > cnt ){
 		col =  0.;
 		return MaxDist;
 	}
 
-	float len = sin(length(vec3(xIdx+zIdx, 0, 0)) * 2. + t) / 4.;
-
+	float len = sin(length( vec3(9.) * vec3(xIdx, 0, zIdx)) - t) / 8.;
 	vec3 off = vec3(0, -len ,0);
-	d = cubeSDF( (np + off), vec3(0.4, 1. + len, .25));
+	d = cubeSDF( (np + off) , vec3(0.35, 2. + len*1., .35));
 
 	return d;
 }
 
 
-float shadowMarch(vec3 point, vec3 lightPos){
-
-  vec3 pToLight = lightPos-point;
-  vec3 rd = normalize(pToLight);
-  vec3 ro = point;
-
-  float s = 0.;
-  for(int i = 0; i < MaxShadowStep; ++i){
-    vec3 v = ro + (rd*s);
-    
-    float dum;
-    float dist;
-    dist = sdScene(v, dum);
-
-    if(dist < Epsilon){
-      return 0.;
-    }
-    s += dist/1.;
-
-    if(s >= MaxDist){
-      return 1.;
-    }
+float ao(vec3 p, vec3 n)
+{
+  float stepSize = .1;
+  float t = stepSize;
+  float oc = 0.;
+  float dum;
+  for(int i = 0; i < 4; ++i)
+  {
+    float d = sdScene(p+n*t, dum);
+    oc += t - d;
+    t += stepSize;
   }
-  return 1.;
+
+  return clamp(oc, 0., 1.);
 }
+
+
+
 
 vec3 estimateNormal(vec3 v){
   vec3 n;
@@ -172,7 +165,7 @@ float rayMarch(vec3 ro, vec3 rd, out vec3 col){
 		if(d < Epsilon){
 			return s;
 		}
-		s += d;
+		s += d/1.1;
 
 		if(d > MaxDist){
 			return MaxDist;
@@ -181,21 +174,6 @@ float rayMarch(vec3 ro, vec3 rd, out vec3 col){
 	return MaxDist;
 }
 
-float ao(vec3 p, vec3 n)
-{
-  float stepSize = .02;
-  float t = stepSize;
-  float oc = 0.;
-  float dum;
-  for(int i = 0; i < 4; ++i)
-  {
-    float d = sdScene(p+n*t, dum);
-    oc += t - d;
-    t += stepSize;
-  }
-
-  return clamp(oc, 0., 1.);
-}
 
 
 void main(){
@@ -204,53 +182,32 @@ void main(){
 	float t = u_time*1.;
 	vec2 fc = gl_FragCoord.xy;
 
-	// glitch
-	// float vn = valueNoise(0., vec2(t));
-	// if(vn > .02){
-	// 	fc.x  += 40.;
-	// }
-	// if(vn > 0.1){
-	// 	fc.y -= 35.;
-	// }
-
 	float x =  sin(t) * 10.;
 	float z =  cos(t) * 10.;
-	z = 4.9;
-	x = 4.999999;
+	z = 5.;
+	x = 5.;
 
-	vec3 eye = vec3( x  , 5. , z);
-	vec3 center = vec3(0,0,0);
-	vec3 lightPos =   vec3(-1,5,-1) + eye;
+	vec3 eye = vec3( 8.  , 5. , 8.);
+	vec3 center = vec3(0);
+	vec3 lightPos =  vec3(8,10,8);
+	//  vec3(-1,5,-1) + eye;
 	vec3 up = vec3(0,1,0);
 
 	mat3 viewWorld = viewMatrix(eye, center, up);
-	vec3 ray = rayDirection(80.0, u_res, fc);
+	vec3 ray = rayDirection(70.0, u_res, fc);
 
   vec3 worldDir = viewWorld * ray;
   vec3 col;
   float d = rayMarch(eye, worldDir, col);
 
-
-  // i = 0.1;
   vec3 v = eye + worldDir*d;
 
 	if(d < MaxDist){
-		// float visibleToLight = shadowMarch(eye + ray * d, lightPos);
-		// float visibleToLight = shadowMarch(eye+worldDir*(d-0.001), lightPos);
-
 		vec3 n = estimateNormal(v);
-
+		float _ao = ao(v, n);
 		float lights = lighting(v, n, lightPos);
-
-		i += (d * lights) * col.x;	
+		 i += (lights/5.) * (1.-_ao)*10.;
 	}
-
-  float fog = 5./ pow( d, 2.);
-  // i *= fog;
-
-	// float vignette = 1.-smoothstep(0.9, 1., abs(p.x)) *  
-									 // 1.-smoothstep(0.9, 1., abs(p.y));
-	// i *= vignette;
 
 	gl_FragColor = vec4(vec3(i), 1);
 }
