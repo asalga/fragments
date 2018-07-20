@@ -1,21 +1,25 @@
 precision mediump float;
+uniform sampler2D u_t0;
+uniform vec2 u_res;
+uniform float u_time;
 
-uniform sampler2D t0;
-uniform vec2 res;
+float aspect = u_res.x/u_res.y;
 
-float sdCircle(vec2 p, float r){
-	return length(p)-r/2.;
+vec4 sample(vec2 offset){
+  vec2 p = vec2(gl_FragCoord.xy + offset) / u_res;
+  p.y = 1.0 - p.y;
+  return texture2D(u_t0, p);
 }
 
 void main() {
-	vec2 as = vec2(1., res.y/res.x);
-	vec2 p = as * ((gl_FragCoord.xy /res) *2. -1.);
-  vec3 col = texture2D(t0, (p+1.)/2. ).rgb;
+	float numShades = 16.;
+  vec2 p = (gl_FragCoord.xy / u_res);
+  p.y = 1.0 - p.y;
 
-  float c = .5;
-  vec2 np = vec2(mod(p, c)) - c*0.5;
-  float d = step(sdCircle(np, .25), 0.);
-  col *= vec3(d);// + vec3(0,0,1);
+  vec4 diffuse = texture2D(u_t0, p);
+  float intensity = (diffuse.r + diffuse.g + diffuse.b) / 3.0;
+  vec4 final = vec4(  vec3(floor(intensity * numShades)/ numShades), 1.0);
+  gl_FragColor = final;
   
-	gl_FragColor = vec4(col, 1.);
+  
 }

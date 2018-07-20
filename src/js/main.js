@@ -70,8 +70,8 @@ function makeSketch(fs, params) {
       sketchTime = 0;
       tracking = [0, 0];
 
-      p.createCanvas(p.windowWidth, p.windowHeight, p.WEBGL);
-      gfx = p.createGraphics(p.windowWidth, p.windowHeight, p.WEBGL);
+      p.createCanvas(w, h, p.WEBGL);
+      gfx = p.createGraphics(w, h, p.WEBGL);
 
       shader_0 = new p5.Shader(gfx._renderer, globalVs, shader_0_Frag);
       shader_1 = new p5.Shader(p._renderer, globalVs, shader_1_Frag);
@@ -86,8 +86,8 @@ function makeSketch(fs, params) {
           Draw
     */
     p.draw = function() {
-      let width = p.windowWidth;
-      let height = p.windowHeight;
+      let width = w;
+      let height = h;
       let sz = 1.;
 
       gfx.push();
@@ -101,9 +101,9 @@ function makeSketch(fs, params) {
       p.push();
       p.translate(width / 2, height / 2);
       p.shader(shader_1);
-      shader_1.setUniform('res', [width, height]);
+      shader_1.setUniform('u_res', [width, height]);
       shader_1.setUniform('u_time', p.millis() / 1000.);
-      shader_1.setUniform('t0', gfx);
+      shader_1.setUniform('u_t0', gfx);
       p.rect(-width * sz, -height * sz, width * sz, height * sz, 2, 2);
       p.pop();
 
@@ -135,6 +135,6 @@ function getFs1() {
   Promise.all([getFs0(), getFs1()])
     .then(fragShaders => {
       let relPath;
-      let sketch = new p5(makeSketch(fragShaders, {}), relPath);
+      let sketch = new p5(makeSketch(fragShaders, {width:500, height: 500}), relPath);
     });
 })();
