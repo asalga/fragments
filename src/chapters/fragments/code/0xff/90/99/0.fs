@@ -170,12 +170,12 @@ float ao(vec3 p, vec3 n)
 void main(){
 	vec2 p = (gl_FragCoord.xy/u_res)*2. -1.;
 	float i;
-	float t = u_time;
+	float t = u_time*0.;
 
 	float x =  + sin(t*1.) * .2;
 	vec3 eye = vec3(5. + x  , 1.2, 6. + sin(t*1.) * 2.);
 	vec3 center = vec3(2,0,0);
-	vec3 lightPos =   vec3(10, 20,0);
+	vec3 lightPos =   vec3(20,0,0);
 	vec3 up = vec3(0,1,0);
 
 	mat3 viewWorld = viewMatrix(eye, center, up);
@@ -199,9 +199,6 @@ void main(){
 		// i *= fog;
 	}
 
-	if(mod(gl_FragCoord.y, 3.) < 2.){
-		i *= .5;
-	}
 
 	float vignette = 1.-smoothstep(0.9, 1., abs(p.x)) *  
 									 1.-smoothstep(0.9, 1., abs(p.y));

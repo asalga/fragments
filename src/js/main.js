@@ -101,9 +101,17 @@ function makeSketch(fs, params) {
       p.push();
       p.translate(width / 2, height / 2);
       p.shader(shader_1);
-      shader_1.setUniform('u_res', [width, height]);
-      shader_1.setUniform('u_time', p.millis() / 1000.);
-      shader_1.setUniform('u_t0', gfx);
+
+      shader_1.setUniform('col', [1,1, 1]);
+      shader_1.setUniform('res', [width, height]);
+      shader_1.setUniform('time', p.millis() / 1000.);
+      shader_1.setUniform('_', [ -1,  -1,   0, 
+                                 -1,   1,  -1,
+                                 -1,   0,   0,
+                                   0,  1,   0, 
+                                  -1,  1,   0, 
+                                   1,  1,  1]);
+      shader_1.setUniform('t1', gfx);
       p.rect(-width * sz, -height * sz, width * sz, height * sz, 2, 2);
       p.pop();
 
@@ -114,7 +122,7 @@ function makeSketch(fs, params) {
 
 let demo = {
   '0': {
-    src: '../fragments/code/0xff/90/99/0.fs'
+    src: '../fragments/code/0xff/100_199/0/108_seed_of_life.fs'
   },
   '1': {
     src: '../fragments/code/0xff/90/99/1.fs'
