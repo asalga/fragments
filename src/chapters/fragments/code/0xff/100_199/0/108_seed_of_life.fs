@@ -126,13 +126,6 @@ float sdScene(vec3 p, out float col){
 	float c = 1.15;
 	p.z = mod(p.z, c) - c * 0.5;
 
-	float cx = 4.;
-	// p.x = mod(p.x, cx) - cx * 0.5;
-	
-	float cy = 4.;
-	// p.y = mod(p.y, cy) - cy * 0.5;
-
-
 	vec3 _0 = (vec4(p,1.) * r2dX(PI/2.)).xyz + offset * vec3(cos(r*1.), 0, sin(r*1.));
 	d =         sdTorus( _0, vec2(sz, th));
 
@@ -150,6 +143,9 @@ float sdScene(vec3 p, out float col){
 
 	vec3 _5 = (vec4(p,1.) * r2dX(PI/2.)).xyz + offset * vec3(cos(r*6.), 0, sin(r*6.));
 	d = smin(d, sdTorus( _5, vec2(sz, th)), k);
+
+	vec3 _6 = (vec4(p,1.) * r2dX(PI/2.)).xyz;
+	d = smin(d, sdTorus( _6, vec2(sz, th)), k);
 
 	return d;
 }
