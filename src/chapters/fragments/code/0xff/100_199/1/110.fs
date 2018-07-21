@@ -48,7 +48,7 @@ float sdCylinder(vec3 p, vec2 sz ){
 
 
 float lighting(vec3 p, vec3 n, vec3 lightPos){
-	float ambient = .8;
+	float ambient = 1.;
 	// ---
   vec3 pToLight = vec3(lightPos - p);
   float power = 1.;
@@ -57,7 +57,7 @@ float lighting(vec3 p, vec3 n, vec3 lightPos){
   d *= d;
   float nDotL = max(dot(n,lightRayDir), 0.);
   float diffuse = (nDotL*power) / d;
-  float kd = 1.;
+  float kd = 0.;
 
   // ---
   float gloss = 10.;
@@ -124,7 +124,7 @@ float sdScene(vec3 p, out float col){
 
 	float s = sdSphere(p, 1.);
 	float c = cubeSDF(np, vec3(.5, 2, .5));
-	float g = cubeSDF(p, vec3(5, .01, 5));
+	float g = cubeSDF(p+ vec3(0,0.5,0), vec3(5, .5, 5));
 
 	// return min(s,c);
 	// res = min(s, c);
