@@ -46,17 +46,17 @@ float sdCylinder(vec3 p, vec2 sz ){
 }
 
 float lighting(vec3 p, vec3 n, vec3 lightPos){
-	float ambient = .0;
+	float ambient = .1;
 	// ---
   vec3 pToLight = vec3(lightPos - p);
-  float power = 20.;
+  float power = 100.;
   vec3 lightRayDir = normalize(pToLight);
   float d = length(pToLight);
   d *= d;
   float nDotL = max(dot(n,lightRayDir), 0.);
   float diffuse = (nDotL*power) / d;
   // ---
-  float gloss = 140.;
+  float gloss = 1.;
   vec3 H = normalize(lightRayDir + p);
   float NdotH = dot(n, H);
   // vec3 r = reflect(lightRayDir, n);
@@ -112,18 +112,18 @@ mat4 r2dX(float a){
 
 float sdScene(vec3 p, out float col){
 	float d = 1.00;
-	float t = u_time;
+	float t = u_time * 0.1;
 
 	const float r = TAU/6.;
 	const float sz = .8;
 	const float offset = sz;
-	const float th = 0.06;
+	const float th = 0.02;
 	float k = 0.1;
-	//abs(0.2 * sin(t));
 
 	// as each approached camera, quickly 
+	// transition 
 
-	float c = 2.;
+	float c = 1.15;
 	p.z = mod(p.z, c) - c * 0.5;
 
 	float cx = 4.;
@@ -231,20 +231,20 @@ float ao(vec3 p, vec3 n)
 void main(){
 	vec2 p = (gl_FragCoord.xy/u_res)*2. -1.;
 	float i;
-	float t = u_time*4.;
+	float t = u_time*2.;
 
 	float x = sin(t) * 10.;
 	float z = cos(t) * 10.;
 
 	// vec3 eye = vec3( x  , 5. + sin(t*4.)*0.5, z);
-	vec3 eye = vec3(2, 2, 10. + t);
+	vec3 eye = vec3(1, 1, 10. + t);
 
-	vec3 center = vec3(0, 0, eye.z+ 10.);
-	vec3 lightPos =  vec3(0,0,2) + eye;
+	vec3 center = vec3(-2, -1, eye.z+ 10.);
+	vec3 lightPos =  vec3(0,0,-5) + eye;
 	vec3 up = vec3(0,1,0);
 
 	mat3 viewWorld = viewMatrix(eye, center, up);
-	vec3 ray = rayDirection( sin(t/10.)*0. + 80.0, u_res, gl_FragCoord.xy);
+	vec3 ray = rayDirection( 120.0, u_res, gl_FragCoord.xy);
 
   vec3 worldDir = viewWorld * ray;
   vec3 col;
@@ -261,7 +261,7 @@ void main(){
 
 		i += lights;// * col.x;	
 
-		float fog = 1./pow(d, .8);
+		float fog = 1./pow(d, 1.1);
 		i *= fog;
 	}
 

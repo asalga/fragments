@@ -143,6 +143,6 @@ function getFs1() {
   Promise.all([getFs0(), getFs1()])
     .then(fragShaders => {
       let relPath;
-      let sketch = new p5(makeSketch(fragShaders, {width:500, height: 500}), relPath);
+      let sketch = new p5(makeSketch(fragShaders, {width:600, height: 600}), relPath);
     });
 })();
