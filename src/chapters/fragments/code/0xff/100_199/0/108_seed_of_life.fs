@@ -49,14 +49,14 @@ float lighting(vec3 p, vec3 n, vec3 lightPos){
 	float ambient = .0;
 	// ---
   vec3 pToLight = vec3(lightPos - p);
-  float power = 50.;
+  float power = 20.;
   vec3 lightRayDir = normalize(pToLight);
   float d = length(pToLight);
   d *= d;
   float nDotL = max(dot(n,lightRayDir), 0.);
   float diffuse = (nDotL*power) / d;
   // ---
-  float gloss = 40.;
+  float gloss = 140.;
   vec3 H = normalize(lightRayDir + p);
   float NdotH = dot(n, H);
   // vec3 r = reflect(lightRayDir, n);
@@ -118,35 +118,39 @@ float sdScene(vec3 p, out float col){
 	const float sz = .8;
 	const float offset = sz;
 	const float th = 0.06;
+	float k = 0.1;
+	//abs(0.2 * sin(t));
+
+	// as each approached camera, quickly 
 
 	float c = 2.;
 	p.z = mod(p.z, c) - c * 0.5;
+
+	float cx = 4.;
+	// p.x = mod(p.x, cx) - cx * 0.5;
+	
+	float cy = 4.;
+	// p.y = mod(p.y, cy) - cy * 0.5;
+
 
 	vec3 _0 = (vec4(p,1.) * r2dX(PI/2.)).xyz + offset * vec3(cos(r*1.), 0, sin(r*1.));
 	d =         sdTorus( _0, vec2(sz, th));
 
 	vec3 _1 = (vec4(p,1.) * r2dX(PI/2.)).xyz + offset * vec3(cos(r*2.), 0, sin(r*2.));
-	d = smin(d, sdTorus( _1, vec2(sz, th)), 0.1);
+	d = smin(d, sdTorus( _1, vec2(sz, th)), k);
 
 	vec3 _2 = (vec4(p,1.) * r2dX(PI/2.)).xyz + offset * vec3(cos(r*3.), 0, sin(r*3.));
-	d = smin(d, sdTorus( _2, vec2(sz, th)), 0.1);
+	d = smin(d, sdTorus( _2, vec2(sz, th)), k);
 
 	vec3 _3 = (vec4(p,1.) * r2dX(PI/2.)).xyz + offset * vec3(cos(r*4.), 0, sin(r*4.));
-	d = smin(d, sdTorus( _3, vec2(sz, th)), 0.1);
+	d = smin(d, sdTorus( _3, vec2(sz, th)), k);
 
 	vec3 _4 = (vec4(p,1.) * r2dX(PI/2.)).xyz + offset * vec3(cos(r*5.), 0, sin(r*5.));
-	d = smin(d, sdTorus( _4, vec2(sz, th)), 0.1);
+	d = smin(d, sdTorus( _4, vec2(sz, th)), k);
 
 	vec3 _5 = (vec4(p,1.) * r2dX(PI/2.)).xyz + offset * vec3(cos(r*6.), 0, sin(r*6.));
-	d = smin(d, sdTorus( _5, vec2(sz, th)), 0.1);
+	d = smin(d, sdTorus( _5, vec2(sz, th)), k);
 
-
-	// vec3 _1 = (vec4(p,1.) * r2dX(PI/2.)).xyz + vec3(cos(r*2.), 0, sin(r*2.));
-	// d = min(d, sdTorus( _0, vec2(.5, 0.05)));
-
-	// vec3 _1 = (vec4(p,1.) * r2dX(PI/2.)).xyz + vec3(cos(r*2.), 0, sin(r*2.));
-	// d = min(d, sdTorus( _0, vec2(.5, 0.05)));
-	
 	return d;
 }
 
@@ -233,7 +237,7 @@ void main(){
 	float z = cos(t) * 10.;
 
 	// vec3 eye = vec3( x  , 5. + sin(t*4.)*0.5, z);
-	vec3 eye = vec3(3, 3, 10. + t);
+	vec3 eye = vec3(2, 2, 10. + t);
 
 	vec3 center = vec3(0, 0, eye.z+ 10.);
 	vec3 lightPos =  vec3(0,0,2) + eye;
