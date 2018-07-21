@@ -3,6 +3,31 @@
 */
 'use strict';
 
+let demo = {
+  'size': {
+    'width': 600,
+    'height': 600
+  },
+  '0': {
+    src: '../fragments/code/0xff/100_199/1/110.fs'
+  },
+  '1': {
+    src: '../fragments/code/0xff/post_process/sobel.fs',
+    
+    uniforms: [
+      {
+        'name': 'u_numShades',
+        'value': 10
+      },
+      {
+        'name': '_',
+        'value': [-1, -1, 0, -1, 1, -1, -1, 0, 0, 0, 1, 0, -1, 1, 0, 1, 1, 1]
+      }
+    ]
+
+  }
+};
+
 let globalVs = `
 precision highp float;
 attribute vec3 aPosition;
@@ -106,10 +131,11 @@ function makeSketch(fs, params) {
 
       shader_1.setUniform('u_res', [width, height]);
       shader_1.setUniform('u_time', p.millis() / 1000.);
-      shader_1.setUniform('_', [-1, -1, 0, -1, 1, -1, -1, 0, 0,
-        0, 1, 0, -1, 1, 0,
-        1, 1, 1
-      ]);
+
+      // custom uniforms
+      demo[1].uniforms.forEach( v => {
+        shader_1.setUniform(v.name, v.value);
+      });
       shader_1.setUniform('u_t0', gfx);
       p.rect(-width * sz, -height * sz, width * sz, height * sz, 2, 2);
       p.pop();
@@ -118,22 +144,6 @@ function makeSketch(fs, params) {
   };
   return sketch;
 }
-
-let demo = {
-  'size': {
-    'width': 600,
-    'height': 600
-  },
-  '0': {
-    src: '../fragments/code/0xff/100_199/1/110.fs'
-  },
-  '1': {
-    src: '../fragments/code/0xff/post_process/sobel.fs',
-    uniforms: {
-      // stuff here
-    }
-  }
-};
 
 function getFs0() {
   return fetch(demo[0].src)

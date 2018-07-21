@@ -48,28 +48,34 @@ float sdCylinder(vec3 p, vec2 sz ){
 
 
 float lighting(vec3 p, vec3 n, vec3 lightPos){
-	float ambient = .08;
+	float ambient = .8;
 	// ---
   vec3 pToLight = vec3(lightPos - p);
-  float power = 70.;
+  float power = 1.;
   vec3 lightRayDir = normalize(pToLight);
   float d = length(pToLight);
   d *= d;
   float nDotL = max(dot(n,lightRayDir), 0.);
   float diffuse = (nDotL*power) / d;
+  float kd = 1.;
+
   // ---
-  float gloss = 400.;
+  float gloss = 10.;
   vec3 H = normalize(lightRayDir + p);
-  float NdotH = dot(n, H);
-  // vec3 r = reflect(lightRayDir, n);
-  // float RdotV = dot(r, normalize(p));
-  float spec = pow( NdotH , gloss );
-  // float spec = pow(RdotV, gloss) / d;
+  // float NdotH = max(dot(n, H), .0);
+  vec3 r = reflect(lightRayDir, n);
+  float RdotV = max( 0., dot(r, normalize(p)) );
+  // float spec = pow( NdotH , gloss )/d;
+  float spec = pow(RdotV, gloss);
+  float ks = 0.;
   // ---
+
 
   // return ambient + diffuse + spec;
   // return ambient + spec;
-  return ambient + spec;
+  return	ambient + 
+  			diffuse * kd + 
+  			spec * ks;
 }
 
 vec3 rayDirection(float fieldOfView, vec2 size, vec2 fragCoord) {
@@ -109,17 +115,23 @@ mat4 r2dZ(float a){
 float sdScene(vec3 p, out float col){
 	float res;
 
-	float e = sdEllipsoid(p+ vec3(0,0,-.01), vec3(.5, .5, .7));
-	float c = max( cubeSDF(p, vec3(.5)), -cubeSDF(p, vec3(.3, .3, .51)));
+	
+	vec3 np = p;
 
-	res = min(e,c);
+	float rep = 10.;
+	// np.x = mod(p.x, rep) - rep * 0.5;
+	// np.z = mod(p.z, rep) - rep * 0.5;
+
+	float s = sdSphere(p, 1.);
+	float c = cubeSDF(np, vec3(.5, 2, .5));
+	float g = cubeSDF(p, vec3(5, .01, 5));
+
+	// return min(s,c);
+	// res = min(s, c);
+	res = min(c, g);
 
 	return res;
-	// col = .4;
-	// float d;
-	// float t = u_time * 5.;
 
-	// float c = 1.;
 	// vec3 np = mod(p, vec3(c))-c *0.5;
 	// np.y = p.y;
 	
@@ -140,21 +152,30 @@ float sdScene(vec3 p, out float col){
 	// return d;
 }
 
+float shadowMarch(vec3 point, vec3 lightPos){
 
-float ao(vec3 p, vec3 n)
-{
-  float stepSize = .1;
-  float t = stepSize;
-  float oc = 0.;
-  float dum;
-  for(int i = 0; i < 4; ++i)
-  {
-    float d = sdScene(p+n*t, dum);
-    oc += t - d;
-    t += stepSize;
+  vec3 pToLight = lightPos-point;
+  vec3 rd = normalize(pToLight);
+  vec3 ro = point;
+
+  float s = 0.;
+  for(int i = 0; i < MaxShadowStep; ++i){
+    vec3 v = ro + (rd*s);
+    
+    float dum;
+    float dist;
+    dist = sdScene(v, dum);
+
+    if(dist < Epsilon){
+      return 0.;
+    }
+    s += dist/1.;
+
+    if(s >= MaxDist){
+      return 1.;
+    }
   }
-
-  return clamp(oc, 0., 1.);
+  return 1.;
 }
 
 
@@ -193,21 +214,21 @@ float rayMarch(vec3 ro, vec3 rd, out vec3 col){
 
 
 void main(){
-	// vec2 p = (gl_FragCoord.xy/u_res)*2. -1.;
 	float i;
-	float t = u_time*1.;
+	float t = u_time*1.5;
 	vec2 fc = gl_FragCoord.xy;
 
-	float x =  sin(t) * 10.;
-	float z =  cos(t) * 10.;
-	z = 5.;
-	x = 5.;
+	float x =  sin(t) * 15.;
+	float z =  cos(t) * 15.;
+	x = 10.;
+	z = 10.;
 
-	vec3 eye = vec3( 3,3, 4);
+	vec3 eye = vec3( x, 10, z);
 	vec3 center = vec3(0);
-	vec3 lightPos =  vec3(4,4,10);
-	//  vec3(-1,5,-1) + eye;
+	vec3 lightPos =  vec3(cos(t/2.) * 16. ,7, sin(t/2.) * 16.);
 	vec3 up = vec3(0,1,0);
+	eye.x = -lightPos.x;
+	eye.z = -lightPos.z;
 
 	mat3 viewWorld = viewMatrix(eye, center, up);
 	vec3 ray = rayDirection(70.0, u_res, fc);
@@ -219,10 +240,15 @@ void main(){
   vec3 v = eye + worldDir*d;
 
 	if(d < MaxDist){
+		float visibleToLight = shadowMarch(eye+worldDir*(d-0.01), lightPos);
+
 		vec3 n = estimateNormal(v);
-		float _ao = ao(v, n);
 		float lights = lighting(v, n, lightPos);
-		 i += (lights/5.) * (1.-_ao)*10.;
+		i += lights;
+
+		if(visibleToLight == 0.){
+			i = 0.;
+		}
 	}
 
 	gl_FragColor = vec4(vec3(i), 1);

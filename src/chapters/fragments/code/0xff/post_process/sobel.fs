@@ -47,5 +47,5 @@ void main() {
   float resCol = sqrt(colX.r * colX.r + colY.r * colY.r);
 
   // gl_FragColor = diffuse1;
-  gl_FragColor = vec4( vec3(resCol), 1.0);
+  gl_FragColor = (diffuse1*.0) + vec4( vec3(resCol), 1.0);
 }
