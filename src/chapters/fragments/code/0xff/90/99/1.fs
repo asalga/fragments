@@ -56,13 +56,13 @@ void main() {
 
   float resCol = sqrt(colX.r * colX.r + colY.r * colY.r);
 
-  // gl_FragColor = diffuse1;
+  gl_FragColor = diffuse1;
 
 
   // 50% - 75% 
   // Sobel
   // if(gl_FragCoord.x > res.x * 0.5 && gl_FragCoord.x < res.x * 0.75){
-    gl_FragColor = vec4( vec3(resCol) * vec3(0.8), 1.0);
+    // gl_FragColor = vec4( vec3(resCol) * vec3(0.8), 1.0);
   // }
 
 

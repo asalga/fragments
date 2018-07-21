@@ -48,7 +48,7 @@ float sdCylinder(vec3 p, vec2 sz ){
 
 
 float lighting(vec3 p, vec3 n, vec3 lightPos){
-	float ambient = .2;
+	float ambient = .08;
 	// ---
   vec3 pToLight = vec3(lightPos - p);
   float power = 70.;
@@ -58,15 +58,18 @@ float lighting(vec3 p, vec3 n, vec3 lightPos){
   float nDotL = max(dot(n,lightRayDir), 0.);
   float diffuse = (nDotL*power) / d;
   // ---
-  // float gloss = 30.;
-  // vec3 H = normalize(lightRayDir + p);
-  // float NdotH = dot(n, H);
+  float gloss = 400.;
+  vec3 H = normalize(lightRayDir + p);
+  float NdotH = dot(n, H);
   // vec3 r = reflect(lightRayDir, n);
   // float RdotV = dot(r, normalize(p));
-  // float spec = pow( NdotH , gloss );
+  float spec = pow( NdotH , gloss );
   // float spec = pow(RdotV, gloss) / d;
   // ---
-  return ambient + diffuse;// + spec;
+
+  // return ambient + diffuse + spec;
+  // return ambient + spec;
+  return ambient + spec;
 }
 
 vec3 rayDirection(float fieldOfView, vec2 size, vec2 fragCoord) {
@@ -104,7 +107,14 @@ mat4 r2dZ(float a){
 
 // sss - just a marker
 float sdScene(vec3 p, out float col){
-	return sdEllipsoid(p, vec3(0.3,0.3, 0.5));
+	float res;
+
+	float e = sdEllipsoid(p+ vec3(0,0,-.01), vec3(.5, .5, .7));
+	float c = max( cubeSDF(p, vec3(.5)), -cubeSDF(p, vec3(.3, .3, .51)));
+
+	res = min(e,c);
+
+	return res;
 	// col = .4;
 	// float d;
 	// float t = u_time * 5.;
@@ -193,9 +203,9 @@ void main(){
 	z = 5.;
 	x = 5.;
 
-	vec3 eye = vec3( 8.  , 5. , 8.);
+	vec3 eye = vec3( 3,3, 4);
 	vec3 center = vec3(0);
-	vec3 lightPos =  vec3(8,10,8);
+	vec3 lightPos =  vec3(4,4,10);
 	//  vec3(-1,5,-1) + eye;
 	vec3 up = vec3(0,1,0);
 

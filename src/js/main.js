@@ -90,6 +90,8 @@ function makeSketch(fs, params) {
       let height = h;
       let sz = 1.;
 
+      // TODO: add case if we only have 1 shader
+
       gfx.push();
       gfx.translate(width / 2, height / 2);
       gfx.shader(shader_0);
@@ -102,16 +104,13 @@ function makeSketch(fs, params) {
       p.translate(width / 2, height / 2);
       p.shader(shader_1);
 
-      shader_1.setUniform('col', [1,1, 1]);
-      shader_1.setUniform('res', [width, height]);
-      shader_1.setUniform('time', p.millis() / 1000.);
-      shader_1.setUniform('_', [ -1,  -1,   0, 
-                                 -1,   1,  -1,
-                                 -1,   0,   0,
-                                   0,  1,   0, 
-                                  -1,  1,   0, 
-                                   1,  1,  1]);
-      shader_1.setUniform('t1', gfx);
+      shader_1.setUniform('u_res', [width, height]);
+      shader_1.setUniform('u_time', p.millis() / 1000.);
+      shader_1.setUniform('_', [-1, -1, 0, -1, 1, -1, -1, 0, 0,
+        0, 1, 0, -1, 1, 0,
+        1, 1, 1
+      ]);
+      shader_1.setUniform('u_t0', gfx);
       p.rect(-width * sz, -height * sz, width * sz, height * sz, 2, 2);
       p.pop();
 
@@ -121,11 +120,18 @@ function makeSketch(fs, params) {
 }
 
 let demo = {
+  'size': {
+    'width': 600,
+    'height': 600
+  },
   '0': {
-    src: '../fragments/code/0xff/100_199/0/108_seed_of_life.fs'
+    src: '../fragments/code/0xff/100_199/1/110.fs'
   },
   '1': {
-    src: '../fragments/code/0xff/90/99/1.fs'
+    src: '../fragments/code/0xff/post_process/sobel.fs',
+    uniforms: {
+      // stuff here
+    }
   }
 };
 
@@ -143,6 +149,6 @@ function getFs1() {
   Promise.all([getFs0(), getFs1()])
     .then(fragShaders => {
       let relPath;
-      let sketch = new p5(makeSketch(fragShaders, {width:600, height: 600}), relPath);
+      let sketch = new p5(makeSketch(fragShaders, demo.size), relPath);
     });
 })();
