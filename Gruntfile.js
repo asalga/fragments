@@ -92,29 +92,29 @@ module.exports = function(grunt) {
      * https://github.com/jsoverson/grunt-open
      * Opens the web server in the browser
      */
-    open: {
-      server: {
-        path: `http://localhost:<%= connect.options.port %>/`
-      }
-    },
+    // open: {
+    //   server: {
+    //     path: `http://localhost:<%= connect.options.port %>/`
+    //   }
+    // },
 
     /**
      *  https://www.npmjs.com/package/grunt-processhtml
      *  process <!-- build:include --> directives
      */
-    processhtml: {
-      dev: {
-        options: {
-          process: true
-          // data: config,
-          // strip: true,
-        },
-        files: [{
-          'src': `${app}/chapters/fragments/index.html`,
-          'dest': `${app}/chapters/fragments/index.html`
-        }]
-      }
-    },
+    // processhtml: {
+    //   dev: {
+    //     options: {
+    //       process: true
+    //       // data: config,
+    //       // strip: true,
+    //     },
+    //     files: [{
+    //       'src': `${app}/chapters/fragments/index.html`,
+    //       'dest': `${app}/chapters/fragments/index.html`
+    //     }]
+    //   }
+    // },
 
     /**
      * Connect port/livereload
@@ -154,7 +154,7 @@ module.exports = function(grunt) {
           'copy:dev',
           'copy:demos',
           // 'pug',
-          'processhtml'
+          // 'processhtml'
         ],
         options: {
           livereload: true
@@ -171,12 +171,12 @@ module.exports = function(grunt) {
 
     // HTML process
     // 'pug',
-    'processhtml',
+    // 'processhtml',
     // html validation
 
     // LIVE UPDATES / PREVIEW
     'connect:livereload',
-    'open',
+    // 'open',
     'watch'
   ]);
 };
