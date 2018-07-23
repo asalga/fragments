@@ -1,4 +1,4 @@
-// 109 - The old classic square sin set
+// 109 - "Darkness within Darkness"
 precision highp float;
 uniform vec2 u_res;
 uniform float u_time;
