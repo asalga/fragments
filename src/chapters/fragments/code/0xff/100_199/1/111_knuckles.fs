@@ -1,4 +1,4 @@
-// 111 - ????
+// 111 - ""
 precision highp float;
 uniform vec2 u_res;
 uniform float u_time;
@@ -15,12 +15,14 @@ const float TAU = PI*2.;
 
 const int MaxShadowStep = 100;
 
-const vec3 lightGrey = vec3(1.);
-const vec3 darkGrey = vec3(0.4);
+const vec3 lightGrey = vec3(.9);
+const vec3 darkGrey = vec3(0.1);
 const float X_SCALE= 13443.;
 const float Y_SCALE = 389492.;
 
-
+float sdCircle(vec2 p, float r){
+  return length(p)-r;
+}
 float sdSphere(vec3 p, float r){
   return length(p)-r;
 }
@@ -76,6 +78,16 @@ float cubeSDF(vec3 p, vec3 sz) {
   return insideDistance + outsideDistance;
 }
 
+mat4 r2dX(float a){
+  float c = cos(a);
+  float s = sin(a);
+
+  return mat4(1, -c, s,  0,
+              0,  s, c,  0,
+              0,  0, 0,  0,
+              0,  0, 0,  1);
+}
+
 mat4 r2dY(float a){
   float c = cos(a);
   float s = sin(a);
@@ -100,43 +112,34 @@ mat4 r2dZ(float a){
 float sdScene(vec3 p, out float col){
   col = .5;
   float d = sdSphere(p, 1.33);
-  float t = -u_time * 1.011;
+  float t = -u_time * .5;
 
-  if(d < 0.001){
+  if(d < E){
     // lat squares
     // vec3 referenceVec = -vec3(cos(t),0,sin(t));
     vec3 referenceVec = vec3(0, 0, 1);
     vec3 yzVec = normalize(vec3(0, p.y, p.z));
 
-    // vec3 yzVecRot = (vec4(yzVec,1.) * r2dY(t)).xyz;
-
     float angle = acos(dot(referenceVec, yzVec));
-    // angle = (angle + PI)/2.;
 
     // float angle = atan(yzVecRot.y,yzVecRot.x)/TAU;
-    float div =  PI/10.;
+    float div =  PI/20.;
     if(yzVec.y > 0.){
       angle -= t*2.;
     }
-    col = step(mod(angle + t,div*2.), div);
-    if(yzVec.y > 0.){
-     col = 1.-col;
+    col = step(mod(angle + t, div*2.), div);
+    if(yzVec.y >= E-0.0001){
+      col = 1.-col;
     }
 
     // longitude squares
     vec3 upVec = vec3(1,0,0);
     float longTheta = acos(dot(upVec, p));
-    float divLong = .2;
+    float divLong = PI/20.;
     float longCol = step(mod(longTheta, divLong*2.), divLong);
 
-    // col += longCol;
-    // if(col > 1.){
-    //   col = 0.;
-    // }
-    // col = longCol;
-
     // wut??? this shouldn't work...
-    col = (col+longCol == 1.) ? 0. : 1.;
+    col = (col+longCol == 1.) ? lightGrey.x : darkGrey.x;
   }
 
   return d;
@@ -216,18 +219,21 @@ float ao(vec3 p, vec3 n)
 }
 
 void main(){
+  vec2 p = (gl_FragCoord.xy/u_res)*2. -1.;
+  p.x /= 2.18;
+
   float i;
   float t = u_time*1.;
   vec2 fc = gl_FragCoord.xy;
 
-  // good values
-  vec3 eye = vec3( 0, -1.01, 1.8);
+  // good sexy values
+  vec3 eye = vec3( 0, -1.00, 1.8);
   vec3 center = vec3(0, 5,-2);
 
   // vec3 eye = vec3(0,5,5);
   // vec3 center = vec3(0,0,0.1);
 
-  vec3 lightPos =   vec3(-1,5,-1) + eye;
+  vec3 lightPos = vec3(0,2,2.5);
   vec3 up = vec3(0,1,0);
 
   mat3 viewWorld = viewMatrix(eye, center, up);
@@ -241,10 +247,14 @@ void main(){
   vec3 v = eye + worldDir*d;
 
   if(d < MaxDist){
-    // vec3 n = estimateNormal(v);
-    // float lights = lighting(v, n, lightPos);
-    i = col.x;
+    vec3 n = estimateNormal(v);
+    float lights = lighting(v, n, lightPos);
+    // i = col.x * lights;
     // i += (d * lights) * col.x; 
+    i = col.x * lights;
+  }
+  else{
+    i = mod( floor(sdCircle(p, .45 * t) * 8.)/8. , 1. );
   }
 
   gl_FragColor = vec4(vec3(i), 1);
