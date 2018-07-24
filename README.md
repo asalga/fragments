@@ -6,9 +6,9 @@ Thanks to Patricio Gonzalez Vivo works who gave me the inspiration to make this 
 https://github.com/patriciogonzalezvivo/PixelSpiritDeck
 
 
-
 #TODO
  - move all 'card' data to json file
  - create shortlist of best sketches
  - fix gif exporter.
  - move fragments up one dir
+ - Add GUI to control uniforms

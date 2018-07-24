@@ -15,12 +15,11 @@ let demo = {
     ]
   },
   '1': {
-    src: '../fragments/code/0xff/post_process/null.fs',    
+    src: '../fragments/code/0xff/post_process/sobel.fs',    
     uniforms: [
       { 'name': 'u_numShades', 'value': 10 },
       { 'name': '_', 'value': [-1, -1, 0, -1, 1, -1, -1, 0, 0, 0, 1, 0, -1, 1, 0, 1, 1, 1] }
     ]
-
   }
 };
 
