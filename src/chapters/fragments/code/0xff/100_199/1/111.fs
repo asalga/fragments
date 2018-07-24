@@ -100,13 +100,13 @@ mat4 r2dZ(float a){
 float sdScene(vec3 p, out float col){
   col = .5;
   float d = sdSphere(p, 1.33);
-  float t = u_time * 1.011;
+  float t = -u_time * 1.011;
 
   if(d < 0.001){
     // lat squares
     // vec3 referenceVec = -vec3(cos(t),0,sin(t));
     vec3 referenceVec = vec3(0, 0, 1);
-    vec3 yzVec = normalize(vec3(p.x, 0, p.z));
+    vec3 yzVec = normalize(vec3(0, p.y, p.z));
 
     // vec3 yzVecRot = (vec4(yzVec,1.) * r2dY(t)).xyz;
 
@@ -115,11 +115,11 @@ float sdScene(vec3 p, out float col){
 
     // float angle = atan(yzVecRot.y,yzVecRot.x)/TAU;
     float div =  PI/10.;
-    if(yzVec.x > 0.){
+    if(yzVec.y > 0.){
       angle -= t*2.;
     }
     col = step(mod(angle + t,div*2.), div);
-    if(yzVec.x > 0.){
+    if(yzVec.y > 0.){
      col = 1.-col;
     }
 
@@ -221,11 +221,11 @@ void main(){
   vec2 fc = gl_FragCoord.xy;
 
   // good values
-  // vec3 eye = vec3( 0, -1.01, 1.8);
-  // vec3 center = vec3(0, 5,-2);
+  vec3 eye = vec3( 0, -1.01, 1.8);
+  vec3 center = vec3(0, 5,-2);
 
-  vec3 eye = vec3(0,5,5);
-  vec3 center = vec3(0,0,0.1);
+  // vec3 eye = vec3(0,5,5);
+  // vec3 center = vec3(0,0,0.1);
 
   vec3 lightPos =   vec3(-1,5,-1) + eye;
   vec3 up = vec3(0,1,0);
