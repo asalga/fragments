@@ -2,13 +2,17 @@
 precision highp float;
 uniform vec2 u_res;
 uniform float u_time;
+uniform float u_fov;
 
 const float Epsilon = 0.0001;
 const float E = Epsilon;
 const float MaxDist = 100.;
 const int MaxSteps = 228;
+
 const float PI = 3.141592658;
 const float HALF_PI = PI*0.5;
+const float TAU = PI*2.;
+
 const int MaxShadowStep = 100;
 
 const vec3 lightGrey = vec3(1.);
@@ -16,8 +20,9 @@ const vec3 darkGrey = vec3(0.4);
 const float X_SCALE= 13443.;
 const float Y_SCALE = 389492.;
 
+
 float sdSphere(vec3 p, float r){
-	return length(p)-r;
+  return length(p)-r;
 }
 float valueNoise(float seed, vec2 p){  
   float x = p.x * X_SCALE;
@@ -37,8 +42,8 @@ float sdCylinder(vec3 p, vec2 sz ){
   return  _in + _out;
 }
 float lighting(vec3 p, vec3 n, vec3 lightPos){
-	float ambient = .1;
-	// ---
+  float ambient = .1;
+  // ---
   vec3 pToLight = vec3(lightPos - p);
   float power = 10.;
   vec3 lightRayDir = normalize(pToLight);
@@ -72,53 +77,69 @@ float cubeSDF(vec3 p, vec3 sz) {
 }
 
 mat4 r2dY(float a){
-	float c = cos(a);
-	float s = sin(a);
+  float c = cos(a);
+  float s = sin(a);
 
-	return mat4(-c, 0, s,  0,
-							0,  1, 0,  0,
-							s,  0, c,  0,
-							0,  0, 0,  1);
+  return mat4(-c, 0, s,  0,
+              0,  1, 0,  0,
+              s,  0, c,  0,
+              0,  0, 0,  1);
 }
 
 mat4 r2dZ(float a){
-	float c = cos(a);
-	float s = sin(a);
+  float c = cos(a);
+  float s = sin(a);
 
-	return mat4(c, -s, 0,  0,
-							s,  c, 0,  0,
-							0,  0, 1,  0,
-							0,  0, 0,  1);
+  return mat4(c, -s, 0,  0,
+              s,  c, 0,  0,
+              0,  0, 1,  0,
+              0,  0, 0,  1);
 }
 
 
 float sdScene(vec3 p, out float col){
-	col = .5;
-	float d = sdSphere(p, 1.);
-	return d;
-	// col = .4;
-	// float d;
-	// float t = u_time * 4.;
+  col = .5;
+  float d = sdSphere(p, 1.33);
+  float t = u_time * 1.011;
 
-	// float c = 1.;
-	// vec3 np = mod(p, vec3(c))-c *0.5;
-	// np.y = p.y;
-	
-	// // float xIdx = abs(sin( floor(p.x)/10. + t )) *3.;
-	// float xIdx = floor(p.x)/10.;
-	// float zIdx = floor(p.z)/10.;
+  if(d < 0.001){
+    // lat squares
+    // vec3 referenceVec = -vec3(cos(t),0,sin(t));
+    vec3 referenceVec = vec3(0, 0, 1);
+    vec3 yzVec = normalize(vec3(p.x, 0, p.z));
 
-	// if( abs(p.x) >= 5. || abs(p.z) > 5. ){
-	// 	col =  0.;
-	// 	return MaxDist;
-	// }
+    // vec3 yzVecRot = (vec4(yzVec,1.) * r2dY(t)).xyz;
 
-	// float len = sin(length(vec3(xIdx+zIdx, 0, 0)) * 2. + t) / 4.;
+    float angle = acos(dot(referenceVec, yzVec));
+    // angle = (angle + PI)/2.;
 
-	// vec3 off = vec3(0, -len ,0);
-	// d = cubeSDF( (np + off), vec3(0.4, 1. + len, .25));
+    // float angle = atan(yzVecRot.y,yzVecRot.x)/TAU;
+    float div =  PI/10.;
+    if(yzVec.x > 0.){
+      angle -= t*2.;
+    }
+    col = step(mod(angle + t,div*2.), div);
+    if(yzVec.x > 0.){
+     col = 1.-col;
+    }
 
-	// return d;
+    // longitude squares
+    vec3 upVec = vec3(1,0,0);
+    float longTheta = acos(dot(upVec, p));
+    float divLong = .2;
+    float longCol = step(mod(longTheta, divLong*2.), divLong);
+
+    // col += longCol;
+    // if(col > 1.){
+    //   col = 0.;
+    // }
+    // col = longCol;
+
+    // wut??? this shouldn't work...
+    col = (col+longCol == 1.) ? 0. : 1.;
+  }
+
+  return d;
 }
 
 
@@ -158,24 +179,24 @@ vec3 estimateNormal(vec3 v){
 }
 
 float rayMarch(vec3 ro, vec3 rd, out vec3 col){
-	float s = 0.;
-	for(int i = 0; i < MaxSteps; i++){
-		vec3 p = ro + rd * s;
-		
-		float intensity;
-		float d = sdScene(p, intensity);
-		col = vec3(intensity);
-		
-		if(d < Epsilon){
-			return s;
-		}
-		s += d;
+  float s = 0.;
+  for(int i = 0; i < MaxSteps; i++){
+    vec3 p = ro + rd * s;
+    
+    float intensity;
+    float d = sdScene(p, intensity);
+    col = vec3(intensity);
+    
+    if(d < Epsilon){
+      return s;
+    }
+    s += d;
 
-		if(d > MaxDist){
-			return MaxDist;
-		}
-	}
-	return MaxDist;
+    if(d > MaxDist){
+      return MaxDist;
+    }
+  }
+  return MaxDist;
 }
 
 float ao(vec3 p, vec3 n)
@@ -194,39 +215,37 @@ float ao(vec3 p, vec3 n)
   return clamp(oc, 0., 1.);
 }
 
-
 void main(){
-	float i;
-	float t = u_time*1.;
-	vec2 fc = gl_FragCoord.xy;
+  float i;
+  float t = u_time*1.;
+  vec2 fc = gl_FragCoord.xy;
 
-	float x =  sin(t) * 10.;
-	float z =  cos(t) * 10.;
-	z = 4.9;
-	x = 4.999999;
+  // good values
+  // vec3 eye = vec3( 0, -1.01, 1.8);
+  // vec3 center = vec3(0, 5,-2);
 
-	vec3 eye = vec3( x  , 5. , z);
-	vec3 center = vec3(0,0,0);
-	vec3 lightPos =   vec3(-1,5,-1) + eye;
-	vec3 up = vec3(0,1,0);
+  vec3 eye = vec3(0,5,5);
+  vec3 center = vec3(0,0,0.1);
 
-	mat3 viewWorld = viewMatrix(eye, center, up);
-	vec3 ray = rayDirection(80.0, u_res, fc);
+  vec3 lightPos =   vec3(-1,5,-1) + eye;
+  vec3 up = vec3(0,1,0);
+
+  mat3 viewWorld = viewMatrix(eye, center, up);
+  vec3 ray = rayDirection(u_fov , u_res, fc);
 
   vec3 worldDir = viewWorld * ray;
   vec3 col;
   float d = rayMarch(eye, worldDir, col);
 
-
   // i = 0.1;
   vec3 v = eye + worldDir*d;
 
-	if(d < MaxDist){
-		// vec3 n = estimateNormal(v);
+  if(d < MaxDist){
+    // vec3 n = estimateNormal(v);
+    // float lights = lighting(v, n, lightPos);
+    i = col.x;
+    // i += (d * lights) * col.x; 
+  }
 
-		float lights = lighting(v, n, lightPos);
-		i += (d * lights) * col.x;	
-	}
-
-	gl_FragColor = vec4(vec3(i), 1);
+  gl_FragColor = vec4(vec3(i), 1);
 }

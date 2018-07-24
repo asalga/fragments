@@ -5,11 +5,17 @@
 
 let demo = {
   'size': {
-    'width': 600,
-    'height': 600
+    'width': 500,
+    'height': 500
   },
   '0': {
-    src: '../fragments/code/0xff/100_199/1/111.fs'
+    src: '../fragments/code/0xff/100_199/1/111.fs',
+    uniforms: [
+      {
+        'name': 'u_fov',
+        'value': 70
+      }
+    ]
   },
   '1': {
     src: '../fragments/code/0xff/post_process/null.fs',
@@ -121,22 +127,24 @@ function makeSketch(fs, params) {
       gfx.translate(width / 2, height / 2);
       gfx.shader(shader_0);
       shader_0.setUniform('u_res', [width, height]);
-      shader_0.setUniform('u_time', p.millis() / 1000.);
+      shader_0.setUniform('u_time', p.millis() / 1000.);      
+      demo[0].uniforms.forEach( v => {// custom uniforms
+        shader_0.setUniform(v.name, v.value);
+      });
+
       gfx.rect(-width * sz, -height * sz, width * sz, height * sz, 2, 2);
       gfx.pop();
 
       p.push();
       p.translate(width / 2, height / 2);
       p.shader(shader_1);
-
       shader_1.setUniform('u_res', [width, height]);
       shader_1.setUniform('u_time', p.millis() / 1000.);
-
-      // custom uniforms
-      demo[1].uniforms.forEach( v => {
+      shader_1.setUniform('u_t0', gfx);
+      demo[1].uniforms.forEach( v => {// custom uniforms
         shader_1.setUniform(v.name, v.value);
       });
-      shader_1.setUniform('u_t0', gfx);
+      
       p.rect(-width * sz, -height * sz, width * sz, height * sz, 2, 2);
       p.pop();
 

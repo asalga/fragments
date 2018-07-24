@@ -63,22 +63,30 @@ module.exports = function(grunt) {
       dev: {
         files: [{
           expand: true,
-          cwd: `${src}/`,
+          cwd: `${src}/js/`,
           src: ['**'],
           dest: `${app}/`,
           filter: 'isFile'
-        }]
+        }
+        // {
+        //   expand: true,
+        //   cwd: `${src}/js/main.js`,
+        //   src: ['*'],
+        //   dest: `${app}/`,
+        //   filter: 'isFile'
+        // }
+        ]
       },
       demos: {
         files: [{
           expand: true,
-          cwd: `${src}/chapters/fragments/code/0xff/100_199/0`,
+          cwd: `${src}/chapters/fragments/code/0xff/100_199/1`,
           // cwd: `${src}/chapters/fragments/code/0xff/90/`,
           // cwd: `${src}/chapters/fragments/code/0xff/_wip/`,
           // cwd: `${src}/chapters/fragments/code/ex/`,
           // cwd: `${src}/chapters/fragments/code/0xff/_wip/raymarch/`,
           src: ['**'],
-          dest: `${app}/chapters/fragments/code/0xff/100_199/0`,
+          dest: `${app}/chapters/fragments/code/0xff/100_199/1`,
           // dest: `${app}/chapters/fragments/code/0xff/90/`,
           // dest: `${app}/chapters/fragments/code/ex/`,
           // dest: `${app}/chapters/fragments/code/0xff/_wip/`,
@@ -148,7 +156,8 @@ module.exports = function(grunt) {
       },
       all: {
         files: [
-          `${src}/**/*.*`
+          `${src}/js/**/*.*`,
+          `${src}/chapters/fragments/code/0xff/100_199/1/**/*.*`
         ],
         tasks: [
           'copy:dev',
