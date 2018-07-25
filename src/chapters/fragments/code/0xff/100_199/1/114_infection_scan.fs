@@ -1,4 +1,4 @@
-// 114 - "Square Noise"
+// 114 - "Infection Scan"
 precision mediump float;
 uniform vec2 u_res;
 uniform float u_time;
@@ -6,7 +6,6 @@ uniform float u_time;
 #define Y_SCALE 45343.
 #define X_SCALE 37738.
 #define PI 3.141592658
-
 
 float valueNoise(float seed, vec2 p){  
   float x = p.x * X_SCALE;
@@ -46,36 +45,24 @@ return step(sdRect(p, vec2(dim.x) ), 0.) -
        step(sdRect(p, vec2(dim.x-dim.y) ), 0.);
 }
 
-mat2 r2d(float a){
-  return mat2(cos(a),-sin(a),sin(a), cos(a));
-}
-
-vec2 getNoise(float t){
-  return vec2(sValueNoise(vec2(t))*2. -1.,
-              sValueNoise(vec2(t+100.))*2. -1.);
-}
-
 void main(){
   vec2 p = (gl_FragCoord.xy/u_res)*2.-1.;
   float i = 0.;
-  float t = u_time*2.;
-  
-  // vec2 n = getNoise(t);
-  
-  // float r = sValueNoise(vec2(t+200.)*0.1)*2.*PI;
-  float r = 0.;
-  // vec2 offset = n * 0.5;
-  p = (p*r2d(r));
-  vec2 d = vec2(.5, .03);
+  float t = u_time*1.3;
+  float scale = 16.;
+  float scanSpeed = t/3.;
 
-  i += strokeRect( p + getNoise(t)            * .5 , d);
-  i += strokeRect( p + getNoise(t - .05 * 1.) * .5 , d/2.) * 0.9;
-  i += strokeRect( p + getNoise(t - .05 * 2.) * .5 , d/3.) * 0.6;
-  i += strokeRect( p + getNoise(t - .05 * 3.) * .5 , d/4.) * 0.3;
-  i += strokeRect( p + getNoise(t - .05 * 4.) * .5 , d/5.) * 0.1;
+  vec2 n = vec2(0, sValueNoise(p*scale + vec2(0, t)));
+  i += strokeRect((p+vec2(t, 0  )) * n, vec2(.2, .1)) * 0.75;
 
+  float st = 1.;
+  i *= 0.8 + abs(sin(n.y+t*60.)/1.);// monitor refresh
+  i += strokeRect((p+vec2(0, mod(scanSpeed, st)*st*8. - st*4.)) * n, vec2(.1, .05));
 
-
+  float vignette = 1.-smoothstep(0.5, 1., abs(p.x)) *  
+                   1.-smoothstep(0.5, 1., abs(p.y));
+  i *= vignette;
+  i = i * step(mod(gl_FragCoord.y, 4.), 2.); //scanlines
 
   gl_FragColor = vec4(vec3(i),1);
 }
