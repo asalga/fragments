@@ -9,13 +9,13 @@ let demo = {
     'height': 500
   },
   '0': {
-    src: '../fragments/code/0xff/100_199/1/115.fs',
+    src: '../fragments/code/0xff/100_199/1/115_textured_torus.fs',
     uniforms: [
       // {'name': 'u_fov', 'value': 70}
     ]
   },
   '1': {
-    src: '../fragments/code/0xff/post_process/null.fs',    
+    src: '../fragments/code/0xff/post_process/sobel.fs',    
     uniforms: [
       { 'name': 'u_numShades', 'value': 10 },
       { 'name': '_', 'value': [-1, -1, 0, -1, 1, -1, -1, 0, 0, 0, 1, 0, -1, 1, 0, 1, 1, 1] }
@@ -98,7 +98,7 @@ function makeSketch(fs, params) {
 
       p.pixelDensity(1);
       $(p.canvas).appendTo($('#target'));
-      p.loop();
+      // p.loop();
     };
 
 

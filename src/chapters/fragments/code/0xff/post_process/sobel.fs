@@ -7,7 +7,7 @@ uniform float u_time;
 uniform float _[18];
 
 mat3 sobel = mat3(  -1., .0, 1.,
-                    -2., .1, 2.,
+                    -2., .0, 2.,
                     -1., .0, 1.);
 
 vec4 sample(vec2 offset){
