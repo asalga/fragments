@@ -48,9 +48,9 @@ return step(sdRect(p, vec2(dim.x) ), 0.) -
 void main(){
   vec2 p = (gl_FragCoord.xy/u_res)*2.-1.;
   float i = 0.;
-  float t = u_time*1.3;
+  float t = 1. + u_time*1.0;
   float scale = 16.;
-  float scanSpeed = t/3.;
+  float scanSpeed = t*1.;
 
   vec2 n = vec2(0, sValueNoise(p*scale + vec2(0, t)));
   i += strokeRect((p+vec2(t, 0  )) * n, vec2(.2, .1)) * 0.75;

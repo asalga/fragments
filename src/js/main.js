@@ -9,13 +9,13 @@ let demo = {
     'height': 500
   },
   '0': {
-    src: '../fragments/code/0xff/100_199/1/115_textured_torus.fs',
+    src: '../fragments/code/0xff/100_199/1/114_infection_scan.fs',
     uniforms: [
       // {'name': 'u_fov', 'value': 70}
     ]
   },
   '1': {
-    src: '../fragments/code/0xff/post_process/sobel.fs',    
+    src: '../fragments/code/0xff/post_process/null.fs',    
     uniforms: [
       { 'name': 'u_numShades', 'value': 10 },
       { 'name': '_', 'value': [-1, -1, 0, -1, 1, -1, -1, 0, 0, 0, 1, 0, -1, 1, 0, 1, 1, 1] }
@@ -58,7 +58,7 @@ function makeSketch(fs, params) {
   let w, h;
   let img0, img1, img2;
 
-  let timeVal = { t: 0 };
+  // let timeVal = { t: 0 };
   let sketchTime;
   let tracking = [];
   let easing = 0.05;
@@ -101,6 +101,14 @@ function makeSketch(fs, params) {
       // p.loop();
     };
 
+    p.mouseClicked = function(){
+      start = p.millis();
+    };
+    
+    // p.mousePressed = function(){
+    //  sketchTime = p.millis(); 
+    // }
+
 
     /**
           Draw
@@ -109,6 +117,7 @@ function makeSketch(fs, params) {
       let width = w;
       let height = h;
       let sz = 1.;
+      sketchTime = (p.millis()-start) / 1000;
 
       // TODO: add case if we only have 1 shader
 
@@ -116,7 +125,7 @@ function makeSketch(fs, params) {
       gfx.translate(width / 2, height / 2);
       gfx.shader(shader_0);
       shader_0.setUniform('u_res', [width, height]);
-      shader_0.setUniform('u_time', p.millis() / 1000.);      
+      shader_0.setUniform('u_time', sketchTime);
       demo[0].uniforms.forEach( v => {// custom uniforms
         shader_0.setUniform(v.name, v.value);
       });
@@ -128,7 +137,7 @@ function makeSketch(fs, params) {
       p.translate(width / 2, height / 2);
       p.shader(shader_1);
       shader_1.setUniform('u_res', [width, height]);
-      shader_1.setUniform('u_time', p.millis() / 1000.);
+      shader_1.setUniform('u_time', sketchTime);
       shader_1.setUniform('u_t0', gfx);
       demo[1].uniforms.forEach( v => {// custom uniforms
         shader_1.setUniform(v.name, v.value);
