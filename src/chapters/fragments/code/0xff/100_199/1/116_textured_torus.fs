@@ -169,7 +169,7 @@ float sdScene(vec3 p, out float col){
   n = normalize(n);
 
   vec2 uv = vec2(atan(n.x, n.z) /(PI) + .5,
-                  asin(n.y)*2./PI);
+                  asin(n.y)*2./PI;
                  // asin(n.y)/(PI) + .5);
 
 
