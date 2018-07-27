@@ -1,4 +1,17 @@
-// 113 - "Withering Hope"
+// 115 - "Withering Hope"
+
+/*
+d1 $ stut 4 0.5 0.5
+   $ sound "hit:3"
+   # gain 0.9
+
+d2 $ n "1 ~ 2 ~ 3 0"
+   # s "superchip"
+   # gain 0.5
+   # legato 2.0
+*/
+
+
 precision mediump float;
 uniform vec2 u_res;
 uniform float u_time;

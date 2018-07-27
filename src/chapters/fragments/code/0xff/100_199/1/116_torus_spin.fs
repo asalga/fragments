@@ -22,8 +22,8 @@ float sampleCheckerboard(vec2 c) {
   vec2 co = ((mod(c,sz*2.)-sz*1.)+1.)/2.;
 
   vec2 s = step(co, vec2(.5) );
-  if(s.x == s.y){return 0.4;}
-  return 0.7;
+  if(s.x == 1.){return 0.;}
+  return 1.;
 }
 
 float rectSDF(vec2 p, vec2 size) {//book of shaders
@@ -162,29 +162,37 @@ mat4 r2dZ(float a){
 
 // sss - just a marker
 float sdScene(vec3 p, out float col){
-  float res;
+  // float res;
   float t = u_time/1.;
 
   vec3 n = p;
   n = normalize(n);
 
   vec2 uv = vec2(atan(n.x, n.z) /(PI) + .5,
-                  asin(n.y)*2./PI;
+                  asin(n.y)*2./PI);
                  // asin(n.y)/(PI) + .5);
 
 
-  uv.y += t * .25;
-  float distend = 1. + sin(t);
+  uv.x += t * .25;
+  // float distend = 1. + sin(t);
   // + sin(t);
   //
 
   uv *= 0.25;
 
   col = sampleCheckerboard(uv);
-  float v = sample(uv);
-  res = (v*distend) + sdSphere(p, 1.);
-  return res;
+  // col = 1.;
+  // float v = sample(uv);
+  // res = (v*distend) + sdSphere(p, 1.);
+  float t1 = sdTorus(p, vec2(1., 0.5));
+  float t2 = sdTorus(p+vec3(1.75,0,0), vec2(1., 0.5));
+  float t3 = sdTorus(p+vec3(-1.75,0,0), vec2(1., 0.5));
 
+  float res = min(t1, t2);
+  res = min(res, t3);
+
+  return res;
+}
   // res = sdTorus(p, vec2(1., .25));
   // float s = sdSphere(p+ vec3(1, 0, 0), .27);
   // float c = cubeSDF(p - vec3(0, 0, 1), vec3(1.5, 1, 1.));
@@ -211,7 +219,7 @@ float sdScene(vec3 p, out float col){
   // d = cubeSDF( (np + off) , vec3(0.35, 2. + len*1., .35));
 
   // return d;
-}
+
 
 float shadowMarch(vec3 point, vec3 lightPos){
 
@@ -263,7 +271,7 @@ float rayMarch(vec3 ro, vec3 rd, out vec3 col){
     if(d < Epsilon){
       return s;
     }
-    s += d/5.1;
+    s += d;
 
     if(d > MaxDist){
       return MaxDist;
@@ -280,8 +288,8 @@ void main(){
   vec2 fc = gl_FragCoord.xy;
 
   float dist = 4.;
-  vec3 eye = vec3(dist * cos(t), sin(t) * 3., dist * sin(t));
-  // vec3 eye = vec3(0, 3, 4);
+  // vec3 eye = vec3(dist * cos(t), sin(t) * 3., dist * sin(t));
+  vec3 eye = vec3(0, 7, 4);
   vec3 center = vec3(0, 0, 0.);
   vec3 lightPos =  vec3(0., 0., 0) + eye;
   vec3 up = vec3(0,1,0);
@@ -297,9 +305,10 @@ void main(){
   if(d < MaxDist){
     vec3 n = estimateNormal(v);
     float lights = lighting(v, n, lightPos);
-    i = lights/1.3 * col.x;
-    // i = col.x;
+    // i = lights/1.3 * col.x;
+    i = col.x;
   }
+
 
   gl_FragColor = vec4(vec3(i), 1);
 }

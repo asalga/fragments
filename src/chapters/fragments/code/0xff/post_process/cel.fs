@@ -18,6 +18,7 @@ void main() {
   float intensity = (diffuse.r + diffuse.g + diffuse.b) / 3.0;
   vec4 final = vec4(  vec3(floor(intensity * u_numShades)/ u_numShades), 1.0);
 
+  final = vec4(1)-final;
 	// gl_FragColor = sample(p);  
   gl_FragColor = final;
 }
