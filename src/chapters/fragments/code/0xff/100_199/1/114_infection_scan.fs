@@ -56,13 +56,20 @@ void main(){
   i += strokeRect((p+vec2(t, 0  )) * n, vec2(.2, .1)) * 0.75;
 
   float st = 1.;
-  i *= 0.8 + abs(sin(n.y+t*60.)/1.);// monitor refresh
+  
   i += strokeRect((p+vec2(0, mod(scanSpeed, st)*st*8. - st*4.)) * n, vec2(.1, .05));
+
+  i *= 0.8 + abs(sin(n.y+t*60.)/1.);// monitor refresh
 
   float vignette = 1.-smoothstep(0.5, 1., abs(p.x)) *  
                    1.-smoothstep(0.5, 1., abs(p.y));
   i *= vignette;
-  i = i * step(mod(gl_FragCoord.y, 4.), 2.); //scanlines
+  // i = i * step(mod(gl_FragCoord.y, 4.), 2.); //scanlines
+  float scanline =  step(mod(gl_FragCoord.y, 4.), 2.);
+  if(scanline == 0.){
+    i *= 0.5;
+  }
+
 
   gl_FragColor = vec4(vec3(i),1);
 }
