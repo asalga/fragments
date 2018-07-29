@@ -250,7 +250,7 @@ void main(){
   vec3 up = vec3(0,1,0);
 
   mat3 viewWorld = viewMatrix(eye, center, up);
-  vec3 ray = rayDirection(70., u_res, fc);
+  vec3 ray = rayDirection(90. - sin(t)*30. , u_res, fc);
 
   vec3 worldDir = viewWorld * ray;
   vec3 col;
