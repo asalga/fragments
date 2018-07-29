@@ -180,8 +180,8 @@ float sdScene(vec3 p, out float col){
   vec2 uv = vec2(atan(n.x, n.z) /(PI) + .5,
                  asin(n.y)/(PI) + .5);
 
-  uv.y += t * .025;
-  uv.x += t*0.1;
+  // uv.y += t * .025;
+  // uv.x += t*0.1;
   uv *= 80.;
 
   col = sample(uv);
@@ -241,7 +241,7 @@ float rayMarch(vec3 ro, vec3 rd, out vec3 col){
     if(d < Epsilon){
       return s;
     }
-    s += d/1.;
+    s += d;
 
     if(d > MaxDist){
       return MaxDist;
@@ -271,6 +271,8 @@ void main(){
   vec3 col;
   float d = rayMarch(eye, worldDir, col);
   vec3 v = eye + worldDir*d;
+
+
 
   if(d < MaxDist){
     vec3 n = estimateNormal(v);

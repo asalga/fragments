@@ -1,29 +1,26 @@
-// Torus SDF test
+// 116
 precision highp float;
 uniform vec2 u_res;
 uniform float u_time;
 
-const float Epsilon = 0.0001;
-const float E = Epsilon;
+const float Epsilon = 0.01;
 const float MaxDist = 400.;
 const int MaxSteps = 128;
 const float PI = 3.141592658;
 const float TAU = PI*2.;
 const float HALF_PI = PI*0.5;
-const int MaxShadowStep = 100;
 
 const vec3 lightGrey = vec3(1.);
 const vec3 darkGrey = vec3(0.4);
-const float X_SCALE= 13443.;
-const float Y_SCALE = 389492.;
 
 float sampleCheckerboard(vec2 c) {
-  vec2 sz = vec2(0.005 * PI);
+  vec2 sz = vec2(0.008);
   vec2 co = ((mod(c,sz*2.)-sz*1.)+1.)/2.;
 
   vec2 s = step(co, vec2(.5) );
-  if(s.x == 1.){return 0.;}
-  return 1.;
+  return s.x;
+  //if(s.x == 1.){return 0.;}
+  //return 1.;
 }
 
 float rectSDF(vec2 p, vec2 size) {//book of shaders
@@ -33,29 +30,8 @@ float rectSDF(vec2 p, vec2 size) {//book of shaders
 
 float sample(vec2 c) {
   vec2 sz = vec2(0.005* PI);
-  // vec2 col = step(mod(c, sz*2.), sz);
-  // vec2 co = (mod(c, sz)*4.)-.125;
   vec2 co = mod(c,sz)-sz*0.5;
-
   return rectSDF(co, vec2(0.0125)) * 8.;
-  // return 1.-length(col);
-
-
-  // return pow((length(col) - .001), 0.1);
-  // return pow(1.-(length(col) + 1.), .05);
-
-  // return smoothstep( 0., 1. , length(col)/10.);
-  //pow(1.-(length(col) + 1.), .08);
-
-  // return (col.x+col.y == 1.) ? .9 : .1;
-  // float col;
-  // col = mod(c.y, .5);
-  // return col;
-  // return length(c);
-  // vec2 col = (mod(c, sz*2.)+.0)/2.;
-  // return 1.*col.x;// + col.y;
-  
-  // return length(c);
 }
 
 float sdEllipsoid( in vec3 p, in vec3 r ){
@@ -77,28 +53,12 @@ float sdSphere(vec3 p, float r){
   return length(p)-r;
 }
 
-float valueNoise(float seed, vec2 p){  
-  float x = p.x * X_SCALE;
-  float y = p.y * Y_SCALE;
-  return fract( sin(x+y) * (23454. + seed));
-}
-
-
 mat3 viewMatrix(vec3 eye, vec3 center, vec3 up) {
   vec3 f = normalize(center - eye);
   vec3 s = normalize(cross(f, up));
   vec3 u = cross(s, f);
   return mat3(s, u, -f);
 }
-
-float sdCylinder(vec3 p, vec2 sz ){
-  vec2 d = abs(vec2(length(p.xy),p.z)) - sz;
-  float _out = length(max(vec2(d.x,d.y), 0.));
-  float _in = min(max(d.x,d.y), 0.);
-  return  _in + _out;
-}
-
-
 
 float lighting(vec3 p, vec3 n, vec3 lightPos){
   float ambient = 0.3;
@@ -133,13 +93,6 @@ vec3 rayDirection(float fieldOfView, vec2 size, vec2 fragCoord) {
   return normalize(vec3(xy, -z));
 }
 
-float cubeSDF(vec3 p, vec3 sz) {
-  vec3 d = abs(p) - sz;
-  float insideDistance = min(max(d.x, max(d.y, d.z)), 0.0);
-  float outsideDistance = length(max(d, 0.0));    
-  return insideDistance + outsideDistance;
-}
-
 mat4 r2dY(float a){
   float c = cos(a);
   float s = sin(a);
@@ -148,6 +101,18 @@ mat4 r2dY(float a){
               0,  1, 0,  0,
               s,  0, c,  0,
               0,  0, 0,  1);
+}
+
+
+
+mat4 r2dX(float a){
+  float c = cos(a);
+  float s = sin(a);
+
+  return mat4(1,  0,  0,  0,
+              0,  -c, s,  0,
+              0,  s,  c,  0,
+              0,  0,  0,  1);
 }
 
 mat4 r2dZ(float a){
@@ -160,95 +125,32 @@ mat4 r2dZ(float a){
               0,  0, 0,  1);
 }
 
-// sss - just a marker
 float sdScene(vec3 p, out float col){
-  // float res;
   float t = u_time/1.;
 
   vec3 n = p;
   n = normalize(n);
 
-  vec2 uv = vec2(atan(n.x, n.z) /(PI) + .5,
-                  asin(n.y)*2./PI);
-                 // asin(n.y)/(PI) + .5);
-
-
-  uv.x += t * .25;
-  // float distend = 1. + sin(t);
-  // + sin(t);
-  //
-
-  uv *= 0.25;
-
-  col = sampleCheckerboard(uv);
-  // col = 1.;
-  // float v = sample(uv);
-  // res = (v*distend) + sdSphere(p, 1.);
-  float t1 = sdTorus(p, vec2(1., 0.5));
-  float t2 = sdTorus(p+vec3(1.75,0,0), vec2(1., 0.5));
-  float t3 = sdTorus(p+vec3(-1.75,0,0), vec2(1., 0.5));
-
-  float res = min(t1, t2);
-  res = min(res, t3);
-
-  return res;
-}
-  // res = sdTorus(p, vec2(1., .25));
-  // float s = sdSphere(p+ vec3(1, 0, 0), .27);
-  // float c = cubeSDF(p - vec3(0, 0, 1), vec3(1.5, 1, 1.));
-  // // res = min(res, s);
-
-  // res = max(res, -c);
-  // return res;
-
-  // vec3 np = mod(p, vec3(c))-c *0.5;
-  // np.y = p.y;
-  
-  // // float xIdx = abs(sin( floor(p.x)/10. + t )) *3.;
-  // float xIdx = floor(p.x)/10.;
-  // float zIdx = floor(p.z)/10.;
-
-  // float cnt = 9.;
-  // if( abs(p.x) >= cnt || abs(p.z) > cnt ){
-  //  col =  0.;
-  //  return MaxDist;
+  vec2 uv = vec2(atan(n.x, n.z)/PI + .5,
+                  asin(n.y)/PI + 0.5);
+  // if(n.x < 0.){
+  //   uv.y *- -1.;
   // }
+  // uv.x += t * .25;
+  uv *= 0.25;
+ 
+  // col = sampleCheckerboard(uv);
 
-  // float len = sin(length( vec3(9.) * vec3(xIdx, 0, zIdx)) - t) / 8.;
-  // vec3 off = vec3(0, -len ,0);
-  // d = cubeSDF( (np + off) , vec3(0.35, 2. + len*1., .35));
+  float t1 = sdTorus( (vec4(p,1) * r2dX(t*0.00)).xyz + vec3(1,0,0), vec2(1.5, 0.85));
+  // float t1 = sdTorus( p, vec2(1.5, 0.85));
+  // float t2 = sdTorus(p+vec3(1.75,0,0), vec2(1., 0.5));
+  // float t3 = sdTorus(p+vec3(-1.75,0,0), vec2(1., 0.5));
+  // float res = min(t1, t2);
+  // res = min(res, t3);
 
-  // return d;
-
-
-float shadowMarch(vec3 point, vec3 lightPos){
-
-  vec3 pToLight = lightPos-point;
-  vec3 rd = normalize(pToLight);
-  vec3 ro = point;
-
-  float s = 0.;
-  for(int i = 0; i < MaxShadowStep; ++i){
-    vec3 v = ro + (rd*s);
-    
-    float dum;
-    float dist;
-    dist = sdScene(v, dum);
-
-    if(dist < Epsilon){
-      return 0.;
-    }
-    s += dist/1.;
-
-    if(s >= MaxDist){
-      return 1.;
-    }
-  }
-  return 1.;
+  return t1;
+  // return res;
 }
-
-
-
 
 vec3 estimateNormal(vec3 v){
   vec3 n;
@@ -271,7 +173,7 @@ float rayMarch(vec3 ro, vec3 rd, out vec3 col){
     if(d < Epsilon){
       return s;
     }
-    s += d;
+    s += d/2.;
 
     if(d > MaxDist){
       return MaxDist;
@@ -280,7 +182,35 @@ float rayMarch(vec3 ro, vec3 rd, out vec3 col){
   return MaxDist;
 }
 
+float getColor(vec3 n){
+  float t = u_time * 0.0;
 
+  // float u = acos(n.y/1.)*TAU;
+  // float v = acos(n.x/(1.+ 0.5 *cos(2.*PI) ))*TAU;
+  // vec2 uv = vec2(u,v);
+  
+  float a = atan(n.x, n.z)/PI + .5;
+  vec2 uv = vec2(a+t, 0.);
+
+
+  vec3 up = vec3(0,1,0);
+  float an = acos( dot(up,n));
+
+  if(an > PI/2.){
+    // uv.x = 0.;
+  }
+
+  // if(n.x < 0. && n.z < 0.){
+  //   uv.x *= 0.1;
+  //   // uv.x = 0.;
+  // }
+  
+
+  // uv.x += t * .25;
+  uv *= 0.25 / PI;
+
+  return sampleCheckerboard(uv);
+}
 
 void main(){
   float i;
@@ -304,11 +234,14 @@ void main(){
 
   if(d < MaxDist){
     vec3 n = estimateNormal(v);
+
+    float intensity = getColor(n);
+
     float lights = lighting(v, n, lightPos);
     // i = lights/1.3 * col.x;
-    i = col.x;
+    // i = col.x;
+    i = intensity;
   }
-
 
   gl_FragColor = vec4(vec3(i), 1);
 }
