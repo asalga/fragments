@@ -17,20 +17,37 @@ const vec3 darkGrey = vec3(0.4);
 const float X_SCALE= 13443.;
 const float Y_SCALE = 389492.;
 
+float sdCircle(vec2 p, float r){
+  float d = length(p) - r;
+  return d;
+}
 
+float sdRect(vec2 p, vec2 size) {//book of shaders
+  vec2 d = abs(p) - size;
+  return min(max(d.x,d.y),.0)+length(max(d,.0));
+}
 
-float sample(vec2 c) {
-   // vec2 sz = vec2(0.005 * PI);
+float sample(vec2 c, vec3 n) {
+  float t = u_time*0.3;
+
   vec2 sz = vec2(1.);
-  vec2 co = ((mod(c,sz*2.)-sz*1.)+1.)/2.;
-  return step(length(co-vec2(.5))-.25, 0.);
+  vec2 co = ((mod(c,sz*2.)-sz)+1.)/2.;
+  co -= vec2(0.5);
 
+  float d;
+  float outer = step(sdCircle(co, .25), 0.);
+  float inner = step(sdCircle(co, .22), 0.);
+  d += outer - inner;
+
+  float _ = acos(dot(vec3(0,1,0), n))+t*2.;// +  acos(dot(vec3(1,0,0), n))*10./PI   + t;
+  co *= mat2( -cos(_), sin(_),
+              sin(_), cos(_));
+
+  float w = 0.3;
+  d += step(sdRect(co, vec2(w) ), 0.) - step(sdRect(co, vec2(w*0.95) ), 0.);
+
+  return d;
   vec2 s = step(co, vec2(.5) );
-  // return length(s)-1.;
-  // return length(c)-.25;
-
-  if(s.x == s.y){return 0.1;}
-  return 0.9;
 }
 
 
@@ -40,37 +57,18 @@ float rectSDF(vec2 p, vec2 size) {//book of shaders
   return min(max(d.x,d.y),.0)+length(max(d,.0));
 }
 
-// float sample(vec2 c) {
-//   vec2 sz = vec2(0.005* PI);
-//   // vec2 col = step(mod(c, sz*2.), sz);
-//   // vec2 co = (mod(c, sz)*4.)-.125;
-//   vec2 co = mod(c,sz)-sz*0.5;
 
-//   return rectSDF(co, vec2(0.0125)) * 8.;
-//   // return 1.-length(col);
-
-
-//   // return pow((length(col) - .001), 0.1);
-//   // return pow(1.-(length(col) + 1.), .05);
-
-//   // return smoothstep( 0., 1. , length(col)/10.);
-//   //pow(1.-(length(col) + 1.), .08);
-
-//   // return (col.x+col.y == 1.) ? .9 : .1;
-//   // float col;
-//   // col = mod(c.y, .5);
-//   // return col;
-//   // return length(c);
-//   // vec2 col = (mod(c, sz*2.)+.0)/2.;
-//   // return 1.*col.x;// + col.y;
-  
-//   // return length(c);
-// }
 
 float sdEllipsoid( in vec3 p, in vec3 r ){
     return (length( p/r ) - 1.0) * min(min(r.x,r.y),r.z);
 }
 
+mat4 scale(vec3 v){
+    return mat4(v.x,  0,  0,  0,
+                0,  v.y, 0,  0,
+                0,  0,  v.z,  0,
+                0,  0,  0,  1);
+}
 // x => overall size/radius
 // y => thickness
 float sdTorus(vec3 p, vec2 t){  
@@ -113,7 +111,7 @@ float lighting(vec3 p, vec3 n, vec3 lightPos){
   float ambient = 0.3;
   // ---
   vec3 pToLight = vec3(lightPos - p);
-  float power = 24.;
+  float power = 44.;
   vec3 lightRayDir = normalize(pToLight);
   float d = length(pToLight);
   d *= d;
@@ -132,7 +130,7 @@ float lighting(vec3 p, vec3 n, vec3 lightPos){
   float ks = 0.;
   // ---
 
-  return ambient + diffuse;// + spec;
+  return ambient + diffuse + spec;
   // return spec;
 }
 
@@ -158,7 +156,15 @@ mat4 r2dY(float a){
               s,  0, c,  0,
               0,  0, 0,  1);
 }
+mat4 r2dX(float a){
+  float c = cos(a);
+  float s = sin(a);
 
+  return mat4(1,  0,  0,  0,
+              0,  -c, s,  0,
+              0,  s,  c,  0,
+              0,  0,  0,  1);
+}
 mat4 r2dZ(float a){
   float c = cos(a);
   float s = sin(a);
@@ -177,46 +183,25 @@ float sdScene(vec3 p, out float col){
   vec3 n = p;
   n = normalize(n);
 
-  vec2 uv = vec2(atan(n.x, n.z) /(PI) + .5,
-                 asin(n.y)/(PI) + .5);
+  // vec2 uv = vec2(atan(n.x, n.z) /(PI) + .5,
+                 // asin(n.y)/(PI) + .5);
+  // uv *= 80.;
 
-  // uv.y += t * .025;
-  // uv.x += t*0.1;
-  uv *= 80.;
 
-  col = sample(uv);
-  float v = sample(uv);
+  // n.x+=0.1 * t;
+  float u = acos(n.y/1.)*TAU;
+  float v = acos(n.x/(1.+ .25 * cos(2.*PI) ))*TAU;
+  v += t*1.5;
+  u -= t*2.;
+  vec2 uv = vec2(u*2.,v);
+
+  col = sample(uv,n);
+  // col = test(uv);
+
   // res = sdSphere(p, 1.);
-  res = -sdTorus(p, vec2(2., 1.7));
+  res = -sdTorus( (vec4(p,1)*scale(vec3(1, 1., 1) )).xyz , vec2(2.2, 1.7));
   return res;
 }
-
-float shadowMarch(vec3 point, vec3 lightPos){
-
-  vec3 pToLight = lightPos-point;
-  vec3 rd = normalize(pToLight);
-  vec3 ro = point;
-
-  float s = 0.;
-  for(int i = 0; i < MaxShadowStep; ++i){
-    vec3 v = ro + (rd*s);
-    
-    float dum;
-    float dist;
-    dist = sdScene(v, dum);
-
-    if(dist < Epsilon){
-      return 0.;
-    }
-    s += dist;
-
-    if(s >= MaxDist){
-      return 1.;
-    }
-  }
-  return 1.;
-}
-
 
 
 
@@ -259,9 +244,9 @@ void main(){
 
   float dist = 4.;
   // vec3 eye = vec3(dist * cos(t), sin(t) * 3., dist * sin(t));
-  vec3 eye = vec3(0, 0, 3.3);
+  vec3 eye = vec3(0, 0, 3.69);
   vec3 center = vec3(0, 0, 0.);
-  vec3 lightPos =  vec3(0., 0., 0) + eye;
+  vec3 lightPos =  vec3(0., 0., 4) + eye;
   vec3 up = vec3(0,1,0);
 
   mat3 viewWorld = viewMatrix(eye, center, up);
@@ -271,7 +256,6 @@ void main(){
   vec3 col;
   float d = rayMarch(eye, worldDir, col);
   vec3 v = eye + worldDir*d;
-
 
 
   if(d < MaxDist){
