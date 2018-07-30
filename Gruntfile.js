@@ -30,19 +30,19 @@ module.exports = function(grunt) {
       ]
     },
 
-    /*
-     */
-    pug: {
-      dev: {
-        options: {
-          pretty: true
-        },
-        files: [{
-          src: `${src}/chapters/fragments/index.pug`,
-          dest: `${tmp}/templates-compiled/index.html`
-        }]
-      }
-    },
+    // /*
+    //  */
+    // pug: {
+    //   dev: {
+    //     options: {
+    //       pretty: true
+    //     },
+    //     files: [{
+    //       src: `${src}/chapters/fragments/index.pug`,
+    //       dest: `${tmp}/templates-compiled/index.html`
+    //     }]
+    //   }
+    // },
 
     /** 
      */
@@ -148,6 +148,7 @@ module.exports = function(grunt) {
       all: {
         files: [
           `${src}/js/**/*.*`,
+          `${src}/chapters/fragments/code/0xff/100_199/1/**/*.*`,
           `${src}/chapters/fragments/code/0xff/100_199/2/**/*.*`
         ],
         tasks: [

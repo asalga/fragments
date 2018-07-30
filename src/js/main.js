@@ -9,7 +9,7 @@ let demo = {
     'height': 500
   },
   '0': {
-    src: '../fragments/code/0xff/100_199/2/120.fs',
+    src: '../fragments/code/0xff/100_199/2/121_box_tex_displace.fs',
     uniforms: [
       // {'name': 'u_fov', 'value': 70}
     ]

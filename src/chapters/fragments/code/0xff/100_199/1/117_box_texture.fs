@@ -1,4 +1,4 @@
-// 117 - cube vortex
+// 117 - "box texture"
 precision highp float;
 uniform vec2 u_res;
 uniform float u_time;
