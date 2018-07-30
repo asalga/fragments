@@ -21,7 +21,7 @@ float sdCircle(vec2 p, float r){
 float sdScene(vec2 p){
 	float d = sdRect(p, vec2(0.25));
 	float c = sdCircle(p + vec2(.5), .1);
-	return c;//min(d,c);
+	return min(d,c);
 }
 
 float sdSceneRender(vec2 p){
@@ -36,6 +36,11 @@ float shadowMarch(vec2 p, vec2 l){
 	for(int it = 0; it < MaxShadowStep; it++){
 		vec2 v = ro + (rd*s);
 		float d = sdScene(v);		
+
+		// if we went father than the distance form point to light
+		if( length(rd*s) > length(l-p) ){
+			return 1.;
+		}
 
 		if(d < Epsilon){
 			return 0.;
@@ -53,7 +58,7 @@ void main(){
 
 	vec2 lightPos = vec2(m.x, m.y);
 
-	float i = .3+sdScene(p);
+	float i = 1.-sdSceneRender(p);
 
 	float visibleToLight = shadowMarch(p, lightPos);
 	
