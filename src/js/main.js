@@ -9,13 +9,13 @@ let demo = {
     'height': 500
   },
   '0': {
-    src: '../fragments/code/0xff/100_199/1/118_terrain_scan.fs',
+    src: '../fragments/code/0xff/100_199/2/120.fs',
     uniforms: [
       // {'name': 'u_fov', 'value': 70}
     ]
   },
   '1': {
-    src: '../fragments/code/0xff/post_process/sobel.fs',    
+    src: '../fragments/code/0xff/post_process/null.fs',    
     uniforms: [
       { 'name': 'u_numShades', 'value': 10 },
       { 'name': '_', 'value': [-1, -1, 0, -1, 1, -1, -1, 0, 0, 0, 1, 0, -1, 1, 0, 1, 1, 1] }
@@ -125,6 +125,14 @@ function makeSketch(fs, params) {
       gfx.translate(width / 2, height / 2);
       gfx.shader(shader_0);
       shader_0.setUniform('u_res', [width, height]);
+      shader_0.setUniform('u_mouse', [p.mouseX, p.mouseY]);
+
+         // if (fs.match(/uniform\s+vec3\s+u_mouse/)) {
+        let x = p.mouseX.clamp(0, w);
+        let y = p.mouseY.clamp(0, h);
+        shader_0.setUniform('u_mouse', [x, y, mouseIsDown]);
+
+
       shader_0.setUniform('u_time', sketchTime);
       demo[0].uniforms.forEach( v => {// custom uniforms
         shader_0.setUniform(v.name, v.value);

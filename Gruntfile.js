@@ -81,13 +81,13 @@ module.exports = function(grunt) {
       demos: {
         files: [{
           expand: true,
-          cwd: `${src}/chapters/fragments/code/0xff/100_199/1`,
+          cwd: `${src}/chapters/fragments/code/0xff/100_199/2`,
           // cwd: `${src}/chapters/fragments/code/0xff/90/`,
           // cwd: `${src}/chapters/fragments/code/0xff/_wip/`,
           // cwd: `${src}/chapters/fragments/code/ex/`,
           // cwd: `${src}/chapters/fragments/code/0xff/_wip/raymarch/`,
           src: ['**'],
-          dest: `${app}/chapters/fragments/code/0xff/100_199/1`,
+          dest: `${app}/chapters/fragments/code/0xff/100_199/2`,
           // dest: `${app}/chapters/fragments/code/0xff/90/`,
           // dest: `${app}/chapters/fragments/code/ex/`,
           // dest: `${app}/chapters/fragments/code/0xff/_wip/`,
@@ -96,16 +96,6 @@ module.exports = function(grunt) {
         }]
       }
     },
-
-    /**
-     * https://github.com/jsoverson/grunt-open
-     * Opens the web server in the browser
-     */
-    // open: {
-    //   server: {
-    //     path: `http://localhost:<%= connect.options.port %>/`
-    //   }
-    // },
 
     /**
      *  https://www.npmjs.com/package/grunt-processhtml
@@ -158,7 +148,7 @@ module.exports = function(grunt) {
       all: {
         files: [
           `${src}/js/**/*.*`,
-          `${src}/chapters/fragments/code/0xff/100_199/1/**/*.*`
+          `${src}/chapters/fragments/code/0xff/100_199/2/**/*.*`
         ],
         tasks: [
           'copy:dev',
@@ -174,19 +164,8 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask('default', [
-    // JS process
-    // 'jshint',
-
     'copy',
-
-    // HTML process
-    // 'pug',
-    // 'processhtml',
-    // html validation
-
-    // LIVE UPDATES / PREVIEW
     'connect:livereload',
-    // 'open',
     'watch'
   ]);
 };
