@@ -149,7 +149,7 @@ module.exports = function(grunt) {
         files: [
           `${src}/js/**/*.*`,
           `${src}/chapters/fragments/code/0xff/100_199/1/**/*.*`,
-          `${src}/chapters/fragments/code/0xff/100_199/2/**/*.*`
+          `${src}/chapters/fragments/code/0xff/100_199/1/**/*.*`
         ],
         tasks: [
           'copy:dev',
