@@ -13,9 +13,11 @@ const float HALF_PI = PI*0.5;
 
 const vec3 lightGrey = vec3(1.);
 const vec3 darkGrey = vec3(0.4);
+
 float cSDF(vec2 p, float r){
   return length(p) - r;
 }
+
 float sdSphere(vec3 p, float r){
   return length(p)-r;
 }

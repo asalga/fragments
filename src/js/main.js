@@ -9,8 +9,12 @@ let demo = {
     'height': 500
   },
   '0': {
-    src: '../fragments/code/0xff/100_199/2/121_box_tex_displace.fs',
+    // src: '../fragments/code/0xff/100_199/2/121_box_tex_displace.fs',
+    src: '../fragments/code/0xff/100_199/2/122_slice_of_noise.fs',
+
     uniforms: [
+      //lights
+      // {'name': 'ks', 'value': 70}
       // {'name': 'u_fov', 'value': 70}
     ]
   },
@@ -128,8 +132,8 @@ function makeSketch(fs, params) {
       // shader_0.setUniform('u_mouse', [p.mouseX, p.mouseY]);
 
       // if (fs.match(/uniform\s+vec3\s+u_mouse/)) {
-      let x = p.mouseX.clamp(0, w);
-      let y = p.mouseY.clamp(0, h);
+      let x = p.mouseX.clamp(0, w)/width;
+      let y = p.mouseY.clamp(0, h)/height;
       shader_0.setUniform('u_mouse', [x, y, mouseIsDown]);
 
 
@@ -137,6 +141,10 @@ function makeSketch(fs, params) {
       demo[0].uniforms.forEach(v => { // custom uniforms
         shader_0.setUniform(v.name, v.value);
       });
+
+      // console.log(x,y);
+      shader_0.setUniform('u_kd', x);
+      shader_0.setUniform('u_ks', y);
 
       gfx.rect(-width * sz, -height * sz, width * sz, height * sz, 2, 2);
       gfx.pop();
