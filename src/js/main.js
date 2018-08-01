@@ -12,7 +12,7 @@ let demo = {
     // src: '../fragments/code/0xff/100_199/2/121_box_tex_displace.fs',
     // src: '../fragments/code/0xff/100_199/2/122_slice_of_noise.fs',
     // src: '../fragments/code/0xff/100_199/2/123_cel_twist.fs',
-    src: '../fragments/code/0xff/100_199/2/121_shadow_march_2d.fs',
+    src: '../fragments/code/0xff/100_199/2/121_shadow_march_2d_catacombs.fs',
 
     uniforms: [
       //lights
