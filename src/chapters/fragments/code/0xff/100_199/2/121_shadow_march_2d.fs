@@ -1,6 +1,4 @@
 // 121 - "2D Shadow March"
-// shadowmarch from pixel to light
-// top down? bird's eye view?
 precision highp float;
 uniform vec2 u_res;
 uniform float u_time;
@@ -19,9 +17,23 @@ float sdCircle(vec2 p, float r){
 }
 
 float sdScene(vec2 p){
-	float d = sdRect(p, vec2(0.25));
-	float c = sdCircle(p + vec2(.5), .1);
-	return min(d,c);
+	float res = 1.;
+	float t = u_time * .3;
+
+	float rad = .081;
+	
+	for(float it = 0.; it < 4.; ++it){
+
+		float x = mod(it/2.+t, 2. + rad*2.) - 1. - rad;
+
+		float cTop = sdCircle(p + vec2(x, .5), rad);	
+		float cBot = sdCircle(p + vec2(x, -.5), rad);	
+
+		res = min(res, cBot);
+		res = min(res, cTop);
+	}
+
+	return res;
 }
 
 float sdSceneRender(vec2 p){
@@ -53,20 +65,17 @@ float shadowMarch(vec2 p, vec2 l){
 
 void main(){
 	vec2 p = (gl_FragCoord.xy/u_res)*2.-1.;
-	vec2 m = vec2(u_mouse.xy/u_res)*2.-1.;
-	m.y *= -1.;
 
-	vec2 lightPos = vec2(m.x, m.y);
+	vec2 lightPos = vec2(sin(u_time*2.)*0.5, sin(u_time*3.)*.3);
 
 	float i = 1.-sdSceneRender(p);
+	i -= 0.4;
+
+	// draw light
+	i += step(sdCircle(p-lightPos, 0.01), 0.);
 
 	float visibleToLight = shadowMarch(p, lightPos);
-	
-	if(visibleToLight == 0.){
-		i -= .5;
-	}
-
-	// i = 1.-i;
+	i -= step(visibleToLight, 0.)*.4;
 
 	gl_FragColor = vec4(vec3(i),1);
 }

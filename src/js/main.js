@@ -10,7 +10,9 @@ let demo = {
   },
   '0': {
     // src: '../fragments/code/0xff/100_199/2/121_box_tex_displace.fs',
-    src: '../fragments/code/0xff/100_199/2/122_slice_of_noise.fs',
+    // src: '../fragments/code/0xff/100_199/2/122_slice_of_noise.fs',
+    // src: '../fragments/code/0xff/100_199/2/123_cel_twist.fs',
+    src: '../fragments/code/0xff/100_199/2/121_shadow_march_2d.fs',
 
     uniforms: [
       //lights
@@ -102,7 +104,7 @@ function makeSketch(fs, params) {
 
       p.pixelDensity(1);
       $(p.canvas).appendTo($('#target'));
-      // p.loop();
+      // p.noLoop();
     };
 
     p.mouseClicked = function() {
