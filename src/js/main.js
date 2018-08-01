@@ -9,13 +9,13 @@ let demo = {
     'height': 500
   },
   '0': {
-    src: '../fragments/code/0xff/100_199/2/123.fs',
+    src: '../fragments/code/0xff/100_199/2/121_box_tex_displace.fs',
     uniforms: [
       // {'name': 'u_fov', 'value': 70}
     ]
   },
   '1': {
-    src: '../fragments/code/0xff/post_process/cel.fs',    
+    src: '../fragments/code/0xff/post_process/null.fs',    
     uniforms: [
       { 'name': 'u_numShades', 'value': 10 },
       { 'name': '_', 'value': [-1, -1, 0, -1, 1, -1, -1, 0, 0, 0, 1, 0, -1, 1, 0, 1, 1, 1] }
