@@ -1,3 +1,6 @@
+/*
+  Sobel
+*/
 precision mediump float;
 
 uniform sampler2D u_t0;
@@ -46,9 +49,8 @@ void main() {
 
   float resCol = sqrt(colX.r * colX.r + colY.r * colY.r);
 
-  // resCol = resCol * step(mod(gl_FragCoord.y, 2.), 1.); //scanlines
+  resCol = resCol * step(mod(gl_FragCoord.y, 2.), 1.); //scanlines
 
   // gl_FragColor = diffuse1;
   gl_FragColor = (diffuse1) +  vec4( vec3(resCol), 1.0);
-
 }

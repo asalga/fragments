@@ -15,9 +15,9 @@ let demo = {
     ]
   },
   '1': {
-    src: '../fragments/code/0xff/post_process/null.fs',    
+    src: '../fragments/code/0xff/post_process/sobel.fs',
     uniforms: [
-      { 'name': 'u_numShades', 'value': 10 },
+      { 'name': 'u_numShades', 'value': 2 },
       { 'name': '_', 'value': [-1, -1, 0, -1, 1, -1, -1, 0, 0, 0, 1, 0, -1, 1, 0, 1, 1, 1] }
     ]
   }
@@ -101,10 +101,10 @@ function makeSketch(fs, params) {
       // p.loop();
     };
 
-    p.mouseClicked = function(){
+    p.mouseClicked = function() {
       start = p.millis();
     };
-    
+
     // p.mousePressed = function(){
     //  sketchTime = p.millis(); 
     // }
@@ -117,7 +117,7 @@ function makeSketch(fs, params) {
       let width = w;
       let height = h;
       let sz = 1.;
-      sketchTime = (p.millis()-start) / 1000;
+      sketchTime = (p.millis() - start) / 1000;
 
       // TODO: add case if we only have 1 shader
 
@@ -127,14 +127,14 @@ function makeSketch(fs, params) {
       shader_0.setUniform('u_res', [width, height]);
       shader_0.setUniform('u_mouse', [p.mouseX, p.mouseY]);
 
-         // if (fs.match(/uniform\s+vec3\s+u_mouse/)) {
-        let x = p.mouseX.clamp(0, w);
-        let y = p.mouseY.clamp(0, h);
-        shader_0.setUniform('u_mouse', [x, y, mouseIsDown]);
+      // if (fs.match(/uniform\s+vec3\s+u_mouse/)) {
+      let x = p.mouseX.clamp(0, w);
+      let y = p.mouseY.clamp(0, h);
+      shader_0.setUniform('u_mouse', [x, y, mouseIsDown]);
 
 
       shader_0.setUniform('u_time', sketchTime);
-      demo[0].uniforms.forEach( v => {// custom uniforms
+      demo[0].uniforms.forEach(v => { // custom uniforms
         shader_0.setUniform(v.name, v.value);
       });
 
@@ -147,10 +147,10 @@ function makeSketch(fs, params) {
       shader_1.setUniform('u_res', [width, height]);
       shader_1.setUniform('u_time', sketchTime);
       shader_1.setUniform('u_t0', gfx);
-      demo[1].uniforms.forEach( v => {// custom uniforms
+      demo[1].uniforms.forEach(v => { // custom uniforms
         shader_1.setUniform(v.name, v.value);
       });
-      
+
       p.rect(-width * sz, -height * sz, width * sz, height * sz, 2, 2);
       p.pop();
 

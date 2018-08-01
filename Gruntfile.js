@@ -9,6 +9,8 @@ module.exports = function(grunt) {
   const src = 'src';
   const tmp = '.tmp';
   const app = 'app';
+  const _0xff = '/chapters/fragments/code/0xff';
+  const currDir = '100_199/2';
 
   require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
@@ -30,20 +32,6 @@ module.exports = function(grunt) {
       ]
     },
 
-    // /*
-    //  */
-    // pug: {
-    //   dev: {
-    //     options: {
-    //       pretty: true
-    //     },
-    //     files: [{
-    //       src: `${src}/chapters/fragments/index.pug`,
-    //       dest: `${tmp}/templates-compiled/index.html`
-    //     }]
-    //   }
-    // },
-
     /** 
      */
     clean: {
@@ -61,59 +49,33 @@ module.exports = function(grunt) {
      */
     copy: {
       dev: {
-        files: [
-        // {
-        //   expand: true,
-        //   cwd: `${src}/js/`,
-        //   src: ['**'],
-        //   dest: `${app}/`,
-        //   filter: 'isFile'
-        // },
-        {
+        files: [{
           expand: true,
           cwd: `${src}/js`,
           src: ['main.js'],
           dest: `${app}/js`,
           filter: 'isFile'
-        }
-        ]
-      },
-      demos: {
-        files: [{
-          expand: true,
-          cwd: `${src}/chapters/fragments/code/0xff/100_199/2`,
-          // cwd: `${src}/chapters/fragments/code/0xff/90/`,
-          // cwd: `${src}/chapters/fragments/code/0xff/_wip/`,
-          // cwd: `${src}/chapters/fragments/code/ex/`,
-          // cwd: `${src}/chapters/fragments/code/0xff/_wip/raymarch/`,
-          src: ['**'],
-          dest: `${app}/chapters/fragments/code/0xff/100_199/2`,
-          // dest: `${app}/chapters/fragments/code/0xff/90/`,
-          // dest: `${app}/chapters/fragments/code/ex/`,
-          // dest: `${app}/chapters/fragments/code/0xff/_wip/`,
-          // dest: `${app}/chapters/fragments/code/0xff/_wip/raymarch/`,
-          filter: 'isFile'
         }]
+      },
+      shaders: {
+        files: [{ // sketches
+            expand: true,
+            cwd: `${src}${_0xff}/${currDir}`,
+            src: ['**'],
+            dest: `${app}${_0xff}/${currDir}`,
+            filter: 'isFile'
+          },
+          { //post processing
+            expand: true,
+            cwd: `${src}${_0xff}/post_process/`,
+            src: '**',
+            dest: `${app}${_0xff}/post_process/`,
+            filter: 'isFile'
+          }
+        ]
       }
     },
 
-    /**
-     *  https://www.npmjs.com/package/grunt-processhtml
-     *  process <!-- build:include --> directives
-     */
-    // processhtml: {
-    //   dev: {
-    //     options: {
-    //       process: true
-    //       // data: config,
-    //       // strip: true,
-    //     },
-    //     files: [{
-    //       'src': `${app}/chapters/fragments/index.html`,
-    //       'dest': `${app}/chapters/fragments/index.html`
-    //     }]
-    //   }
-    // },
 
     /**
      * Connect port/livereload
@@ -139,6 +101,7 @@ module.exports = function(grunt) {
 
     /**
      * https://github.com/gruntjs/grunt-contrib-watch
+     * TODO: all demos are copied if post processing changes, fix this
      */
     watch: {
       options: {
@@ -147,15 +110,13 @@ module.exports = function(grunt) {
       },
       all: {
         files: [
-          `${src}/js/**/*.*`,
-          // `${src}/chapters/fragments/code/0xff/100_199/1/**/*.*`,
-          `${src}/chapters/fragments/code/0xff/100_199/2/**/*.*`
+          `${src}/js/**/*.*`, // build file/js
+          `${src}${_0xff}/${currDir}/**/*.*`, // demos
+          `${src}${_0xff}/post_process/**/*.*` // post processing
         ],
         tasks: [
           'copy:dev',
-          'copy:demos',
-          // 'pug',
-          // 'processhtml'
+          'copy:shaders'
         ],
         options: {
           livereload: true

@@ -1,3 +1,6 @@
+/*
+  Cel Shader
+*/
 precision mediump float;
 uniform sampler2D u_t0;
 uniform vec2 u_res;
