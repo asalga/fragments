@@ -193,7 +193,9 @@ float rayMarch(vec3 ro, vec3 rd, out vec3 col){
     if(d < Epsilon){
       return s;
     }
-    s += d/4.;
+    s += d/3.5;
+    
+
 
     if(d > MaxDist){
       return MaxDist;
