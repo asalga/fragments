@@ -15,7 +15,7 @@ let demo = {
     ]
   },
   '1': {
-    src: '../fragments/code/0xff/post_process/sobel.fs',
+    src: '../fragments/code/0xff/post_process/null.fs',
     uniforms: [
       { 'name': 'u_numShades', 'value': 2 },
       { 'name': '_', 'value': [-1, -1, 0, -1, 1, -1, -1, 0, 0, 0, 1, 0, -1, 1, 0, 1, 1, 1] }
@@ -125,7 +125,7 @@ function makeSketch(fs, params) {
       gfx.translate(width / 2, height / 2);
       gfx.shader(shader_0);
       shader_0.setUniform('u_res', [width, height]);
-      shader_0.setUniform('u_mouse', [p.mouseX, p.mouseY]);
+      // shader_0.setUniform('u_mouse', [p.mouseX, p.mouseY]);
 
       // if (fs.match(/uniform\s+vec3\s+u_mouse/)) {
       let x = p.mouseX.clamp(0, w);
