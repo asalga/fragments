@@ -1,4 +1,4 @@
-// 121 - "box texture"
+// 121 - "Friends in the Amazon" / "Slice of Noise"
 precision highp float;
 uniform vec2 u_res;
 uniform float u_time;
@@ -69,13 +69,20 @@ float getHeight(vec2 c){
   float t = -u_time*2.;
 
   float n;
-  n += smoothValueNoise(c*2. + t/12.) * 0.5;
+  n += smoothValueNoise(c*2. + t/10.) * 0.5;
   n += smoothValueNoise(c*4.) * 0.25;
   n += smoothValueNoise(c*6.) * 0.125;
   n += smoothValueNoise(c*8.+t*3.) * 0.0625;
   n /= .89;
 
-  float porab = pow(c.y*c.x, 1.1)-1.6;
+  // c.x += sin(t/2.);
+  // c.x += smoothValueNoise( vec2(t/2.) ) * 1.5;
+  // c.y += smoothValueNoise( vec2((t+10.)/2.) ) * 1.5;
+
+  // c.x += sin(t);
+  // c.y += cos(t);
+
+  float porab = pow( sqrt(dot(c,c)/2. ) , 3.1)-2.;
 
   ///float modt = step(1., mod(t, 2.));
   float e = easeInOutBack( fract(t) , 1.1, .0, .01);
@@ -270,7 +277,9 @@ void main(){
   if(d < MaxDist){
     vec3 n = estimateNormal(v);
     float lights = lighting(v, n, lightPos, eye);
-    i = lights * col.x;
+    float lights2 = lighting(v, n, -lightPos, eye);
+
+    i = (lights2+lights) * col.x;
   }
   
   i = pow(i, 1./2.2);

@@ -1,10 +1,10 @@
-// 121 - "2D Shadow March"
+// 121 - "Lost in the Catacombs"
 precision highp float;
 
 uniform vec2 u_res;
 uniform float u_time;
 
-const int MaxShadowStep = 40;
+const int MaxShadowStep = 80;
 const float Epsilon = 0.001;
 const float MaxDist = 400.;
 const int MaxSteps = 128;
@@ -21,24 +21,46 @@ float sdRect(vec2 p, vec2 size) {
   return min(max(d.x, d.y), 0.0) + length(max(d,0.0));
 }
 
-float sdCircle(vec2 p, float r){
-	return length(p) - r;
+float sdCylinder(vec3 p, vec2 sz ){
+  vec2 d = abs(vec2(length(p.xz),p.y)) - sz;
+  float _out = length(max(vec2(d.x,d.y), 0.));
+  float _in = min(max(d.x,d.y), 0.);
+  return  _in + _out;
 }
+float sdCircle(vec2 p, float r){
+  return length(p) - r;
+}
+
+float samplePac(vec2 p){
+  float t = u_time*4.;
+  p *= 3.0;
+
+  float theta = abs(atan(p.y,p.x))/PI;
+  float i = smoothstep(0.01,0.001,sdCircle(p,.45)) * 
+        step(.25,theta+(sin(t*PI*1.)+1.)/2.*.25);
+  
+  // i += step(sdCircle(p+vec2(mod(t*.5,1.)-1.,0.),.08),0.);
+
+  return i;
+}
+
+ 
 
 float sdScene2d(vec2 p){
 	float res = 1.;
 	float t = u_time * .3;
 
-	float rad = .081;
+	float rad = .07;
 	
-	for(float it = 0.; it < 4.; ++it){
+  const float NumCols = 5.;
+	for(float it = 0.; it < NumCols; ++it){
 
-		float x = mod(it/2.+t, 2. + rad*2.) - 1. - rad;
+		float x = mod( (it/NumCols)*2. + t, 2. + rad*2.) - 1. - rad;
 
-		float cTop = sdCircle(p + vec2(x, .45), rad);	
-		// float cBot = sdCircle(p + vec2(x, -.45), rad);	
+		float cTop = sdCircle(p + vec2(x,  .3 ), rad);	
+		float cBot = sdCircle(p + vec2(x, -.3), rad);	
 
-		// res = min(res, cBot);
+		res = min(res, cBot);
 		res = min(res, cTop);
 	}
 
@@ -115,23 +137,6 @@ float sdSceneRender(vec2 p){
 	return step(sdScene2d(p), 0.);
 }
 
-float sample2dShadowTex(vec2 p){
-	// vec2 p = (gl_FragCoord.xy/u_res)*2.-1.;
-	vec2 lightPos = vec2(0.);
-	//vec2(sin(u_time*2.)*0.5, sin(u_time*3.)*.3);
-
-	float i = 1.-sdSceneRender(p);
-	i -= 0.4;
-
-	// draw light
-	i += step(sdCircle(p-lightPos, 0.01), 0.);
-
-	float visibleToLight = shadowMarch2d(p, lightPos);
-	i -= step(visibleToLight, 0.)*.4;
-
-	// gl_FragColor = vec4(vec3(i),1);
-	return i;
-}
 
 
 
@@ -178,6 +183,7 @@ vec3 rayDirection(float fieldOfView, vec2 size, vec2 fragCoord) {
   return normalize(vec3(xy, -z));
 }
 
+
 // sss - just a marker
 float sdScene(vec3 p, out float col){
   // float h = getHeight(p.xz);
@@ -187,20 +193,53 @@ float sdScene(vec3 p, out float col){
 
   float c_ = 1.0;
   vec2 uv = mod(p.xz, vec2(c_))*0.5*c_ - 0.25; 
-  // uv *= 4.;
+  uv *= 4.;
   // uv.x += 0.5;// + sin(u_time);
   // uv.y -= 0.5;
 
 
-  float ch = sampleChecker(p.xz);
-  float shadowTex = sample2dShadowTex(p.xz);
-  col = ch * shadowTex;
-  col = shadowTex;
+  float ch = sampleChecker(p.xz*4.);
+  // float shadowTex = sample2dShadowTex(p.xz);
+  // col = ch * shadowTex;
+  // col = shadowTex;
 
 
   float box = sdBox(p - vec3(0, 0, 0), vec3(1, 0.1, 1.));
+
+  // float test = sdBox(p , vec3(0.5, .5, 0.5));
+
+  float test = sdCylinder(p, vec2(0.1, 1.));
+
+  return min(test, box);
   return box;
 }
+
+float shadowMarch(vec3 point, vec3 lightPos){
+
+  vec3 pToLight = lightPos-point;
+  vec3 rd = normalize(pToLight);
+  vec3 ro = point;
+
+  float s = 0.;
+  for(int i = 0; i < MaxShadowStep; ++i){
+    vec3 v = ro + (rd*s);
+
+    float dum;
+    float dist = sdScene(v, dum);
+
+    if(dist < Epsilon){
+      return 0.;
+    }
+    s += dist;
+
+    if(s >= MaxDist){
+      return 1.;
+    }
+  }
+  return 1.;
+}
+
+
 
 
 
@@ -234,39 +273,65 @@ float rayMarch(vec3 ro, vec3 rd, out vec3 col){
   return MaxDist;
 }
 
-void main(){
-  float i;
-  float t = u_time * .15;
-  vec2 fc = gl_FragCoord.xy;
+// void main(){
+//   float i;
+//   float t = u_time * 0.;
+//   vec2 fc = gl_FragCoord.xy;
 
-  float dist = 2.;
-  // vec3 eye = vec3(dist * cos(t), 3.  , dist * sin(t));
-  vec3 eye = vec3(2., 2., 2.);
-  vec3 center = vec3(0, 0, 0.);
-  vec3 lightPos =  vec3(0., 2., 4);
-  vec3 up = vec3(0,1,0);
+//   float dist = 2.;
+//   vec3 eye = vec3(dist * cos(t), 3.  , dist * sin(t));
+//   // vec3 eye = vec3(2., 2., 2.);
+//   vec3 center = vec3(0, 0, 0.);
+//   vec3 lightPos =  vec3(2., 2., 2.);
+//   vec3 up = vec3(0,1,0);
 
-  mat3 viewWorld = viewMatrix(eye, center, up);
-  vec3 ray = rayDirection(90., u_res, fc);
+//   mat3 viewWorld = viewMatrix(eye, center, up);
+//   vec3 ray = rayDirection(90., u_res, fc);
 
-  vec3 worldDir = viewWorld * ray;
-  vec3 col;
-  float d = rayMarch(eye, worldDir, col);
-  vec3 v = eye + worldDir*d;
+//   vec3 worldDir = viewWorld * ray;
+//   vec3 col;
+//   float d = rayMarch(eye, worldDir, col);
+//   vec3 v = eye + worldDir*d;
 
-  if(d < MaxDist){
-    // float visibleToLight = shadowMarch(eye+ray*(d), lightPos);
-    // vec3 n = estimateNormal(v);
-    // float lights = lighting(v, n, lightPos, eye);
-    // i = lights * col.x;
-    i = col.x;
+//   if(d < MaxDist){
+//         // float visibleToLight = shadowMarch(eye+worldDir*(d-0.01), lightPos);
+//     // vec3 n = estimateNormal(v);
 
-    // if(visibleToLight == 0.){
-      // i -= .35;
-    // }
-  }
+//     // float lights = lighting(v, n, lightPos, eye);
+//     // i = lights * col.x;
+//     i = col.x;
+//     // i = col.x;
+
+//     // if(visibleToLight == 0.){
+//       // i -= .5;
+//       // i = 0.;
+//     // }
+//   }
   
-  // i = pow(i, 1./2.2);
-  gl_FragColor = vec4(vec3(i), 1);
-}
+//   // i = pow(i, 1./2.2);
+//   gl_FragColor = vec4(vec3(i), 1);
+// }
 
+
+void main(){
+  vec2 p = (gl_FragCoord.xy/u_res)*2.-1.;
+
+  vec2 lightPos = vec2(0.);
+  //vec2(sin(u_time*2.)*0.5, sin(u_time*3.)*.3);
+
+  float i = sdSceneRender(p);
+  // i -= 0.4;
+
+  // draw light
+  // i -= step(sdCircle(p-lightPos, 0.01), 0.);
+  i = samplePac(p);
+
+  float visibleToLight = shadowMarch2d(p, lightPos);
+  // i -= step(visibleToLight, 0.) *.84;
+  if(visibleToLight == 0.){
+    i = 0.72;
+  }
+
+  gl_FragColor = vec4(vec3(i),1);
+  // return i;
+}
