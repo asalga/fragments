@@ -38,9 +38,6 @@ float samplePac(vec2 p){
   float theta = abs(atan(p.y,p.x))/PI;
   float i = smoothstep(0.01,0.001,sdCircle(p,.45)) * 
         step(.25,theta+(sin(t*PI*1.)+1.)/2.*.25);
-  
-  // i += step(sdCircle(p+vec2(mod(t*.5,1.)-1.,0.),.08),0.);
-
   return i;
 }
 
@@ -52,13 +49,14 @@ float sdScene2d(vec2 p){
 
 	float rad = .07;
 	
-  const float NumCols = 5.;
+  const float NumCols = 4.;
 	for(float it = 0.; it < NumCols; ++it){
 
-		float x = mod( (it/NumCols)*2. + t, 2. + rad*2.) - 1. - rad;
+    float x = mod( (it + t* .2) * 8., 2. + rad*2.) - 1. - rad;
+    float x2 = mod( (it+0.5 + t* .2) * 8., 2. + rad*2.) - 1. - rad;
 
 		float cTop = sdCircle(p + vec2(x,  .3 ), rad);	
-		float cBot = sdCircle(p + vec2(x, -.3), rad);	
+		float cBot = sdCircle(p + vec2(x2, -.3), rad);	
 
 		res = min(res, cBot);
 		res = min(res, cTop);
@@ -137,12 +135,6 @@ float sdSceneRender(vec2 p){
 	return step(sdScene2d(p), 0.);
 }
 
-
-
-
-
-
-////////////
 
 
 float sampleChecker(vec2 c) {
@@ -317,21 +309,16 @@ void main(){
   vec2 p = (gl_FragCoord.xy/u_res)*2.-1.;
 
   vec2 lightPos = vec2(0.);
-  //vec2(sin(u_time*2.)*0.5, sin(u_time*3.)*.3);
 
   float i = sdSceneRender(p);
-  // i -= 0.4;
 
-  // draw light
-  // i -= step(sdCircle(p-lightPos, 0.01), 0.);
-  i = samplePac(p);
+  i = .8;
+  i -= samplePac(p);
 
   float visibleToLight = shadowMarch2d(p, lightPos);
-  // i -= step(visibleToLight, 0.) *.84;
   if(visibleToLight == 0.){
-    i = 0.72;
+    i = 0.1;
   }
 
   gl_FragColor = vec4(vec3(i),1);
-  // return i;
 }

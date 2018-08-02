@@ -9,11 +9,9 @@ let demo = {
     'height': 500
   },
   '0': {
-    // src: '../fragments/code/0xff/100_199/2/121_box_tex_displace.fs',
-    // src: '../fragments/code/0xff/100_199/2/122_slice_of_noise.fs',
     // src: '../fragments/code/0xff/100_199/2/123_cel_twist.fs',
-    src: '../fragments/code/0xff/100_199/2/121_shadow_march_2d_catacombs.fs',
-
+    // src: '../fragments/code/0xff/100_199/2/121_shadow_march_2d_catacombs.fs',
+    src: '../fragments/code/0xff/100_199/2/124_bobbly_dither.fs',
     uniforms: [
       //lights
       // {'name': 'ks', 'value': 70}
@@ -21,8 +19,9 @@ let demo = {
     ]
   },
   '1': {
-    src: '../fragments/code/0xff/post_process/null.fs',
+    src: '../fragments/code/0xff/post_process/simple_dither.fs',
     uniforms: [
+      { 'name': 'u_ditherMatrix', 'value': [0,1,2,3,4,5,6,7,8] },
       { 'name': 'u_numShades', 'value': 2 },
       { 'name': '_', 'value': [-1, -1, 0, -1, 1, -1, -1, 0, 0, 0, 1, 0, -1, 1, 0, 1, 1, 1] }
     ]
