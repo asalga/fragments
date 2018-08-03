@@ -5,32 +5,30 @@
 
 let demo = {
   'size': {
-    'width': 600,
-    'height': 600
+    'width': 500,
+    'height': 500
   },
   '0': {
     // 122
-    // src: '../fragments/code/0xff/100_199/2/124_dither_test.fs',
-
-    // 125
-    src: '../fragments/code/0xff/100_199/2/125_cone_sdf.fs',
+    src: '../fragments/code/0xff/100_199/2/124_dither_test.fs',
 
     // 123
     // src: '../fragments/code/0xff/100_199/2/123_cel_twist.fs',
 
+    // 125
+    // src: '../fragments/code/0xff/100_199/2/125_cone_sdf.fs',
 
     uniforms: [
-      // {'name': 'ks', 'value': 70}
       // {'name': 'u_fov', 'value': 70}
-
     ]
   },
   '1': {
     // src: '../fragments/code/0xff/post_process/simple_dither.fs',
-    src: '../fragments/code/0xff/post_process/null.fs',
-
+    // src: '../fragments/code/0xff/post_process/null.fs',
+    src: '../fragments/code/0xff/post_process/pixelate.fs',
     uniforms: [
       { 'name': 'u_numShades', 'value': 2 },
+      // { 'name': 'u_pixelSize', 'value': 8 },
       { 'name': '_', 'value': [-1, -1, 0, -1, 1, -1, -1, 0, 0, 0, 1, 0, -1, 1, 0, 1, 1, 1] }
     ]
   }
@@ -89,7 +87,6 @@ function makeSketch(fs, params) {
     2, 1, 4,
     6, 3, 8
   ];
-
 
   var sketch = function(p) {
 

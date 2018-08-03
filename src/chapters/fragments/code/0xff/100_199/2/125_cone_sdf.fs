@@ -10,9 +10,12 @@ const float PI = 3.141592658;
 const float TAU = PI*2.;
 const float HALF_PI = PI*0.5;
 
-float sdTorus(vec3 p, vec2 t){  
-  vec2 q = vec2(length(p.xz)-t.x, p.y);
-  return length(q) - t.y;
+float sdCone( in vec3 p, in vec3 c )
+{
+    vec2 q = vec2( length(p.xz), p.y );
+    float d1 = -q.y-c.z;
+    float d2 = max( dot(q,c.xy), q.y);
+    return length(max(vec2(d1,d2),0.0)) + min(max(d1,d2), 0.);
 }
 
 float sdSphere(vec3 p, float r){
@@ -89,6 +92,8 @@ mat4 scale(float x, float y, float z){
 
 float sdScene(vec3 p, out vec3 rot){
 
+  // r,h
+  // return sdCone(p, vec3( .85 , 0.95, 1.  ));
   return sdSphere(p, 1.);
 }
 
@@ -124,13 +129,13 @@ float rayMarch(vec3 ro, vec3 rd, out vec3 rot){
 
 void main(){
   float i;
-  // float t = u_time * 0.0;
+  float t = u_time * 1.0;
 
-  // float dist = 4.;
-  // vec3 eye = vec3(dist * cos(t), sin(t) * 3., dist * sin(t));
-  vec3 eye = vec3(0, 0, 5);
+  float dist = 4.;
+  vec3 eye = vec3(dist * cos(t), sin(t) * 3., dist * sin(t));
+  // vec3 eye = vec3(0, 0, 5);
   vec3 center = vec3(0);
-  vec3 lightPos =  vec3(0,5,2) + eye;
+  vec3 lightPos =  vec3(0,8,8) + eye;
   vec3 up = vec3(0,1,0);
   vec3 ray = rayDirection(70., u_res, gl_FragCoord.xy);
 
