@@ -9,21 +9,24 @@ let demo = {
     'height': 500
   },
   '0': {
+    // 122
+    src: '../fragments/code/0xff/100_199/2/124_dither_test.fs',
+
+    // 123
     // src: '../fragments/code/0xff/100_199/2/123_cel_twist.fs',
-    // src: '../fragments/code/0xff/100_199/2/121_shadow_march_2d_catacombs.fs',
-    src: '../fragments/code/0xff/100_199/2/121_lost_in_the_catacombs.fs',
-    // src: '../fragments/code/0xff/100_199/2/124_bobbly_dither.fs',
+
+
     uniforms: [
-      //lights
       // {'name': 'ks', 'value': 70}
       // {'name': 'u_fov', 'value': 70}
+
     ]
   },
   '1': {
     // src: '../fragments/code/0xff/post_process/simple_dither.fs',
-    src: '../fragments/code/0xff/post_process/null.fs',
+    src: '../fragments/code/0xff/post_process/simple_dither.fs',
     uniforms: [
-      { 'name': 'u_ditherMatrix', 'value': [0,1,2,3,4,5,6,7,8] },
+      { 'name': 'u_ditherMatrix', 'value': [0, 1, 2, 3, 4, 5, 6, 7, 8] },
       { 'name': 'u_numShades', 'value': 2 },
       { 'name': '_', 'value': [-1, -1, 0, -1, 1, -1, -1, 0, 0, 0, 1, 0, -1, 1, 0, 1, 1, 1] }
     ]
@@ -77,7 +80,7 @@ function makeSketch(fs, params) {
   let gfx, shader_0, shader_1;
   let shader_0_Frag = fs[0];
   let shader_1_Frag = fs[1];
-
+  let ditherTex;
 
   var sketch = function(p) {
 
@@ -97,6 +100,24 @@ function makeSketch(fs, params) {
       sketchTime = 0;
       tracking = [0, 0];
 
+      ditherTex = p.createGraphics(3, 3, p.P2D);
+      ditherTex.pixelDensity(1);
+      ditherTex.canvas.style = '';// remove 'display:none'
+      window.ditherTex = ditherTex;
+
+      // Create our dither texture
+      let ditherMat = [ 1,2,3, 
+                        4,5,6,
+                        7,8,9];
+      for(let x = 0; x < 3; ++x){
+        for(let y = 0; y < 3; ++y){
+          let col = (ditherMat[y*3+x]/10) * 255;
+          ditherTex.stroke(col);
+          ditherTex.point(x,y);
+        }
+      }
+
+
       p.createCanvas(w, h, p.WEBGL);
       gfx = p.createGraphics(w, h, p.WEBGL);
 
@@ -105,6 +126,7 @@ function makeSketch(fs, params) {
 
       p.pixelDensity(1);
       $(p.canvas).appendTo($('#target'));
+      $(ditherTex.canvas).appendTo($('#target2'));
       // p.noLoop();
     };
 
@@ -112,17 +134,18 @@ function makeSketch(fs, params) {
       start = p.millis();
     };
 
-    // p.mousePressed = function(){
-    //  sketchTime = p.millis(); 
-    // }
-
-
     /**
-          Draw
+      Draw
     */
     p.draw = function() {
-      let width = w;
-      let height = h;
+
+      // ditherTex.push();
+      // ditherTex.fill(128);
+      // ditherTex.stroke(0,255,0);
+      // ditherTex.rect(0, 0, 50, 50);
+      // ditherTex.pop();
+
+      let [width, height] = [w,h];
       let sz = 1.;
       sketchTime = (p.millis() - start) / 1000;
 
@@ -131,23 +154,13 @@ function makeSketch(fs, params) {
       gfx.push();
       gfx.translate(width / 2, height / 2);
       gfx.shader(shader_0);
+
       shader_0.setUniform('u_res', [width, height]);
-      // shader_0.setUniform('u_mouse', [p.mouseX, p.mouseY]);
-
-      // if (fs.match(/uniform\s+vec3\s+u_mouse/)) {
-      let x = p.mouseX.clamp(0, w)/width;
-      let y = p.mouseY.clamp(0, h)/height;
-      shader_0.setUniform('u_mouse', [x, y, mouseIsDown]);
-
-
+      shader_0.setUniform('u_mouse', [p.mouseX.clamp(0, w) / width, p.mouseY.clamp(0, h) / height, mouseIsDown]);
       shader_0.setUniform('u_time', sketchTime);
       demo[0].uniforms.forEach(v => { // custom uniforms
         shader_0.setUniform(v.name, v.value);
       });
-
-      // console.log(x,y);
-      shader_0.setUniform('u_kd', x);
-      shader_0.setUniform('u_ks', y);
 
       gfx.rect(-width * sz, -height * sz, width * sz, height * sz, 2, 2);
       gfx.pop();
@@ -158,6 +171,7 @@ function makeSketch(fs, params) {
       shader_1.setUniform('u_res', [width, height]);
       shader_1.setUniform('u_time', sketchTime);
       shader_1.setUniform('u_t0', gfx);
+      shader_1.setUniform('u_ditherTex', ditherTex);
       demo[1].uniforms.forEach(v => { // custom uniforms
         shader_1.setUniform(v.name, v.value);
       });

@@ -50,7 +50,7 @@ canvas {
   /*border-radius: 15px;*/
    /*border-radius: 50%;*/
   box-shadow: 1px 1px 5px grey;
-  position: absolute;
+  /*position: absolute;*/
   transition: .35s ease all;
 }
 
