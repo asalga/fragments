@@ -1,4 +1,4 @@
-// 119 - "Torus Spin"
+// 125
 precision highp float;
 uniform vec2 u_res;
 uniform float u_time;
@@ -10,13 +10,7 @@ const float PI = 3.141592658;
 const float TAU = PI*2.;
 const float HALF_PI = PI*0.5;
 
-// x => overall size/radius
-// y => thickness
 float sdTorus(vec3 p, vec2 t){  
-  // first component is the difference between
-  // the sample point straight line distance and the
-  // torus overall size
-  // second component is the 
   vec2 q = vec2(length(p.xz)-t.x, p.y);
   return length(q) - t.y;
 }
@@ -36,7 +30,7 @@ float lighting(vec3 p, vec3 n, vec3 lightPos, vec3 eye){
   float ambient = 0.01;
   // ---
   vec3 pToLight = vec3(lightPos - p);
-  float power = 14.;
+  float power = 10.;
   vec3 lightRayDir = normalize(pToLight);
   float d = length(pToLight);
   d *= d;
@@ -44,13 +38,13 @@ float lighting(vec3 p, vec3 n, vec3 lightPos, vec3 eye){
   float diffuse = (nDotL*power) / d;
   float kd = 1.;
 
-  float gloss = 10.;    
+  float gloss = 1.;    
   vec3 V = normalize(eye - p);
   vec3 R = normalize(reflect(-lightPos, n)); 
   float dotRV = dot(R, V);
   float spec = pow(dotRV, gloss);
 
-  return ambient + diffuse + spec;
+  return ambient + diffuse;// + spec;
 }
 
 vec3 rayDirection(float fieldOfView, vec2 size, vec2 fragCoord) {
@@ -94,27 +88,8 @@ mat4 scale(float x, float y, float z){
 }
 
 float sdScene(vec3 p, out vec3 rot){
-  float t = u_time * 1.0;
 
-  float _1 =       - t;
-  float _2 = PI/2. - t;
-
-  vec2 dims = vec2(1.4, 0.7);
-
-  vec3 rot_t1 = (vec4(p - vec3(dims.x/2. , 0,0),1) * r2dX(_1)).xyz;
-  vec3 rot_t2 = (vec4(p - vec3(-dims.x/2. ,0,0),1) * r2dX(_2)).xyz;
-
-  float t1 = sdTorus(rot_t1, dims);
-  float t2 = sdTorus(rot_t2, dims);
-
-  if(t1 < Epsilon){
-    rot = vec3(_1,0,0);
-  }
-  if(t2 < Epsilon){
-    rot = vec3(_2, 0,0);
-  }
- 
-  return min(t2,t1);
+  return sdSphere(p, 1.);
 }
 
 vec3 estimateNormal(vec3 v){
@@ -145,33 +120,23 @@ float rayMarch(vec3 ro, vec3 rd, out vec3 rot){
   return MaxDist;
 }
 
-float getColor(vec3 n, vec3 p){
-  float t = u_time * 0.4;
-  float a = atan(n.x, n.z);
-  
-  float u = ((atan(n.z/n.x))*2.+PI)/ TAU;
- 
-  float sz = 0.25;
-  return step(mod(u+t, sz), sz/2.) + 0.25;
-}
+
 
 void main(){
   float i;
   // float t = u_time * 0.0;
 
-  float dist = 4.;
+  // float dist = 4.;
   // vec3 eye = vec3(dist * cos(t), sin(t) * 3., dist * sin(t));
-  vec3 eye = vec3(0, 10, 5);
+  vec3 eye = vec3(0, 0, 5);
   vec3 center = vec3(0);
   vec3 lightPos =  vec3(0,5,2) + eye;
   vec3 up = vec3(0,1,0);
-
   vec3 ray = rayDirection(70., u_res, gl_FragCoord.xy);
 
   vec3 worldDir = viewMatrix(eye, center, up) * ray;
   vec3 rot;
   float d = rayMarch(eye, worldDir, rot);
-  
   vec3 i3;
 
   if(d < MaxDist){
@@ -181,7 +146,8 @@ void main(){
     vec3 nt = (vec4(n,1) * r2dX(rot.x)).xyz;
 
     float lights = lighting(v, n, lightPos, eye);
-    i3 = vec3(getColor(nt,v)) * lights;
+    // i3 = vec3(getColor(nt,v)) * lights;
+    i3 = vec3(d * lights);
 
     i3 = pow(i3, 1./vec3(2.2));
   }

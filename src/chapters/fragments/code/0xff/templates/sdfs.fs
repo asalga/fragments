@@ -1,25 +1,24 @@
-// sdfs
-
-precision mediump float;
-
-uniform vec2 u_res;
-uniform float u_time;
+// SDFs
 
 float sdCircle(vec2 p, float r){
   return length(p)-r;
 }
-float sdSquare(vec2 p, float w){
-  vec2 _p = abs(p);
-  return max(_p.x,_p.y) - w;
+
+float sdSphere(vec3 p, float r){
+	return length(p)-r;
 }
 
-void main(){
-  vec2 a = vec2(1., u_res.y/u_res.x);
-  vec2 p = a * (gl_FragCoord.xy/u_res*2.-1.);
-  float i;
 
-  // i += step(sdCircle(p, 0.25), 0.);
-  i = step(sdSquare(p, .25), 0.);
+float sdRect(vec2 p, vec2 sz){
+  vec2 d = abs(p)-sz;
+  float _out = length(max( d , 0. ));
+  float _in = min(max(d.y,d.x),0.);
+  return _in + _out;
+}
 
-  gl_FragColor = vec4(vec3(i),1.);
+float sdBox(vec2 p, vec2 sz){
+}
+
+float sdCone(vec3 p, vec2 sz){
+	
 }
