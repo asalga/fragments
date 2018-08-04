@@ -32,7 +32,13 @@ float sdCone(vec3 p, vec3 c){
   return length(max(vec2(d1,d2),0.0)) + min(max(d1,d2), 0.);
 }
 
-float sdBox(vec2 p, vec2 sz){}
+float cubeSDF(vec3 p, vec3 sz) {
+  vec3 d = abs(p) - sz
+  float _in = min(max(d.x, max(d.y, d.z)), 0.);
+  float _out = length(max(d, 0.));
+  return _in + _out;
+}
+
 float sdSquarePyramid(){}
 float sdTorus(){}
 float sdGear(){}

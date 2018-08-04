@@ -9,14 +9,9 @@ let demo = {
     'height': 500
   },
   '0': {
-    // 122
+    // src: '../fragments/code/0xff/100_199/2/123_low_tide.fs',
     // src: '../fragments/code/0xff/100_199/2/124_dither_test.fs',
-
-    // 123
-    src: '../fragments/code/0xff/100_199/2/123_low_tide.fs',
-
-    // 125
-    // src: '../fragments/code/0xff/100_199/2/125_cone_sdf.fs',
+    src: '../fragments/code/0xff/100_199/2/125_take_this_lantern.fs',
 
     uniforms: [
       // {'name': 'u_fov', 'value': 70}
@@ -24,10 +19,11 @@ let demo = {
   },
   '1': {
     // src: '../fragments/code/0xff/post_process/simple_dither.fs',
-    // src: '../fragments/code/0xff/post_process/null.fs',
-    src: '../fragments/code/0xff/post_process/pixelate.fs',
+    src: '../fragments/code/0xff/post_process/null.fs',
+    // src: '../fragments/code/0xff/post_process/pixelate.fs',
+    // src: '../fragments/code/0xff/post_process/cel.fs',
     uniforms: [
-      { 'name': 'u_numShades', 'value': 2 },
+      { 'name': 'u_numShades', 'value': 12 },
       // { 'name': 'u_pixelSize', 'value': 8 },
       { 'name': '_', 'value': [-1, -1, 0, -1, 1, -1, -1, 0, 0, 0, 1, 0, -1, 1, 0, 1, 1, 1] }
     ]
@@ -186,7 +182,7 @@ function makeSketch(fs, params) {
       shader_1.setUniform('u_res', [width, height]);
       shader_1.setUniform('u_time', sketchTime);
       shader_1.setUniform('u_t0', gfx);
-      shader_1.setUniform('u_ditherTex', ditherTex);
+      // shader_1.setUniform('u_ditherTex', ditherTex);
       demo[1].uniforms.forEach(v => { // custom uniforms
         shader_1.setUniform(v.name, v.value);
       });
