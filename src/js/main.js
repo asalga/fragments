@@ -5,8 +5,8 @@
 
 let demo = {
   'size': {
-    'width': 500,
-    'height': 500
+    'width': 400,
+    'height': 400
   },
   '0': {
     // src: '../fragments/code/0xff/100_199/2/124_dither_test.fs',

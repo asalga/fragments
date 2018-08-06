@@ -4,13 +4,13 @@ precision mediump float;
 uniform vec2 u_res;
 uniform float u_time;
 
-const float light = 0.8;
-const float dark = 0.3;
-const vec2 tileSz = vec2(10.);
-const float sz = 40.;
+const vec2 tileSz = vec2(40.);
+const float sz = 60.;
+const float PI = 3.141592658;
+// const float TAU = PI*2.;
 
 mat2 r2d(float a){
-	return mat2(cos(a),sin(a),-cos(a), sin(a));
+	return mat2(cos(a),sin(a),-sin(a),cos(a));
 }
 
 float sdRect(vec2 p, vec2 sz){
@@ -22,32 +22,31 @@ float sdRect(vec2 p, vec2 sz){
 
 void main(){
 	vec2 p = gl_FragCoord.xy;
+	float t = u_time*1.;
+	float i = 0.;
 
-	// draw alternating tiles
-	// vec2 m = mod(p, tileSz);
-  // float i = step(p.xy, m*2.).x;
+  vec2 rp = ((mod(p, sz)/sz) * 2.) -1.;
+  mat2 r = r2d(t);
 
-  // 1) Draw Alternating Tiles
-  float my = mod(p.y, sz);
-  float iy = step(sz/2., my);
-  float mx = mod(p.x+ (iy*sz/2.), sz);
-  float ix = step(sz/2., mx);
+  // [0,0] [1,0] [2,0] ...
+  // [0,1] [1,1] [2,2] ...
+  vec2 cell = floor(p/sz);
+  
+	// if even, draw rect
+	bool isEven = mod(cell.x+ cell.y, 2.) < 1.;
+	if(isEven){
+		rp *= r;//(cell.x + cell.y) );
+  	i = step(sdRect(rp, vec2(1.)), 0.);	
+  }
+  // if odd, draw 4 surrounding rects
+  else{
+  	vec2 one = vec2(1.);
 
-
-  // 2) 
-
-
-
-
-  // 3) Rotate Tiles
-
-
-  // 4) 
-
-
-  // 5)
-
-  float i = ix;
+  	i += step(sdRect( (rp - vec2( 0,  2.)) * r, one), 0.);	// top
+  	i += step(sdRect( (rp - vec2( 0, -2.)) * r, one), 0.);	// bottom
+  	i += step(sdRect( (rp - vec2( 2,  0.)) * r, one), 0.);	//
+  	i += step(sdRect( (rp - vec2(-2,  0.)) * r, one), 0.);	//
+  }
 
 	gl_FragColor = vec4(vec3(i),1);
 }
