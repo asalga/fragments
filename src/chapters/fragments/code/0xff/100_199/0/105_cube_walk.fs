@@ -228,14 +228,9 @@ void main(){
   vec3 v = eye + worldDir*d;
 
 	if(d < MaxDist){
-
-		// float visibleToLight = shadowMarch(eye + ray * d, lightPos);
-		 float visibleToLight = shadowMarch(eye+worldDir*(d-0.001), lightPos);
-
-			
-			vec3 n = estimateNormal(v);
-
-			float lights = lighting(v, n, lightPos);
+		float visibleToLight = shadowMarch(eye+worldDir*(d-0.001), lightPos);
+		vec3 n = estimateNormal(v);
+		float lights = lighting(v, n, lightPos);
 
 			i += d * lights * col.x;	
 		

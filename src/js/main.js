@@ -9,9 +9,9 @@ let demo = {
     'height': 500
   },
   '0': {
-    // src: '../fragments/code/0xff/100_199/2/123_low_tide.fs',
     // src: '../fragments/code/0xff/100_199/2/124_dither_test.fs',
-    src: '../fragments/code/0xff/100_199/2/125_take_this_lantern.fs',
+    // src: '../fragments/code/0xff/100_199/2/125_take_this_lantern.fs',
+    src: '../fragments/code/0xff/100_199/2/125_rotate_alternate.fs',
 
     uniforms: [
       // {'name': 'u_fov', 'value': 70}
@@ -145,13 +145,13 @@ function makeSketch(fs, params) {
       sketchTime = (p.millis() - start) / 1000;
 
       // totally mess with the dithering :)
-      if( p.frameCount % 10 == 0){
-        for(let i = 0; i < 10; i++){
-          let _one = Math.floor(Math.random()*10);
-          let _two = Math.floor(Math.random()*10);
-          [ditherMat[_one], ditherMat[_two]] = [ditherMat[_two], ditherMat[_one]] ;
-        }
-      }
+      // if( p.frameCount % 10 == 0){
+      //   for(let i = 0; i < 10; i++){
+      //     let _one = Math.floor(Math.random()*10);
+      //     let _two = Math.floor(Math.random()*10);
+      //     // [ditherMat[_one], ditherMat[_two]] = [ditherMat[_two], ditherMat[_one]] ;
+      //   }
+      // }
 
       // Create our dither texture
       for (let x = 0; x < 3; ++x) {
