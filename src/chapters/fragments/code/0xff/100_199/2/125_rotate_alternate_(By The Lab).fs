@@ -1,4 +1,4 @@
-// 125 - "Rotate, Alternate"
+// 125 - "Rotate, Alternate" /  By the Lab
 precision mediump float;
 
 uniform vec2 u_res;

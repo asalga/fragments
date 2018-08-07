@@ -5,13 +5,14 @@
 
 let demo = {
   'size': {
-    'width': 400,
-    'height': 400
+    'width': 500,
+    'height': 500
   },
   '0': {
     // src: '../fragments/code/0xff/100_199/2/124_dither_test.fs',
     // src: '../fragments/code/0xff/100_199/2/125_take_this_lantern.fs',
-    src: '../fragments/code/0xff/100_199/2/125_rotate_alternate.fs',
+    // src: '../fragments/code/0xff/100_199/2/125_rotate_alternate.fs',
+    src: '../fragments/code/0xff/100_199/2/127.fs',
 
     uniforms: [
       // {'name': 'u_fov', 'value': 70}

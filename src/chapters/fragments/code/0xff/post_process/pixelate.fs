@@ -15,6 +15,6 @@ void main(){
 	vec2 p = gl_FragCoord.xy;
 	vec2 c = floor( (p ) / pixelSize)*pixelSize;
 	i = texture2D(u_t0,c/u_res).x;
-	i = 1.-step(i, 0.);
+	// i = 1.-step(i, 0.);
 	gl_FragColor = vec4(vec3(i),1);
 }
