@@ -12,7 +12,8 @@ let demo = {
     // src: '../fragments/code/0xff/100_199/2/124_dither_test.fs',
     // src: '../fragments/code/0xff/100_199/2/125_take_this_lantern.fs',
     // src: '../fragments/code/0xff/100_199/2/125_rotate_alternate.fs',
-    src: '../fragments/code/0xff/100_199/2/127.fs',
+        src: '../fragments/code/0xff/100_199/2/126_pixel_city.fs',
+    // src: '../fragments/code/0xff/100_199/2/127.fs',
 
     uniforms: [
       // {'name': 'u_fov', 'value': 70}
@@ -20,16 +21,29 @@ let demo = {
   },
   '1': {
     // src: '../fragments/code/0xff/post_process/simple_dither.fs',
-    src: '../fragments/code/0xff/post_process/null.fs',
-    // src: '../fragments/code/0xff/post_process/pixelate.fs',
+    // src: '../fragments/code/0xff/post_process/null.fs',
+    src: '../fragments/code/0xff/post_process/pixelate.fs',
     // src: '../fragments/code/0xff/post_process/cel.fs',
     uniforms: [
       { 'name': 'u_numShades', 'value': 12 },
-      // { 'name': 'u_pixelSize', 'value': 8 },
+      { 'name': 'u_pixelSize', 'value': 
+        function(s){
+          return 35.;
+          // return Math.sin(s)*20;
+        }
+      },
       { 'name': '_', 'value': [-1, -1, 0, -1, 1, -1, -1, 0, 0, 0, 1, 0, -1, 1, 0, 1, 1, 1] }
     ]
   }
 };
+
+// var test = {
+//   a: function(){
+//     return 42;
+//   }
+//}
+
+
 
 let globalVs = `
 precision highp float;
@@ -177,15 +191,22 @@ function makeSketch(fs, params) {
       gfx.rect(-width * sz, -height * sz, width * sz, height * sz, 2, 2);
       gfx.pop();
 
+
+
+
+      // Post Processing
       p.push();
       p.translate(width / 2, height / 2);
       p.shader(shader_1);
       shader_1.setUniform('u_res', [width, height]);
       shader_1.setUniform('u_time', sketchTime);
       shader_1.setUniform('u_t0', gfx);
+      // shader_1.setUniform('u_pixelSize', 1.+Math.floor(p.mouseX/10) );
       // shader_1.setUniform('u_ditherTex', ditherTex);
+
       demo[1].uniforms.forEach(v => { // custom uniforms
-        shader_1.setUniform(v.name, v.value);
+        let val = typeof v.value === 'function' ? v.value(sketchTime) : v.value;
+        shader_1.setUniform(v.name, val);
       });
 
       p.rect(-width * sz, -height * sz, width * sz, height * sz, 2, 2);

@@ -1,20 +1,32 @@
+/*
+	Pixelation is fairly straightforward, but there's one
+	minor aesthetic issue we need to resolve. If the user 
+	wants to dynamically change the pixel size, the image will
+	get nudged over since sampling always begins with the top
+	left pixel.
+
+	Rendering a circle sdf will show the problem.
+*/
 precision mediump float;
 
 uniform sampler2D u_t0;
 uniform vec2 u_res;
 uniform float u_time;
-
-const float PI = 3.141592658;
+uniform float u_pixelSize;
 
 void main(){
-	float t = u_time * PI*2.;
-	t *= .5;
+  vec2 p = gl_FragCoord.xy;
+  float i;
 
-	float pixelSize = floor( 1.+(sin(t)+1.)*10.);
-	float i;
-	vec2 p = gl_FragCoord.xy;
-	vec2 c = floor( (p ) / pixelSize)*pixelSize;
-	i = texture2D(u_t0,c/u_res).x;
-	// i = 1.-step(i, 0.);
-	gl_FragColor = vec4(vec3(i),1);
+  vec2 c = floor(p/u_pixelSize)*u_pixelSize;
+	
+	// sample center pixel if odd
+	if(mod(u_pixelSize,3.) == 0.){
+		c += floor(u_pixelSize*0.5) + 1.;
+	}
+
+  i = texture2D(u_t0, c/u_res).x;
+  
+  // i = 1.-step(i, 0.);
+  gl_FragColor = vec4(vec3(i),1);
 }
