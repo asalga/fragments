@@ -10,38 +10,34 @@ let demo = {
   },
   '0': {
     // src: '../fragments/code/0xff/100_199/2/124_dither_test.fs',
-    // src: '../fragments/code/0xff/100_199/2/125_take_this_lantern.fs',
     // src: '../fragments/code/0xff/100_199/2/125_rotate_alternate.fs',
-        src: '../fragments/code/0xff/100_199/2/126_pixel_city.fs',
+    // src: '../fragments/code/0xff/100_199/2/126_pixel_city.fs',
+    // src: '../fragments/code/0xff/100_199/2/131.fs',
     // src: '../fragments/code/0xff/100_199/2/127.fs',
-
+    // src: '../fragments/code/0xff/100_199/2/128_half_tone.fs',
+    // src: '../fragments/code/0xff/100_199/2/129_voronoi.fs',
+    src: '../fragments/code/0xff/100_199/2/129_v.fs',
     uniforms: [
       // {'name': 'u_fov', 'value': 70}
     ]
   },
   '1': {
     // src: '../fragments/code/0xff/post_process/simple_dither.fs',
-    // src: '../fragments/code/0xff/post_process/null.fs',
-    src: '../fragments/code/0xff/post_process/pixelate.fs',
-    // src: '../fragments/code/0xff/post_process/cel.fs',
+    src: '../fragments/code/0xff/post_process/null.fs',
+    // src: '../fragments/code/0xff/post_process/pixelate.fs',
     uniforms: [
       { 'name': 'u_numShades', 'value': 12 },
-      { 'name': 'u_pixelSize', 'value': 
-        function(s){
-          return 35.;
-          // return Math.sin(s)*20;
+      {
+        'name': 'u_pixelSize',
+        'value': function(s) {
+          return 5.;
+          return Math.sin(s / 10.) * 20;
         }
       },
       { 'name': '_', 'value': [-1, -1, 0, -1, 1, -1, -1, 0, 0, 0, 1, 0, -1, 1, 0, 1, 1, 1] }
     ]
   }
 };
-
-// var test = {
-//   a: function(){
-//     return 42;
-//   }
-//}
 
 
 
@@ -119,14 +115,16 @@ function makeSketch(fs, params) {
 
       ditherTex = p.createGraphics(3, 3, p.P2D);
       ditherTex.pixelDensity(1);
-      ditherTex.canvas.style = ''; // remove 'display:none'
-      window.ditherTex = ditherTex;
+      ditherTex.canvas.style = ''; // remove the 'display:none' to see the cvs
 
-      // Create our dither texture
-      let ditherMat = [7, 9, 5,
-        2, 1, 4,
-        6, 3, 8
+      // Dither texture/matrix
+      let ditherMat = [
+      2,5,3,4,1,6,7,8
+        // 7, 9, 5,
+        // 2, 1, 4,
+        // 6, 3, 8
       ];
+
       for (let x = 0; x < 3; ++x) {
         for (let y = 0; y < 3; ++y) {
           let col = (ditherMat[y * 3 + x] / 10) * 255;
@@ -137,6 +135,7 @@ function makeSketch(fs, params) {
 
       p.createCanvas(w, h, p.WEBGL);
       gfx = p.createGraphics(w, h, p.WEBGL);
+       gfx.pixelDensity(1);
 
       shader_0 = new p5.Shader(gfx._renderer, globalVs, shader_0_Frag);
       shader_1 = new p5.Shader(p._renderer, globalVs, shader_1_Frag);
@@ -160,22 +159,22 @@ function makeSketch(fs, params) {
       sketchTime = (p.millis() - start) / 1000;
 
       // totally mess with the dithering :)
-      // if( p.frameCount % 10 == 0){
+      // if( p.frameCount % 40 == 0){
       //   for(let i = 0; i < 10; i++){
-      //     let _one = Math.floor(Math.random()*10);
-      //     let _two = Math.floor(Math.random()*10);
-      //     // [ditherMat[_one], ditherMat[_two]] = [ditherMat[_two], ditherMat[_one]] ;
+      //     let _one = Math.floor(Math.random()*9);
+      //     let _two = Math.floor(Math.random()*9);
+      //     [ditherMat[_one], ditherMat[_two]] = [ditherMat[_two], ditherMat[_one]] ;
       //   }
       // }
 
-      // Create our dither texture
-      for (let x = 0; x < 3; ++x) {
-        for (let y = 0; y < 3; ++y) {
-          let col = (ditherMat[y * 3 + x] / 10) * 255;
-          ditherTex.stroke(col);
-          ditherTex.point(x, y);
-        }
-      }
+      // // Create our dither texture
+      // for (let x = 0; x < 3; ++x) {
+      //   for (let y = 0; y < 3; ++y) {
+      //     let col = (ditherMat[y * 3 + x] / 10) * 255;
+      //     ditherTex.stroke(col);
+      //     ditherTex.point(x, y);
+      //   }
+      // }
 
       gfx.push();
       gfx.translate(width / 2, height / 2);
@@ -202,7 +201,7 @@ function makeSketch(fs, params) {
       shader_1.setUniform('u_time', sketchTime);
       shader_1.setUniform('u_t0', gfx);
       // shader_1.setUniform('u_pixelSize', 1.+Math.floor(p.mouseX/10) );
-      // shader_1.setUniform('u_ditherTex', ditherTex);
+      shader_1.setUniform('u_ditherTex', ditherTex);
 
       demo[1].uniforms.forEach(v => { // custom uniforms
         let val = typeof v.value === 'function' ? v.value(sketchTime) : v.value;

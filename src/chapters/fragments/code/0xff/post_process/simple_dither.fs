@@ -1,5 +1,8 @@
 /*
 	Simple Dithering
+
+	We use a texture instead of a dither matrix since
+	working with uniform matricies are not as flexible.
 */
 precision highp float;
 
@@ -27,11 +30,18 @@ float ditherLookup(vec2 p){
 	// use localCoord to sample dither matrix, stored as a texture
 	localCoord /= sz; // remap to 0..1
 	float ditherThreshold = texture2D(u_ditherTex, localCoord).x;
-	return 1.-step(medianCol, ditherThreshold);	
+	return 1.-step(medianCol, ditherThreshold);
 }
 
-void main(){	
-	// vec2 p = gl_FragCoord.xy/u_res;
-	float i = ditherLookup(gl_FragCoord.xy);
+void main(){
+	// don't remap to keep things easier
+	vec2 c = gl_FragCoord.xy;
+
+	// c = floor(c/.);
+
+	// c = floor(gl_FragCoord.xy/2.)/(u_res/2.);
+	// float i = ditherLookup(c);
+	float i = texture2D(u_t0, c/u_res).x;
+
 	gl_FragColor = vec4(vec3(i),1);
 }

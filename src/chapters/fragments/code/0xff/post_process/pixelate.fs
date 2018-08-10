@@ -1,6 +1,6 @@
 /*
 	Pixelation is fairly straightforward, but there's one
-	minor aesthetic issue we need to resolve. If the user 
+	minor aesthetic issue we need to resolve. If the user
 	wants to dynamically change the pixel size, the image will
 	get nudged over since sampling always begins with the top
 	left pixel.
@@ -16,17 +16,15 @@ uniform float u_pixelSize;
 
 void main(){
   vec2 p = gl_FragCoord.xy;
-  float i;
-
   vec2 c = floor(p/u_pixelSize)*u_pixelSize;
-	
-	// sample center pixel if odd
-	if(mod(u_pixelSize,3.) == 0.){
-		c += floor(u_pixelSize*0.5) + 1.;
-	}
 
-  i = texture2D(u_t0, c/u_res).x;
-  
-  // i = 1.-step(i, 0.);
+  // Use pixel closest to 'center'. Mostly
+  // relevant for larger u_pixelSize values
+  c += floor(u_pixelSize/2.);
+
+  // We're already at the center, add one if odd
+  c += step(1., mod(u_pixelSize, 3.));
+
+  float i = texture2D(u_t0, c/u_res).x;
   gl_FragColor = vec4(vec3(i),1);
 }
