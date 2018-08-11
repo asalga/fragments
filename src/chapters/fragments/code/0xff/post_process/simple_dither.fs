@@ -39,9 +39,10 @@ void main(){
 
 	// c = floor(c/.);
 
-	// c = floor(gl_FragCoord.xy/2.)/(u_res/2.);
-	// float i = ditherLookup(c);
-	float i = texture2D(u_t0, c/u_res).x;
+	// c = floor(gl_FragCoord.xy*2.)/(u_res);
+	c = floor(c/2.)*2.;
+	float i = ditherLookup(c);
+	// float i = texture2D(u_t0, c/u_res).x;
 
 	gl_FragColor = vec4(vec3(i),1);
 }
