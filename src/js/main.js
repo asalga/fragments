@@ -148,7 +148,7 @@ function makeSketch(fs, params) {
       p.pixelDensity(1);
       $(p.canvas).appendTo($('#target'));
       $(ditherTex.canvas).appendTo($('#target2'));
-      p.noLoop();
+      // p.noLoop();
     };
 
     p.mouseClicked = function() {
