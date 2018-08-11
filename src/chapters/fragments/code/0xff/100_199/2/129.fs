@@ -25,23 +25,24 @@ mat3 viewMatrix(vec3 eye, vec3 center, vec3 up) {
 }
 
 float lighting(vec3 p, vec3 n, vec3 lightPos, vec3 eye){
-  float ambient = 0.1;
+  float ambient = 0.35;
+
   // ---
   vec3 pToLight = vec3(lightPos - p);
-  float power = 9.;
+  float power = 20.;
   vec3 lightRayDir = normalize(pToLight);
   float d = length(pToLight);
   d *= d;
   float nDotL = max(dot(n,lightRayDir), 0.);
   float diffuse = (nDotL*power) / d;
-  float kd = .8;
+  float kd = 0.8;
 
-  float gloss = 20.;
+  float gloss = 15.;
   vec3 V = normalize(eye - p);
   vec3 R = normalize(reflect(-lightPos, n));
   float dotRV = dot(R, V);
   float spec = pow(dotRV, gloss);
-  float ks = 0.095;
+  float ks = 0.05;
 
   return  ambient +
           kd * diffuse +
@@ -88,20 +89,33 @@ mat4 scale(float x, float y, float z){
               0, 0, 0, 1);
 }
 
-float halfInvader(vec3 p){
+float halfInvader(vec3 p, float state){
+
+  vec3 c = vec3(14, 10, 0);
+  p = mod(p, c)-0.5*c;
+
   float px = 1.0;
   float sz = 0.5;
 
   // from center to left
-  float _0 = sdBox(p,                       vec3(sz,sz*4.,sz));
-  float _1 = sdBox(p+vec3(px*1.,0,0),       vec3(sz,sz*4.,sz));
-  float _2 = sdBox(p+vec3(px*2.,-px/2.,0),  vec3(sz,sz*5.,sz));
-  float _3 = sdBox(p+vec3(px*3.,px/2.,0),   vec3(sz,sz*5.,sz));
-  float _4 = sdBox(p+vec3(px*4.,0,0),       vec3(sz,sz*2.,sz));
-  float _5 = sdBox(p+vec3(px*5.,px*1.5,0),  vec3(sz,sz*3.,sz));
-  float _6 = sdBox(p+vec3(px*3.,-px*3.5,0), vec3(sz,sz,sz));//antena
-  float _7 = sdBox(p+vec3(px*1.5,px*3.5,0), vec3(sz*2.,sz,sz));//foot
+  float _0 = sdBox(p,                        vec3(sz,sz*4.,sz));
+  float _1 = sdBox(p+vec3(px*1.,0,0),        vec3(sz,sz*4.,sz));
+  float _2 = sdBox(p+vec3(px*2.,-px/2.,0),   vec3(sz,sz*5.,sz));
+  float _3 = sdBox(p+vec3(px*3.,px/2.,0),    vec3(sz,sz*5.,sz));
+  float _4 = sdBox(p+vec3(px*4.,0,0),        vec3(sz,sz*2.,sz));
+  float _5 = sdBox(p+vec3(px*3.,-px*3.5,0),  vec3(sz,sz,sz));//antena
   float eye = sdBox(p + vec3(px*2.,-px*.5,0), vec3(sz,sz,sz*1.1));
+  float legs;
+  float arms;
+
+  if(state == 0.){//arms down
+   arms = sdBox(p+vec3(px*5.,px*1.5,0),   vec3(sz,sz*3.,sz));
+   legs = sdBox(p+vec3(px*1.5,px*3.5,0),  vec3(sz*2.,sz,sz));
+  }
+  else {
+    arms = sdBox(p+vec3(px*5.,-px*1.,0),   vec3(sz,sz*4.,sz));
+    legs = sdBox(p+vec3(px*4.,px*3.5,0),  vec3(sz,sz,sz));
+  }
 
   float final = _0;
   final = min(final,_1);
@@ -109,21 +123,42 @@ float halfInvader(vec3 p){
   final = min(final,_3);
   final = min(final,_4);
   final = min(final,_5);
-  final = min(final,_6);
-  final = min(final,_7);
+  final = min(final,arms);
+  final = min(final,legs);
   final = max(final,-eye);
   return final;
 }
 
 float sdScene(vec3 p, out vec3 rot){
   float t = u_time * 1.0;
+  float gridX, gridY, grid;
+  float thickness = 0.15;
 
-  float left = halfInvader(p);
+  float cellX = floor(p.x/14.);
+
+
+  vec3 c = vec3(1,1,0);
+  vec3 gp = mod(p,c)-(0.5*c);
+
+  gridX = sdBox(gp+vec3(0.,0., -1.4), vec3(thickness, 1,1));
+  gridY = sdBox(gp+vec3(0.,.5, -1.4), vec3(1., thickness, 1.));
+  // grid = gridX;
+  grid = min(gridY, gridX);
+  // gridY = min(gridY, sdBox(gp+vec3(0.,-.5,0), vec3(1., thickness, 1.)));
+
+  float state = step(mod(t, 1.), 0.5);
+  state = step(sin(cellX/1. + t*10.), 0.);
+
+  float left = halfInvader(p, state);
   p.x*=-1.;
-  float right = halfInvader(p);
+  float right = halfInvader(p, state);
 
-  float final = min(left, right);
-  return final;
+  float invader = min(left, right);
+
+  // return grid;
+  // return min(grid, invader);
+  return invader;
+  return max(invader, -grid);
 }
 
 vec3 estimateNormal(vec3 v){
@@ -156,16 +191,18 @@ float rayMarch(vec3 ro, vec3 rd, out vec3 rot){
 
 void main(){
   float i;
-  float t = u_time * 1.0;
+  float t = u_time * 2.0;
 
-  float dist = 5.;
-  vec3 eye = vec3(0, 0, 20);
-  vec3 center = vec3(0, 0, 0);
+  float dist = 30.;
+  // vec3 eye = vec3(cos(0.)*dist, 0, sin(0.)*dist);
+
+  // vec3 eye = vec3(15,5. -t,15);
+  vec3 eye = vec3(3.-t,-t,8);
+  vec3 center = vec3(-t, -t, 0);
   vec3 up = vec3(0,1,0);
-  vec3 lightPos = vec3(5.*cos(t), 0, -5. + sin(t));// + eye;
+  vec3 lightPos =  vec3(0,0,10);
 
-
-  vec3 ray = rayDirection(70., u_res, gl_FragCoord.xy);
+  vec3 ray = rayDirection(150., u_res, gl_FragCoord.xy);
 
   vec3 worldDir = viewMatrix(eye, center, up) * ray;
   vec3 rot;
@@ -176,9 +213,10 @@ void main(){
   if(d < MaxDist){
     vec3 v = eye + worldDir*d;
     vec3 n = estimateNormal(v);
-    i3 = vec3(1) * lighting(v, n, lightPos, eye);
+    i3 = vec3(1.) * lighting(v, n, lightPos, eye);
   }
 
-  i3 = pow(i3, 1./vec3(2.2));
+
+  // i3 = pow(i3, 1./vec3(2.2));
   gl_FragColor = vec4(vec3(i3), 1);
 }
