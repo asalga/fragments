@@ -12,17 +12,11 @@ let demo = {
   },
   '0': {
     // src: '100_199/2/124_dither_test.fs',
-    // src: '100_199/2/125_rotate_alternate.fs',
-    // src: '100_199/2/126_pixel_city.fs',
-    // src: '100_199/2/131.fs',
     // src: '100_199/2/127.fs',
-    // src: '0_99/90/96_conforminty_reprise.fs',
     // src: '100_199/2/128_half_tone.fs',
-    // src: '100_199/2/129_voronoi.fs',
-    // src: '100_199/0/102.fs',
     // src: '100_199/2/129_v.fs',
-
-    src: '100_199/2/129.fs',
+    // src: '100_199/2/129.fs',
+    src: '100_199/3/131.fs',
     
     uniforms: [
       // {'name': 'u_fov', 'value': 70}
@@ -30,10 +24,10 @@ let demo = {
   },
   '1': {
     // src: 'post_process/simple_dither.fs',
-    // src: 'post_process/null.fs',
+    src: 'post_process/null.fs',
     // src: 'post_process/cel.fs',
     // src: 'post_process/pixelate.fs',
-    src: 'post_process/sobel.fs',
+    // src: 'post_process/sobel.fs',
 
     uniforms: [
       { 'name': 'u_numShades', 'value': 12 },
@@ -154,7 +148,7 @@ function makeSketch(fs, params) {
       p.pixelDensity(1);
       $(p.canvas).appendTo($('#target'));
       $(ditherTex.canvas).appendTo($('#target2'));
-      // p.noLoop();
+      p.noLoop();
     };
 
     p.mouseClicked = function() {
