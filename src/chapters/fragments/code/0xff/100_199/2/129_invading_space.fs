@@ -1,4 +1,4 @@
-// 129 - "Invade Space"
+// 129 - "Invading Space"
 precision highp float;
 uniform vec2 u_res;
 uniform float u_time;
