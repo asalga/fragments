@@ -11,7 +11,7 @@ const int MaxShadowStep = 50;
 const float PI = 3.141592658;
 const float TAU = PI*2.;
 const float HALF_PI = PI*0.5;
-#define CNT 10
+#define CNT 2
 
 const float lightGrey = .9;
 const float darkGrey = .0;
@@ -155,7 +155,7 @@ float tex2(vec2 p){
     points[i] = vec2( 2.*fract(cos(float(i)*1000.0))-1.,
                       2.*fract(sin(float(i)*20000.0))-1.);
 
-    points[i].x += smoothValueNoise(vec2(u_time + float(i+1)*100. ));
+    // points[i].x += smoothValueNoise(vec2(u_time + float(i+1)*100. ));
   }
 
 
@@ -170,7 +170,7 @@ float tex2(vec2 p){
     }
   }
 
-  dist = clamp(dist, 0. , 1.);
+  // dist = clamp(dist, 0. , 1.);
   return dist;
 }
 
@@ -180,19 +180,23 @@ float sdScene(vec3 p, out float col){
   float t = u_time;
   float h = 0.;
   col = .1 + .3*sampleChecker(p.xz*2.5);
-  h = tex2(p.xz);
-  col = 1.-h;
+  h = tex2(p.xz*1.);
+  // col += 1.-h;
+  col = h;
 
   // h = pow(h,5.3);
 
 
-  h = max(h, 0.95);
+  // h = max(h, 0.95);
 
 
   // h = clamp(h, 0.3, .9)/10.;
-  // float testH = smoothstep(0.0, .9, h);
-  float testH = h;
 
+  float testH = 1.-h;
+  // testH = 1./testH;
+  testH = smoothstep(0.1, .79589, testH*2. );
+
+  // testH = max(testH, .3);
   //clamp((1.-h)/5., 0. , 1.);
   // testH = max(testH, 0.2);
   // testH =
@@ -200,7 +204,7 @@ float sdScene(vec3 p, out float col){
   // h = max(h,0.5);
 
 
-  float box = sdBox(p + vec3(0,testH,0), vec3(2., 0.01, 2.));
+  float box = sdBox(p - vec3(0,testH,0), vec3(5., 0.01, 5.));
   return box;
 }
 
@@ -269,7 +273,7 @@ void main(){
 
   float dist = 4.;
 
-  vec3 eye = vec3(dist * cos(t), 1.0  , dist * sin(t));
+  vec3 eye = vec3(dist * cos(t), 2.0  , dist * sin(t));
   // vec3 eye = vec3(4., 3., 2.);
   vec3 center = vec3(0, 0, 0.);
   vec3 lightPos =  vec3(0., 0., 5);
