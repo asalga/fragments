@@ -16,6 +16,9 @@ uniform float u_pixelSize;
 
 void main(){
   vec2 p = gl_FragCoord.xy;
+
+  p.y = u_res.y - p.y;
+
   vec2 c = floor(p/u_pixelSize)*u_pixelSize;
 
   // Use pixel closest to 'center'. Mostly

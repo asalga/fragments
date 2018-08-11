@@ -3,34 +3,44 @@
 */
 'use strict';
 
+let relPath = '../../chapters/fragments/code/0xff/';
+
 let demo = {
   'size': {
-    'width': 500,
-    'height': 500
+    'width': 600,
+    'height': 600
   },
   '0': {
-    // src: '../fragments/code/0xff/100_199/2/124_dither_test.fs',
-    // src: '../fragments/code/0xff/100_199/2/125_rotate_alternate.fs',
-    // src: '../fragments/code/0xff/100_199/2/126_pixel_city.fs',
-    // src: '../fragments/code/0xff/100_199/2/131.fs',
-    // src: '../fragments/code/0xff/100_199/2/127.fs',
-    // src: '../fragments/code/0xff/100_199/2/128_half_tone.fs',
-    // src: '../fragments/code/0xff/100_199/2/129_voronoi.fs',
-    src: '../fragments/code/0xff/100_199/2/129_v.fs',
+    // src: '100_199/2/124_dither_test.fs',
+    // src: '100_199/2/125_rotate_alternate.fs',
+    // src: '100_199/2/126_pixel_city.fs',
+    // src: '100_199/2/131.fs',
+    // src: '100_199/2/127.fs',
+    // src: '0_99/90/96_conforminty_reprise.fs',
+    // src: '100_199/2/128_half_tone.fs',
+    // src: '100_199/2/129_voronoi.fs',
+    // src: '100_199/0/102.fs',
+    // src: '100_199/2/129_v.fs',
+
+    src: '100_199/2/129.fs',
+    
     uniforms: [
       // {'name': 'u_fov', 'value': 70}
     ]
   },
   '1': {
-    // src: '../fragments/code/0xff/post_process/simple_dither.fs',
-    src: '../fragments/code/0xff/post_process/null.fs',
-    // src: '../fragments/code/0xff/post_process/pixelate.fs',
+    // src: 'post_process/simple_dither.fs',
+    // src: 'post_process/null.fs',
+    // src: 'post_process/cel.fs',
+    // src: 'post_process/pixelate.fs',
+    src: 'post_process/sobel.fs',
+
     uniforms: [
       { 'name': 'u_numShades', 'value': 12 },
       {
         'name': 'u_pixelSize',
         'value': function(s) {
-          return 5.;
+          return 6.;
           return Math.sin(s / 10.) * 20;
         }
       },
@@ -38,7 +48,6 @@ let demo = {
     ]
   }
 };
-
 
 
 let globalVs = `
@@ -95,7 +104,9 @@ function makeSketch(fs, params) {
     6, 3, 8
   ];
 
-  var sketch = function(p) {
+  var sketch = function(p, relPath) {
+
+
 
     p.preload = function() {
       let mainFs = `precision mediump float;
@@ -118,12 +129,12 @@ function makeSketch(fs, params) {
       ditherTex.canvas.style = ''; // remove the 'display:none' to see the cvs
 
       // Dither texture/matrix
-      let ditherMat = [
-      2,5,3,4,1,6,7,8
+      // let ditherMat = [
+      // 2,5,3,4,1,6,7,8
         // 7, 9, 5,
         // 2, 1, 4,
         // 6, 3, 8
-      ];
+      // ];
 
       for (let x = 0; x < 3; ++x) {
         for (let y = 0; y < 3; ++y) {
@@ -160,7 +171,7 @@ function makeSketch(fs, params) {
 
       // totally mess with the dithering :)
       // if( p.frameCount % 40 == 0){
-      //   for(let i = 0; i < 10; i++){
+      //   for(let i = 0; i < 30; i++){
       //     let _one = Math.floor(Math.random()*9);
       //     let _two = Math.floor(Math.random()*9);
       //     [ditherMat[_one], ditherMat[_two]] = [ditherMat[_two], ditherMat[_one]] ;
@@ -216,20 +227,23 @@ function makeSketch(fs, params) {
   return sketch;
 }
 
+
+
 function getFs0() {
-  return fetch(demo[0].src)
+  return fetch(relPath + demo[0].src)
     .then(res => res.text())
 }
 
 function getFs1() {
-  return fetch(demo[1].src)
+  return fetch(relPath + demo[1].src)
     .then(res => res.text())
 }
+
 
 (function load() {
   Promise.all([getFs0(), getFs1()])
     .then(fragShaders => {
-      let relPath;
+      
       let sketch = new p5(makeSketch(fragShaders, demo.size), relPath);
     });
 })();
