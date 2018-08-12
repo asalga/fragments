@@ -7,8 +7,8 @@ let relPath = '../../chapters/fragments/code/0xff/';
 
 let demo = {
   'size': {
-    'width': 600,
-    'height': 600
+    'width': 500,
+    'height': 500
   },
   '0': {
     // src: '100_199/2/124_dither_test.fs',
@@ -24,9 +24,9 @@ let demo = {
   },
   '1': {
     // src: 'post_process/simple_dither.fs',
-    src: 'post_process/null.fs',
+    // src: 'post_process/null.fs',
     // src: 'post_process/cel.fs',
-    // src: 'post_process/pixelate.fs',
+    src: 'post_process/pixelate.fs',
     // src: 'post_process/sobel.fs',
 
     uniforms: [
@@ -34,7 +34,7 @@ let demo = {
       {
         'name': 'u_pixelSize',
         'value': function(s) {
-          return 6.;
+          return 8.;
           return Math.sin(s / 10.) * 20;
         }
       },

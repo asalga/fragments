@@ -1,8 +1,4 @@
 // 131 - Voronoi
-// 1) add animation
-// 2) add borders
-// 3) add colours?
-// bonus
 precision highp float;
 
 uniform vec2 u_res;
@@ -11,6 +7,9 @@ uniform  float u_time;
 
 const int CNT = 15;
 
+float sdCircle(vec2 p, float r){
+  return length(p)-r;
+}
 
 float random (vec2 st) {
   return fract(sin(dot(st.xy,vec2(22.9898,78.233)))*43758.5453123);
@@ -43,6 +42,8 @@ vec2 voronoi(vec2 p, in vec2 pts[CNT]){
   return sqrt(res);
 }
 
+
+
 void main(){
   vec2 p = gl_FragCoord.xy/u_res*2.-1.;
   vec2 pos[CNT];
@@ -53,15 +54,15 @@ void main(){
   for(int i = 0; i < CNT; i++){
     float fi = float(i);
     pos[i] = vec2(rand(fi, 64134.), rand(fi, 39598.));
-    vel[i] = vec2(rand(fi, 13634.), rand(fi, 39598.));
-    vel[i] /= 10.;
+    vel[i] = vec2(rand(fi, 83634.), rand(fi, 39598.));
+    vel[i] /= 7.;
 
     // move pos
-    pos[i] += vel[i] * t;
+    pos[i] += vel[i] * t*2.;
     vec2 screenIdx = floor(mod(pos[i], 2.));// 0..1
     vec2 dir = screenIdx * 2. - 1.;
     vec2 finalPos = vec2((1.-screenIdx) + dir * mod(pos[i], 1.));
-    pos[i] = finalPos-0.5;
+    pos[i] = (finalPos-0.5)*2.;
   }
 
   vec2 res = voronoi(p, pos);
@@ -69,7 +70,20 @@ void main(){
 
   float dis = res.y-res.x;
   dis = 1.-smoothstep(0., 0.05, dis);
-  col += dis;
+  //col = step(0., res.x);
+
+  if(col < 0.025){
+    col = 0.;
+  }
+  col = mod(col - t/6., 0.125);
+  //col += res.x;//dis;
+
+  // for(int i = 0; i < CNT; i+ +){
+     // col += 1.-smoothstep(0.0, .0001, sdCircle(p-pos[i], 0.01));
+  // }
+
+
+  col *= 2.5;
 
   gl_FragColor = vec4(vec3(col),1);
 }
