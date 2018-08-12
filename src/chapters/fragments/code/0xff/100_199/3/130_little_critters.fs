@@ -83,7 +83,7 @@ void main(){
   // }
 
 
-  col *= 2.5;
+  col *= 4.5;
 
   gl_FragColor = vec4(vec3(col),1);
 }
