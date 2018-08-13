@@ -16,7 +16,7 @@ let demo = {
     // src: '100_199/2/128_half_tone.fs',
     // src: '100_199/2/129_v.fs',
     // src: '100_199/2/129.fs',
-    src: '100_199/3/131.fs',
+    src: '100_199/3/132.fs',
     
     uniforms: [
       // {'name': 'u_fov', 'value': 70}
