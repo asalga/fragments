@@ -16,7 +16,7 @@ let demo = {
     // src: '100_199/2/128_half_tone.fs',
     // src: '100_199/2/129_v.fs',
     // src: '100_199/2/129.fs',
-    src: '100_199/3/132.fs',
+    src: '100_199/3/132_vel.fs',
     
     uniforms: [
       // {'name': 'u_fov', 'value': 70}
@@ -24,10 +24,10 @@ let demo = {
   },
   '1': {
     // src: 'post_process/simple_dither.fs',
-    src: 'post_process/null.fs',
+    // src: 'post_process/null.fs',
     // src: 'post_process/cel.fs',
     // src: 'post_process/pixelate.fs',
-    // src: 'post_process/sobel.fs',
+    src: 'post_process/sobel.fs',
 
     uniforms: [
       { 'name': 'u_numShades', 'value': 12 },

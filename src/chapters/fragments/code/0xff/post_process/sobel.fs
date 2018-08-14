@@ -37,19 +37,19 @@ void main() {
   p.y = 1.0 - p.y;
   vec4 diffuse1 = texture2D(u_t0, p);
 
-  vec4 colX = 
-   sample(_00) * sobel[0][0] + sample(_01) * sobel[0][1] + sample(_02) * sobel[0][2] + 
-   sample(_10) * sobel[1][0] + sample(_11) * sobel[1][1] + sample(_12) * sobel[1][2] + 
+  vec4 colX =
+   sample(_00) * sobel[0][0] + sample(_01) * sobel[0][1] + sample(_02) * sobel[0][2] +
+   sample(_10) * sobel[1][0] + sample(_11) * sobel[1][1] + sample(_12) * sobel[1][2] +
    sample(_20) * sobel[2][0] + sample(_21) * sobel[2][1] + sample(_22) * sobel[2][2];
 
-  vec4 colY = 
-   sample(_01) * sobel[0][0] + sample(_01) * sobel[1][0] + sample(_02) * sobel[2][0] + 
-   sample(_12) * sobel[0][1] + sample(_11) * sobel[1][1] + sample(_12) * sobel[2][1] + 
+  vec4 colY =
+   sample(_01) * sobel[0][0] + sample(_01) * sobel[1][0] + sample(_02) * sobel[2][0] +
+   sample(_12) * sobel[0][1] + sample(_11) * sobel[1][1] + sample(_12) * sobel[2][1] +
    sample(_20) * sobel[0][2] + sample(_21) * sobel[1][2] + sample(_22) * sobel[2][2];
 
   float resCol = sqrt(colX.r * colX.r + colY.r * colY.r);
 
-  resCol = resCol * step(mod(gl_FragCoord.y, 2.), 1.); //scanlines
+  // resCol = resCol * step(mod(gl_FragCoord.y, 2.), 1.); //scanlines
 
   // gl_FragColor = diffuse1;
   gl_FragColor = (diffuse1) +  vec4( vec3(resCol), 1.0);

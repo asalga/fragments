@@ -4,7 +4,7 @@ precision highp float;
 uniform vec2 u_res;
 uniform float u_time;
 
-const float Epsilon = 0.0001;
+const float Epsilon = 0.00001;
 const float E = Epsilon;
 const float MaxDist = 300.;
 const int MaxSteps = 128;
@@ -84,35 +84,117 @@ mat4 r2dZ(float a){
 }
 
 
-float cross(vec3 p, float s){
+
+
+float cross2(vec3 p, float s){
   float sc = 1./3.;
 
-  float _one = 1.1;// add a bit extra ;)
+  float _one = 100.1;// add a bit extra ;)
 
-  float cross = sdBox(p, vec3(_one,sc,sc));
-  cross = min(cross, sdBox(p, vec3(sc,_one,sc)));
-  cross = min(cross, sdBox(p, vec3(sc,sc,_one)));
+  mat4 test = mat4(s,0,0,0,
+                    0,s,0,0,
+                    0,0,s,0,
+                    0,0,0,1);
+
+  float cross =      sdBox( (vec4(p,1.) * test).xyz, vec3(1.));
+  cross = min(cross, sdBox( (vec4(p,1.) * test).xyz, vec3(1.)));
+  cross = min(cross, sdBox( (vec4(p,1.) * test).xyz, vec3(1.)));
 
   return cross * (1./s);
 }
 
+float cross(vec3 p, float s){
+  float sc = (1./3.);
+
+  float _one = 100.;// add a bit extra ;)
+
+  sc = 1.;
+  // float cross =
+    float a = sdBox(p*1., vec3(_one,sc,sc));
+  // cross = min(cross,
+    float b = sdBox(p*1., vec3(sc,_one,sc));
+  // cross = min(cross,
+   float c =  sdBox(p*1., vec3(sc,sc,_one));
+
+  return min(a, min(b,c));
+  // return cross * (1./s);
+}
+
+// float sdCross( in vec3 p )
+// {
+//   float da = sdBox(p.xy,vec2(1.0));
+//   float db = sdBox(p.yz,vec2(1.0));
+//   float dc = sdBox(p.zx,vec2(1.0));
+//   return min(da,min(db,dc));
+// }
+
+float sdCross( in vec3 p )
+{
+  float inf = 100.;
+  float da = sdBox(p.xyz,vec3(inf,1.0,1.0));
+  float db = sdBox(p.yzx,vec3(1.0,inf,1.0));
+  float dc = sdBox(p.zxy,vec3(1.0,1.0,inf));
+  return min(da,min(db,dc));
+}
+
+
 float sdScene(vec3 p, out float col){
-  col = 1.;
 
-  float sponge;
-  float cube = sdBox(p, vec3(1.));
+    col = 1.;
 
-  // float sponge = max(cube, -cross(p, 1.));
+   float d = sdBox(p,vec3(1.0));
+   // float cube = sdBox(p, vec3(1.0));
 
-  // vec3 np = mod(p,3.)-0.5*vec3(3.);
-  sponge = max(cube, -cross(p , 3.));
+   float s = 1.0;
+   for( int m=0; m<2; m++ )
+   {
+      vec3 a = mod( p*s, 2.0 )-1.0;
+      s *= 3.0;
+      vec3 r = 1.0 - 3.0 * abs(a);
 
-  // sponge = cross(np , 1.);
-  return sponge;
-  // return max(cube, -sponge);
-  // return cross(p);
-  // return cross;
-  // return cube;
+      // float c = sdCross(r)/s;
+
+      float da = max(r.x,r.y);
+      float db = max(r.y,r.z);
+      float dc = max(r.z,r.x);
+      float c = (min(da,min(db,dc))-1.0)/s;
+
+      d = max(d,-c);
+      // return cube;
+   }
+   return d;
+   // return vec3(d,0.0,0.0);
+
+
+
+  //
+
+  // float cube = sdBox(p, vec3(1.0));
+  // float sponge = cube;
+
+  // // float sponge = max(cube, -cross(p, 1.));
+
+  // float c = (1./3.);
+  // float s = 2.0;
+  // // vec3 np = mod(p, c) - (.5*vec3(c));
+
+  // vec3 np0 = mod(p*s, 2.0) - 1.;
+
+  // // sponge = max(sponge, -cross(p, 1.));
+  // sponge = max(sponge, -cross(1. - 3.* abs(np0), 1.));
+
+  // // sponge = max(sponge, -cross(np, 9.));
+  // // sponge = cross(np, 3.);
+
+  // // return cross(p*3., 3.)/3.;
+  // return sponge;
+  // // return max(cube, -cross(p, 1.));
+  // // sponge = cross(np , 1.);
+  // // return sponge;
+  // // return max(cube, -sponge);
+  // // return cross(p);
+  // // return cross;
+  // // return cube;
 }
 
 
@@ -190,7 +272,7 @@ float ao(vec3 p, vec3 n){
 
 void main(){
   vec2 fc = gl_FragCoord.xy;
-  float t = u_time * .14;
+  float t = u_time * .90;
   float i;
 
   vec3 eye = vec3(cos(t)*5., 5., sin(t)*5.);
