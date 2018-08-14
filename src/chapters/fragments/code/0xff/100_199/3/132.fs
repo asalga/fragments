@@ -12,6 +12,8 @@ const float PI = 3.141592658;
 const float HALF_PI = PI*0.5;
 const int MaxShadowStep = 100;
 
+const float START = 0.;
+
 const vec3 lightGrey = vec3(1.);
 const vec3 darkGrey = vec3(0.4);
 
@@ -82,25 +84,32 @@ mat4 r2dZ(float a){
 }
 
 
-float cross(vec3 p){
+float cross(vec3 p, float s){
   float sc = 1./3.;
 
-  float _one = 1.1;
+  float _one = 1.1;// add a bit extra ;)
 
   float cross = sdBox(p, vec3(_one,sc,sc));
   cross = min(cross, sdBox(p, vec3(sc,_one,sc)));
   cross = min(cross, sdBox(p, vec3(sc,sc,_one)));
 
-  return cross;
+  return cross * (1./s);
 }
 
 float sdScene(vec3 p, out float col){
   col = 1.;
 
-  float cube = sdBox( p, vec3(1.));
+  float sponge;
+  float cube = sdBox(p, vec3(1.));
 
-  return max(cube, -cross(p));
+  // float sponge = max(cube, -cross(p, 1.));
 
+  // vec3 np = mod(p,3.)-0.5*vec3(3.);
+  sponge = max(cube, -cross(p , 3.));
+
+  // sponge = cross(np , 1.);
+  return sponge;
+  // return max(cube, -sponge);
   // return cross(p);
   // return cross;
   // return cube;
@@ -143,7 +152,7 @@ vec3 estimateNormal(vec3 v){
 }
 
 float rayMarch(vec3 ro, vec3 rd, out vec3 col){
-  float s = 0.;
+  float s = START;
   for(int i = 0; i < MaxSteps; i++){
     vec3 p = ro + rd * s;
 
