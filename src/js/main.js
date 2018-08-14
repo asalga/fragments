@@ -11,12 +11,8 @@ let demo = {
     'height': 500
   },
   '0': {
-    // src: '100_199/2/124_dither_test.fs',
-    // src: '100_199/2/127.fs',
-    // src: '100_199/2/128_half_tone.fs',
-    // src: '100_199/2/129_v.fs',
-    // src: '100_199/2/129.fs',
-    src: '100_199/3/132_vel.fs',
+    // src: '100_199/3/133_sponge_walk.fs',
+    src: '100_199/3/134.fs',
     
     uniforms: [
       // {'name': 'u_fov', 'value': 70}
@@ -24,17 +20,17 @@ let demo = {
   },
   '1': {
     // src: 'post_process/simple_dither.fs',
-    // src: 'post_process/null.fs',
+    src: 'post_process/null.fs',
     // src: 'post_process/cel.fs',
     // src: 'post_process/pixelate.fs',
-    src: 'post_process/sobel.fs',
+    // src: 'post_process/sobel.fs',
 
     uniforms: [
       { 'name': 'u_numShades', 'value': 12 },
       {
         'name': 'u_pixelSize',
         'value': function(s) {
-          return 8.;
+          return 2.;
           return Math.sin(s / 10.) * 20;
         }
       },
