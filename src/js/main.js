@@ -20,18 +20,18 @@ let demo = {
   },
   '1': {
     // src: 'post_process/simple_dither.fs',
-    src: 'post_process/null.fs',
+    // src: 'post_process/null.fs',
     // src: 'post_process/cel.fs',
     // src: 'post_process/pixelate.fs',
-    // src: 'post_process/sobel.fs',
+    src: 'post_process/sobel.fs',
 
     uniforms: [
       { 'name': 'u_numShades', 'value': 12 },
       {
         'name': 'u_pixelSize',
         'value': function(s) {
-          return 2.;
-          return Math.sin(s / 10.) * 20;
+          // return 9.;
+          return Math.sin(s / 2.) * 10;
         }
       },
       { 'name': '_', 'value': [-1, -1, 0, -1, 1, -1, -1, 0, 0, 0, 1, 0, -1, 1, 0, 1, 1, 1] }
@@ -144,7 +144,7 @@ function makeSketch(fs, params) {
       p.pixelDensity(1);
       $(p.canvas).appendTo($('#target'));
       $(ditherTex.canvas).appendTo($('#target2'));
-      p.noLoop();
+      // p.noLoop();
     };
 
     p.mouseClicked = function() {

@@ -21,19 +21,20 @@ float px(vec2 _, vec2 p, vec2 d, float c){
 
 
 void main(){
+  float t = u_time;
   vec2 p = gl_FragCoord.xy;///u_res;
-  float i = 0.0;
+  float i = 0.1;
 
-  // i *= 0.125;
-  // i += step(0., sdRect(p, vec2(.10)));
+  p *= 0.032;
 
-  p.x -= 10.;
-  p *= 0.05;
+  p.y += sin(p.x/2. + t*1.);
 
-  // for(float it = 6.; it > 1.; it--){
-  //   i += px(p, vec2(it, y), vec2( 2.*(15.-y)+4., 1.), 160.);
-  //   y-=2.;
-  // }
+  vec2 np = gl_FragCoord.xy/u_res*2.-1.;
+
+
+  p -= fract(length(np/2.)+t);
+
+  // p.x += cos(p.y*p.y + t)/2.;
 
   // 0
   i += px(p, vec2(6, 15), vec2( 4., 1.), 160.);
@@ -115,6 +116,10 @@ void main(){
   i += px(p, vec2(9, 0), vec2( 1., 1.), 160.);
   i += px(p, vec2(10, 0), vec2( 1., 1.), 255.);
 
+  i += fract(i+t*8.);
+
+  i += fract(length(np)-t/1.)/4.;
+  i /= fract(length(np)-t/1.)*5.;
 
 
 
