@@ -7,12 +7,12 @@ let relPath = '../../chapters/fragments/code/0xff/';
 
 let demo = {
   'size': {
-    'width': 500,
-    'height': 500
+    'width': 400,
+    'height': 400
   },
   '0': {
-    src: '100_199/3/134_helpful_mushroom.fs',
-    // src: '100_199/3/134.fs',
+    // src: '100_199/3/134_helpful_mushroom.fs',
+    src: '100_199/3/135.fs',
     
     uniforms: [
       // {'name': 'u_fov', 'value': 70}

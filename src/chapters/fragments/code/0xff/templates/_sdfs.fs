@@ -11,8 +11,12 @@ float sdRect(vec2 p, vec2 sz){
   return _in + _out;
 }
 
+float sdEqTriangle(vec2 p, vec2 d){
+}
 
 
+
+///////////////////////////
 
 float sdSphere(vec3 p, float r){
 	return length(p)-r;
