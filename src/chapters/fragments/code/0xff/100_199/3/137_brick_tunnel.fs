@@ -1,12 +1,11 @@
 //
 precision highp float;
-
 uniform vec2 u_res;
 uniform float u_time;
 
-const float Epsilon = 0.0001;
-const float MaxDist = 400.;
-const int MaxSteps = 128;
+const float Epsilon = 0.00001;
+const float MaxDist = 600.;
+const int MaxSteps = 200;
 const float PI = 3.141592658;
 const float TAU = PI*2.;
 const float HALF_PI = PI*0.5;
@@ -26,6 +25,7 @@ float samplePolarChecker(vec2 c){
   if(rLen == angle){return 0.8* fog;}
   return rLen*angle * fog;
 }
+
 
 float sampleChecker(vec2 c) {
   float col;
@@ -53,10 +53,10 @@ mat3 viewMatrix(vec3 eye, vec3 center, vec3 up) {
 }
 
 float lighting(vec3 p, vec3 n, vec3 lightPos){
-  float ambient = 0.0;
+  float ambient = 0.2;
   // ---
   vec3 pToLight = vec3(lightPos - p);
-  float power = 140.;
+  float power = 70.;
   vec3 lightRayDir = normalize(pToLight);
   float d = length(pToLight);
   d *= d;
@@ -91,7 +91,7 @@ float cubeSDF(vec3 p, vec3 sz) {
   return insideDistance + outsideDistance;
 }
 
-mat4 r3dY(float a){
+mat4 r2dY(float a){
   float c = cos(a);
   float s = sin(a);
 
@@ -100,7 +100,7 @@ mat4 r3dY(float a){
               s,  0, c,  0,
               0,  0, 0,  1);
 }
-mat4 r3dX(float a){
+mat4 r2dX(float a){
   float c = cos(a);
   float s = sin(a);
 
@@ -109,7 +109,7 @@ mat4 r3dX(float a){
               0,  s,  c,  0,
               0,  0,  0,  1);
 }
-mat4 r3dZ(float a){
+mat4 r2dZ(float a){
   float c = cos(a);
   float s = sin(a);
 
@@ -119,10 +119,46 @@ mat4 r3dZ(float a){
               0,  0, 0,  1);
 }
 
-float sdScene(vec3 p, out float col){
+float sdScene(in vec3 p, out float col){
   float t = u_time;
   col = 1.;
-  return sdBox(p, vec3(1));
+  const float numBricks = 8.;
+
+  p.y += fract(t);
+
+  vec3 c = vec3(0., 1.5, 0.);
+  vec3 r = mod(p,c)-0.5*c;
+
+  if(p.y > 0.){
+    // r.y = abs(p.y)+0.5;
+  }
+
+  float yIdx = floor(p.y*10.)/10.;
+  float rotAlt = 2.;
+
+  if(mod(yIdx, 1.) < .5){
+    rotAlt = 0.;
+  }
+
+  float res = 1.;
+  const float len = 3.;
+  const float inc = TAU/numBricks;
+
+  r = (vec4(r, 1) * r2dY(rotAlt)).xyz;
+
+  for(float it = 0.0; it < TAU; it += inc){
+    float x = cos(it) * len;
+    float z = sin(it) * len;
+
+    vec3 pos = vec3(x, 0., z);
+    vec3 _p = r + pos;
+    vec3 final = (vec4(_p,1.0) * r2dY( -it + PI/2. )).xyz;
+
+    float b = sdBox(final, vec3(0.8, 0.17, 0.18));
+    res = min(res, b);
+  }
+
+  return res;
 }
 
 vec3 estimateNormal(vec3 v){
@@ -146,7 +182,7 @@ float rayMarch(vec3 ro, vec3 rd, out vec3 col){
     if(d < Epsilon){
       return s;
     }
-    s += d;
+    s += d/3.;
 
     if(d > MaxDist){
       return MaxDist;
@@ -157,12 +193,13 @@ float rayMarch(vec3 ro, vec3 rd, out vec3 col){
 
 void main(){
   float i;
-  float t = u_time;
+  float t = u_time * .15;
   vec2 fc = gl_FragCoord.xy;
 
-  float dist = 4.;
-  vec3 eye = vec3(dist);
-  vec3 center = vec3(0, 0, 0.);
+  float dist = 0.;
+  // vec3 eye = vec3(0, dist, 0.000001);
+  vec3 eye = vec3(dist, 10.01-t, dist);
+  vec3 center = vec3(0.01, 0.01-t, 0.001);
   vec3 lightPos =  vec3(0., 4., 2) + eye;
   vec3 up = vec3(0,1,0);
 
@@ -178,7 +215,11 @@ void main(){
     vec3 n = estimateNormal(v);
     float lights = lighting(v, n, lightPos);
     i = lights * col.x;
+    // i = col.x;
   }
+
+  float fog = (1./pow(d*d,.18));
+  i *= fog;
 
   gl_FragColor = vec4(vec3(i), 1);
 }

@@ -11,10 +11,9 @@ let demo = {
     'height': 400
   },
   '0': {
-    // src: '100_199/3/134_helpful_mushroom.fs',
-    // src: '100_199/3/135.fs',
     // src: '100_199/3/135_impossibilities.fs',
-    src: '100_199/3/137.fs',
+    src: '100_199/3/136_rollers.fs',
+    // src: '100_199/3/137_brick_tunnel.fs',
     
     uniforms: [
       // {'name': 'u_fov', 'value': 70}
@@ -146,7 +145,7 @@ function makeSketch(fs, params) {
       p.pixelDensity(1);
       $(p.canvas).appendTo($('#target'));
       $(ditherTex.canvas).appendTo($('#target2'));
-      p.noLoop();
+      // p.noLoop();
     };
 
     p.mouseClicked = function() {

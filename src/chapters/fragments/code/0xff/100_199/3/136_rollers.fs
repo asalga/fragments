@@ -1,5 +1,6 @@
-//
+// 136 - "That's How They Roll"
 precision highp float;
+
 uniform vec2 u_res;
 uniform float u_time;
 
@@ -11,7 +12,7 @@ const float TAU = PI*2.;
 const float HALF_PI = PI*0.5;
 
 const vec3 lightGrey = vec3(1.);
-const vec3 darkGrey = vec3(0.4);
+const vec3 darkGrey = vec3(0.7);
 
 float samplePolarChecker(vec2 c){
   float t = u_time*2.;
@@ -26,7 +27,6 @@ float samplePolarChecker(vec2 c){
   return rLen*angle * fog;
 }
 
-
 float sampleChecker(vec2 c) {
   float col;
   float sz = 0.25;
@@ -36,6 +36,13 @@ float sampleChecker(vec2 c) {
 
   if(x == y){return 0.8;}
   return x*y;
+}
+
+float sdCylinder(vec3 p, vec2 sz ){
+  vec2 d = abs(vec2(length(p.xz),p.y)) - sz;
+  float _out = length(max(vec2(d.x,d.y), 0.));
+  float _in = min(max(d.x,d.y), 0.);
+  return  _in + _out;
 }
 
 float sdBox(vec3 p, vec3 sz) {
@@ -53,10 +60,10 @@ mat3 viewMatrix(vec3 eye, vec3 center, vec3 up) {
 }
 
 float lighting(vec3 p, vec3 n, vec3 lightPos){
-  float ambient = 0.0;
+  float ambient = 0.2;
   // ---
   vec3 pToLight = vec3(lightPos - p);
-  float power = 440.;
+  float power = 20.;
   vec3 lightRayDir = normalize(pToLight);
   float d = length(pToLight);
   d *= d;
@@ -91,7 +98,7 @@ float cubeSDF(vec3 p, vec3 sz) {
   return insideDistance + outsideDistance;
 }
 
-mat4 r2dY(float a){
+mat4 r3dY(float a){
   float c = cos(a);
   float s = sin(a);
 
@@ -100,7 +107,7 @@ mat4 r2dY(float a){
               s,  0, c,  0,
               0,  0, 0,  1);
 }
-mat4 r2dX(float a){
+mat4 r3dX(float a){
   float c = cos(a);
   float s = sin(a);
 
@@ -109,7 +116,8 @@ mat4 r2dX(float a){
               0,  s,  c,  0,
               0,  0,  0,  1);
 }
-mat4 r2dZ(float a){
+
+mat4 r3dZ(float a){
   float c = cos(a);
   float s = sin(a);
 
@@ -119,44 +127,33 @@ mat4 r2dZ(float a){
               0,  0, 0,  1);
 }
 
-float sdScene(in vec3 p, out float col){
+float sampleCheckerboard2(vec3 c) {
+  float y = step(fract(c.y*10.), 0.5);
+  float a = step(mod(atan(c.x, c.z)/PI, 0.2), 0.1);
+
+  if(a != y){
+    return darkGrey.x;
+  }
+  return lightGrey.x;
+}
+
+float sdScene(vec3 p, out float col){
   float t = u_time;
-  col = 1.;
-  const float numBricks = 20.;
+  vec3 uvCoords = p;
 
-  // vec3 c = vec3(5., 1., 10.);
-  // vec3 np = mod(p,c)-0.5*c;
+  uvCoords.y += t;
+  vec3 uvCoords1 = (vec4(uvCoords,1)*r3dY(t)).xyz;
+  vec3 uvCoords2 = (vec4(uvCoords,1)*r3dY(-t)).xyz;
 
-  vec3 np = p;
+  float c1 = sdCylinder( (vec4(p+vec3(1,0,0),1)*r3dY(0.)).xyz   , vec2(1., 2.5));
+  float c2 = sdCylinder( (vec4(p-vec3(1,0,0),1)*r3dY(0.)).xyz   , vec2(1., 2.5));
 
-  float res = 1.;
-  const float len = 4.1;
-  const float inc = TAU/numBricks;
-
-  // for(float it = 0.; it < numBricks; ++it){
-
-  for(float it = 0.0; it < TAU; it += inc){
-    float x = cos( it ) * len;
-    float z = sin( it ) * len;
-
-    // y *= 2.;
-    // y -= 1.;
-
-    // x *= 2.;
-    // x -= 1.;
-
-
-    vec3 pos = vec3(x, 0, z);  // + vec3(len/2., 0, len/2.);
-
-    float b = sdBox(p + pos, vec3(0.7, 0.2, 0.35));
-
-    // mat4 rot = r
-
-    res = min(res, b);
-    // res = b;
+  col = sampleCheckerboard2(uvCoords1/10.0);
+  if(c2 < Epsilon){
+    col = sampleCheckerboard2(uvCoords2/10.0);
   }
 
-  return res;
+  return min(c1, c2);
 }
 
 vec3 estimateNormal(vec3 v){
@@ -191,12 +188,12 @@ float rayMarch(vec3 ro, vec3 rd, out vec3 col){
 
 void main(){
   float i;
-  float t = u_time * .15;
+  float t = u_time;
   vec2 fc = gl_FragCoord.xy;
 
-  float dist = 10.;
-  vec3 eye = vec3(0, dist, 0.000001);
-  // vec3 eye = vec3(dist);
+  float dist = 4.;
+  // vec3 eye = vec3(cos(0.)*dist, 0, sin(0.)* dist);
+  vec3 eye = vec3(0,0,dist);
   vec3 center = vec3(0);
   vec3 lightPos =  vec3(0., 4., 2) + eye;
   vec3 up = vec3(0,1,0);
@@ -212,8 +209,7 @@ void main(){
   if(d < MaxDist){
     vec3 n = estimateNormal(v);
     float lights = lighting(v, n, lightPos);
-    // i = lights * col.x;
-    i = col.x;
+    i = lights * col.x;
   }
 
   gl_FragColor = vec4(vec3(i), 1);
