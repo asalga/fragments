@@ -11,8 +11,8 @@ let demo = {
     'height': 500
   },
   '0': {
-    // src: '100_199/3/133_sponge_walk.fs',
-    src: '100_199/3/134.fs',
+    src: '100_199/3/134_helpful_mushroom.fs',
+    // src: '100_199/3/134.fs',
     
     uniforms: [
       // {'name': 'u_fov', 'value': 70}
