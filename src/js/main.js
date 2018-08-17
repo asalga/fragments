@@ -13,9 +13,13 @@ let demo = {
   '0': {
     // src: '100_199/2/125_rotate_alternate_(By The Lab).fs',
     // src: '100_199/2/120_box_tex_displace.fs',
+    // src: '100_199/3/135_platforms_and_palettes.fs',
 
-    src: '100_199/3/135_platforms_and_palettes.fs',
     // src: '100_199/3/136_rollers.fs',
+    // src: '100_199/3/138_nebulus.fs',
+    src: '100_199/3/139_blocky_line.fs',
+    
+    
     // src: '100_199/3/137_brick_tunnel.fs',
     
     uniforms: [
@@ -23,12 +27,12 @@ let demo = {
     ]
   },
   '1': {
-    // src: 'post_process/simple_dither.fs',
+    //src: 'post_process/simple_dither.fs',
     src: 'post_process/null.fs',
-    // src: 'post_process/flood.fs',
+     //src: 'post_process/flood.fs',
     // src: 'post_process/cel.fs',
     // src: 'post_process/pixelate.fs',
-    // src: 'post_process/sobel.fs',
+     //src: 'post_process/sobel.fs',
 
     uniforms: [
       { 'name': 'u_numShades', 'value': 12 },
