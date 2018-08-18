@@ -11,8 +11,8 @@ const float PI = 3.141592658;
 const float TAU = PI*2.;
 const float HALF_PI = PI*0.5;
 
-const vec3 lightGrey = vec3(1.);
-const vec3 darkGrey = vec3(0.7);
+const vec3 lightGrey = vec3(2.8);
+const vec3 darkGrey = vec3(0.1);
 
 float samplePolarChecker(vec2 c){
   float t = u_time*2.;
@@ -45,6 +45,7 @@ float sdCylinder(vec3 p, vec2 sz ){
   return  _in + _out;
 }
 
+
 float sdBox(vec3 p, vec3 sz) {
   vec3 d = abs(p) - sz;
   float insideDistance = min(max(d.x, max(d.y, d.z)), 0.0);
@@ -60,10 +61,10 @@ mat3 viewMatrix(vec3 eye, vec3 center, vec3 up) {
 }
 
 float lighting(vec3 p, vec3 n, vec3 lightPos){
-  float ambient = 0.2;
+  float ambient = 0.02;
   // ---
   vec3 pToLight = vec3(lightPos - p);
-  float power = 20.;
+  float power = 10.;
   vec3 lightRayDir = normalize(pToLight);
   float d = length(pToLight);
   d *= d;
@@ -138,15 +139,19 @@ float sampleCheckerboard2(vec3 c) {
 }
 
 float sdScene(vec3 p, out float col){
-  float t = u_time;
-  vec3 uvCoords = p;
+  float t = u_time/1.;
 
-  uvCoords.y += t;
-  vec3 uvCoords1 = (vec4(uvCoords,1)*r3dY(t)).xyz;
-  vec3 uvCoords2 = (vec4(uvCoords,1)*r3dY(-t)).xyz;
+  vec3 uvCoords = mod(p, vec3(2,2,2));
 
-  float c1 = sdCylinder( (vec4(p+vec3(1,0,0),1)*r3dY(0.)).xyz   , vec2(1., 2.5));
-  float c2 = sdCylinder( (vec4(p-vec3(1,0,0),1)*r3dY(0.)).xyz   , vec2(1., 2.5));
+  vec3 c = vec3(2,0,0);
+  p = mod(p, c)-(0.5*c);
+
+  // uvCoords.y += t/8.;
+  vec3 uvCoords1 = (vec4(uvCoords,1)*r3dY(-t)).xyz;
+  vec3 uvCoords2 = (vec4(uvCoords,1)*r3dY(t)).xyz;
+
+  float c1 = sdCylinder( (vec4(p+vec3(0,0,0),1)*r3dY(0.)).xyz   , vec2(1.0, 2.5));
+  float c2 = sdCylinder( (vec4(p-vec3(0,0,0),1)*r3dY(0.)).xyz   , vec2(1.0, 2.5));
 
   col = sampleCheckerboard2(uvCoords1/10.0);
   if(c2 < Epsilon){
@@ -154,6 +159,23 @@ float sdScene(vec3 p, out float col){
   }
 
   return min(c1, c2);
+}
+
+
+float ao(vec3 p, vec3 n)
+{
+  float stepSize = .001;
+  float t = stepSize;
+  float oc = 0.;
+  float dum;
+  for(int i = 0; i < 30; ++i)
+  {
+    float d = sdScene(p+n*t, dum);
+    oc += t - d;
+    t += stepSize;
+  }
+
+  return clamp(oc, 0., 1.);
 }
 
 vec3 estimateNormal(vec3 v){
@@ -193,8 +215,8 @@ void main(){
 
   float dist = 4.;
   // vec3 eye = vec3(cos(0.)*dist, 0, sin(0.)* dist);
-  vec3 eye = vec3(0,0,dist);
-  vec3 center = vec3(0);
+  vec3 eye = vec3(t,0,dist);
+  vec3 center = vec3(t,0,0);
   vec3 lightPos =  vec3(0., 4., 2) + eye;
   vec3 up = vec3(0,1,0);
 
@@ -208,8 +230,11 @@ void main(){
 
   if(d < MaxDist){
     vec3 n = estimateNormal(v);
+    float _ao = ao(v, n);
     float lights = lighting(v, n, lightPos);
-    i = lights * col.x;
+    i = lights * col.x;// * (1.-_ao)*1.0;
+    // i = col.x;// * (1.-_ao)*1.0;
+
   }
 
   gl_FragColor = vec4(vec3(i), 1);

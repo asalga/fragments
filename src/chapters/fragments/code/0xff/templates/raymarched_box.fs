@@ -84,13 +84,6 @@ vec3 rayDirection(float fieldOfView, vec2 size, vec2 fragCoord) {
   return normalize(vec3(xy, -z));
 }
 
-float cubeSDF(vec3 p, vec3 sz) {
-  vec3 d = abs(p) - sz;
-  float insideDistance = min(max(d.x, max(d.y, d.z)), 0.0);
-  float outsideDistance = length(max(d, 0.0));
-  return insideDistance + outsideDistance;
-}
-
 mat4 r3dY(float a){
   float c = cos(a);
   float s = sin(a);
