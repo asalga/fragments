@@ -26,37 +26,66 @@ bool line_line_intersection(vec2 a, vec2 b, vec2 c, vec2 d, out vec2 p){
 }
 
 void main(){
-  vec2 p = gl_FragCoord.xy/u_res;
-  float i;
-  vec2 inter;
-  vec2 m = u_mouse.xy;
-  m.y = 1.-m.y;
+  vec2 p = (gl_FragCoord.xy/u_res)*2.-1.;
   float t = u_time;
-
-  vec2 a = vec2(0,0);
-  vec2 b = m;
-
-  vec2 c = vec2(sin(t),0);
-  vec2 d = vec2(0,1);
   vec2 ip;
+  vec2 m = vec2(u_mouse.x, 1.-u_mouse.y);
 
-  vec2 left_0;
-  vec2 left_1;
+  // line 1
+  // vec2 _l1p0 = vec2(0,.5);
+  // float len = 2.;
+  // vec2 _l1p1 = vec2(cos(t)*len, sin(t)*len);
 
-  vec2 cell = floor(p*10.)/10.;
-
-  left_0 = cell;
-  left_1 = cell + vec2(0, 1.);
+  // vec2 _l2p0 = _l1p0;
+  // vec2 _l2p1 = vec2(cos(t)*len, sin(t)*len);
 
 
-  // if(line_line_intersection(a,b,c,d,ip) ){
+
+  vec2 _p1 = vec2(0., .5);
+  vec2 _p2 = vec2(0, -.5);
+  vec2 _p3 = vec2(-0.707, 0.707);
+
+  vec2 cell = floor(p*50.)/10.;
+
+  float sz = .08;
+  vec2 left_0 = cell;
+  vec2 left_1 = cell + vec2(0, sz);
+
+  vec2 top_0 = cell;
+  vec2 top_1 = cell + vec2(sz, 0.);
+
+  vec2 right_0 = cell + vec2(sz, 0.);
+  vec2 right_1 = right_0 + vec2(0, sz);
+
+  vec2 bot_0 = cell + vec2(0, sz);
+  vec2 bot_1 = bot_0 + vec2(sz, 0);
+
+  float i;
+  // if(line_line_intersection(left_0,left_1, _p1, _p2, ip) ){
+  //   i = 1.;
+  // }
+  // else if(line_line_intersection(top_0,top_1, _p1, _p2, ip) ){
+  //   i = 1.;
+  // }
+  // else if(line_line_intersection(right_0,right_1, _p1, _p2, ip) ){
+  //   i = 1.;
+  // }
+  // else if(line_line_intersection(bot_0,bot_1, _p1, _p2, ip) ){
   //   i = 1.;
   // }
 
-  if(line_line_intersection(left_0,left_1,c,d,ip) ){
+  if(line_line_intersection(left_0,left_1, _p1, _p2, ip) ){
     i = 1.;
   }
-
+  else if(line_line_intersection(top_0,top_1, _p1, _p2, ip) ){
+    i = 1.;
+  }
+  else if(line_line_intersection(right_0,right_1, _p1, _p2, ip) ){
+    i = 1.;
+  }
+  else if(line_line_intersection(bot_0,bot_1, _p1, _p2, ip) ){
+    i = 1.;
+  }
   gl_FragColor = vec4(vec3(i),1);
 }
 
