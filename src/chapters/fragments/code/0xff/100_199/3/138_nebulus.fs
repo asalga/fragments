@@ -11,8 +11,8 @@ const float PI = 3.141592658;
 const float TAU = PI*2.;
 const float HALF_PI = PI*0.5;
 
-const vec3 lightGrey = vec3(.7);
-const vec3 darkGrey = vec3(0.2);
+const vec3 lightGrey = vec3(0.8);
+const vec3 darkGrey = vec3(0.52);
 
 float samplePolarChecker(vec2 c){
   float t = u_time*2.;
@@ -125,9 +125,9 @@ float sampleCheckerboard2(vec3 c) {
   float a = step(mod(atan(c.x, c.z)/PI, 0.2), 0.1);
 
   if(a != y){
-    return darkGrey.x;
+    return fract(darkGrey.x+u_time+ y/10.);
   }
-  return lightGrey.x;
+  return fract(u_time + lightGrey.x);
 }
 
 float sdScene(vec3 p, out float col){

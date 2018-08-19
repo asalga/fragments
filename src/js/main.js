@@ -15,8 +15,8 @@ let demo = {
     // src: '100_199/2/120_box_tex_displace.fs',
     // src: '100_199/3/135_platforms_and_palettes.fs',
 
-    src: '100_199/4/140.fs',
-    // src: '100_199/3/138_nebulus.fs',
+    // src: '100_199/4/140.fs',
+    src: '100_199/3/138_nebulus.fs',
     // src: '100_199/3/139_blocky_line.fs',
     // src: '100_199/3/137_brick_tunnel.fs',
     
@@ -37,7 +37,7 @@ let demo = {
       {
         'name': 'u_pixelSize',
         'value': function(s) {
-          return 1.;
+          return 5.;
           return Math.sin(s / 2.) * 10;
         }
       },

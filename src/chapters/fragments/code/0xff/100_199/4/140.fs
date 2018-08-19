@@ -6,23 +6,13 @@ uniform float u_time;
 
 const float Epsilon = 0.00001;
 const float MaxDist = 200.;
-const int MaxSteps = 300;
-const float PI = 3.141592658;
-const float TAU = PI*2.;
-const float HALF_PI = PI*0.5;
-
-const vec3 lightGrey = vec3(1.);
-const vec3 darkGrey = vec3(0.4);
-
-float sdSphere(vec3 p, float r){
-  return length(p)-r;
-}
+const int MaxSteps = 400;
 
 float sdBox(vec3 p, vec3 sz) {
   vec3 d = abs(p) - sz;
-  float insideDistance = min(max(d.x, max(d.y, d.z)), 0.0);
-  float outsideDistance = length(max(d, 0.0));
-  return insideDistance + outsideDistance;
+  float _in = min(max(d.x, max(d.y, d.z)), 0.0);
+  float _out = length(max(d, 0.0));
+  return _in + _out;
 }
 
 mat3 viewMatrix(vec3 eye, vec3 center, vec3 up) {
@@ -33,29 +23,17 @@ mat3 viewMatrix(vec3 eye, vec3 center, vec3 up) {
 }
 
 float lighting(vec3 p, vec3 n, vec3 lightPos){
-  float ambient = 0.0;
-  // ---
+  float ambient = 0.4;
+
   vec3 pToLight = vec3(lightPos - p);
-  float power = 140.;
+  float power = 500.;
   vec3 lightRayDir = normalize(pToLight);
   float d = length(pToLight);
   d *= d;
   float nDotL = max(dot(n,lightRayDir), 0.);
   float diffuse = (nDotL*power) / d;
-  float kd = 1.;
 
-  // ---
-  // float gloss = 100.;
-  // vec3 H = normalize(lightRayDir + p);
-  // float NdotH = max(dot(n, H), .0);
-  // // vec3 r = reflect(lightRayDir, n);
-  // // float RdotV = max( 0., dot(r, normalize(p)) );
-  // float spec = pow( NdotH , gloss )/d;
-  // // float spec = pow(RdotV, gloss);
-  // float ks = 0.;
-  // ---
-
-  return ambient + diffuse;// + spec;
+  return ambient + diffuse;
 }
 
 vec3 rayDirection(float fieldOfView, vec2 size, vec2 fragCoord) {
@@ -64,46 +42,20 @@ vec3 rayDirection(float fieldOfView, vec2 size, vec2 fragCoord) {
   return normalize(vec3(xy, -z));
 }
 
-mat4 r3dY(float a){
-  float c = cos(a);
-  float s = sin(a);
-
-  return mat4(-c, 0, s,  0,
-              0,  1, 0,  0,
-              s,  0, c,  0,
-              0,  0, 0,  1);
-}
-mat4 r3dX(float a){
-  float c = cos(a);
-  float s = sin(a);
-
-  return mat4(1,  0,  0,  0,
-              0,  -c, s,  0,
-              0,  s,  c,  0,
-              0,  0,  0,  1);
-}
-mat4 r3dZ(float a){
-  float c = cos(a);
-  float s = sin(a);
-
-  return mat4(c, -s, 0,  0,
-              s,  c, 0,  0,
-              0,  0, 1,  0,
-              0,  0, 0,  1);
-}
-
 float sdScene(vec3 p, out float col){
   col = 1.;
-
   vec3 cellIdx = floor(p);
 
   vec3 c = vec3(1);
   p = mod(p, c)-(0.5*c);
 
-  float sz = c.x/3.;
+  float cy = cellIdx.y/4.;
+
+  float sz = c.x/2.;
   float len = length( cellIdx );
-  if(len > 5.){
-    sz = 0.;
+
+  if(len > 15.){
+    return sdBox(p, vec3(0.));
   }
 
   return sdBox(p, vec3(sz));
@@ -120,6 +72,7 @@ vec3 estimateNormal(vec3 v){
 
 float rayMarch(vec3 ro, vec3 rd, out vec3 col){
   float s = 0.;
+
   for(int i = 0; i < MaxSteps; i++){
     vec3 p = ro + rd * s;
 
@@ -130,7 +83,7 @@ float rayMarch(vec3 ro, vec3 rd, out vec3 col){
     if(d < Epsilon){
       return s;
     }
-    s += d/3.;
+    s += d/2.;
 
     if(d > MaxDist){
       return MaxDist;
@@ -140,28 +93,24 @@ float rayMarch(vec3 ro, vec3 rd, out vec3 col){
 }
 
 void main(){
-  float i;
-  float t = u_time/4.;
-  vec2 fc = gl_FragCoord.xy;
-
-  float dist = 10.;
-  vec3 eye = vec3(cos(t) * dist, dist, dist * sin(t));
-  vec3 center = vec3(0, 0, 0.);
-  vec3 lightPos =  vec3(0., 4., 2) + eye;
+  vec3 eye = vec3(17.);
+  vec3 center = vec3(0);
+  vec3 lightPos =  vec3(4) + eye;
   vec3 up = vec3(0,1,0);
 
   mat3 viewWorld = viewMatrix(eye, center, up);
-  vec3 ray = rayDirection(90., u_res, fc);
+  vec3 ray = rayDirection(100., u_res, gl_FragCoord.xy);
 
-  vec3 worldDir = viewWorld * ray;
   vec3 col;
+  vec3 worldDir = viewWorld * ray;
   float d = rayMarch(eye, worldDir, col);
-  vec3 v = eye + worldDir*d;
+  vec3 v = eye + worldDir * d;
 
+  float i;
   if(d < MaxDist){
     vec3 n = estimateNormal(v);
     float lights = lighting(v, n, lightPos);
-    i = lights * col.x;
+    i = lights;
   }
 
   gl_FragColor = vec4(vec3(i), 1);
