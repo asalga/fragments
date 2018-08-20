@@ -9,11 +9,15 @@ void main(){
   vec2 p = (gl_FragCoord.xy/u_res);
   p.y = 1.-p.y;
 
-  float marker = (sin(t*1.5)+1.)/2.;
-  if(marker > p.y){
-    p.y = marker;
-  }
+  float marker = 0.5;
+ // if(marker < p.x){
+   //p.x +=  marker;
+  //}
+
 
   vec3 c = texture2D(u_t0, p).rgb;
+
+   c += texture2D(u_t0, p + vec2(marker*2.,0.) ).rgb;
+
   gl_FragColor = vec4(c, 1);
 }

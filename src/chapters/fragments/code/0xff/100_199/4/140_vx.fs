@@ -4,8 +4,8 @@ precision highp float;
 uniform vec2 u_res;
 uniform float u_time;
 
-const float Epsilon = 0.00001;
-const float MaxDist = 200.;
+const float Epsilon = 0.0001;
+const float MaxDist = 400.;
 const int MaxSteps = 400;
 
 float sdBox(vec3 p, vec3 sz) {
@@ -23,10 +23,10 @@ mat3 viewMatrix(vec3 eye, vec3 center, vec3 up) {
 }
 
 float lighting(vec3 p, vec3 n, vec3 lightPos){
-  float ambient = 0.4;
+  float ambient = 0.2;
 
   vec3 pToLight = vec3(lightPos - p);
-  float power = 500.;
+  float power = 300.;
   vec3 lightRayDir = normalize(pToLight);
   float d = length(pToLight);
   d *= d;
@@ -47,18 +47,18 @@ float sdScene(vec3 p, out float col){
   vec3 cellIdx = floor(p);
 
   vec3 c = vec3(1);
-  p = mod(p, c)-(0.5*c);
+  p = mod(p, c)-(0.25*c);
 
   float cy = cellIdx.y/4.;
 
-  float sz = c.x/2.;
+  float sz = c.x/4.;
   float len = length( cellIdx );
 
-  if(len > 15.){
+  if(len > 15. || len < 14.){
     return sdBox(p, vec3(0.));
   }
 
-  return sdBox(p, vec3(sz));
+  return sdBox(p, vec3(sz) *    (cy* sin( (u_time + cy) *3.)+1.)/2. );
 }
 
 vec3 estimateNormal(vec3 v){
@@ -93,7 +93,10 @@ float rayMarch(vec3 ro, vec3 rd, out vec3 col){
 }
 
 void main(){
-  vec3 eye = vec3(17.);
+  float dist = 18.;
+  float t = u_time/5.;
+
+  vec3 eye = vec3(cos(t)*dist, 18., sin(t)*dist);
   vec3 center = vec3(0);
   vec3 lightPos =  vec3(4) + eye;
   vec3 up = vec3(0,1,0);
