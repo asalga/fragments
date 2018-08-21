@@ -7,12 +7,12 @@ let relPath = '../../chapters/fragments/code/0xff/';
 
 let demo = {
   'size': {
-    'width': 400,
-    'height': 400
+    'width': 500,
+    'height': 500
   },
   '0': {
     // src: '100_199/2/120_box_tex_displace.fs',
-    src: '100_199/0/105_cube_walk.fs',
+    // src: '100_199/0/105_cube_walk.fs',
 
     // src: '100_199/4/140_vx.fs',
     // src: '100_199/3/138_interstellar_travel.fs',
@@ -20,6 +20,8 @@ let demo = {
     // src: '100_199/3/137_brick_tunnel.fs',
 
     // src: '100_199/3/139_endless_struggle.fs',
+
+    src: '100_199/4/143_windows.fs',
     
     uniforms: [
       // {'name': 'u_fov', 'value': 70}
@@ -27,8 +29,8 @@ let demo = {
   },
   '1': {
     // src: 'post_process/simple_dither.fs',
-    // src: 'post_process/null.fs',
-    src: 'post_process/182.fs',
+    src: 'post_process/null.fs',
+    // src: 'post_process/182.fs',
     // src: 'post_process/px_sort2.fs',
     // src: 'post_process/blur.fs',
     // src: 'post_process/flood.fs',
