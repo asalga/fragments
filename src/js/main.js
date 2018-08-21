@@ -7,18 +7,18 @@ let relPath = '../../chapters/fragments/code/0xff/';
 
 let demo = {
   'size': {
-    'width': 500,
-    'height': 500
+    'width': 400,
+    'height': 400
   },
   '0': {
     // src: '100_199/2/120_box_tex_displace.fs',
 
-    // src: '100_199/4/140_vx.fs',
+    src: '100_199/4/140_vx.fs',
     // src: '100_199/3/138_interstellar_travel.fs',
     // src: '100_199/3/139_blocky_line.fs',
     // src: '100_199/3/137_brick_tunnel.fs',
 
-    src: '100_199/3/139_endless_struggle.fs',
+    // src: '100_199/3/139_endless_struggle.fs',
     
     uniforms: [
       // {'name': 'u_fov', 'value': 70}
