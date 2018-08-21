@@ -1,3 +1,5 @@
+#version 300 es
+
 precision mediump float;
 
 uniform vec2 u_res;
@@ -22,13 +24,15 @@ void main() {
   // if (iFrame<10) {
     // col = texture(iChannel1, gl_FragCoord/u_res.xy).rgb;           //initialize with image
   // }else {
-  col = texelFetch(u_t0, ivec2(gl_FragCoord), 0).rgb;
+  // col = texelFetch(u_t0, vec2(gl_FragCoord.xy), 0).rgb;
+  texelFetch(u_t0, ivec2(0), 0);
 
-  float ny = min(gl_FragCoord.y+1.0, u_res.y);
-  vec3 c = texelFetch(u_t0, ivec2(gl_FragCoord.x, ny), 0).rgb;
+  // float ny = min(gl_FragCoord.y+1.0, u_res.y);
+  // vec3 c = texelFetch(u_t0, ivec2(gl_FragCoord.x, ny), 0).rgb;
 
-  if ( YAXIS(col) <= YAXIS(c) ){
-    col = c;
-  }
-  fragColor = vec4(col,1.0);
+  // if ( YAXIS(col) <= YAXIS(c) ){
+  //   col = c;
+  // }
+
+  gl_FragColor = vec4(col,1.0);
 }

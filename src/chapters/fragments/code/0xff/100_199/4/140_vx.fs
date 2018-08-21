@@ -6,7 +6,7 @@ uniform float u_time;
 
 const float Epsilon = 0.0001;
 const float MaxDist = 400.;
-const int MaxSteps = 400;
+const int MaxSteps = 500;
 
 float sdBox(vec3 p, vec3 sz) {
   vec3 d = abs(p) - sz;
@@ -47,7 +47,7 @@ float sdScene(vec3 p, out float col){
   vec3 cellIdx = floor(p);
 
   vec3 c = vec3(1);
-  p = mod(p, c)-(0.25*c);
+  p = mod(p, c)-(0.125*c);
 
   float cy = cellIdx.y/4.;
 

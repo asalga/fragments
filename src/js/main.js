@@ -11,15 +11,14 @@ let demo = {
     'height': 500
   },
   '0': {
-    // src: '100_199/2/125_rotate_alternate_(By The Lab).fs',
     // src: '100_199/2/120_box_tex_displace.fs',
-    // src: '100_199/3/135_platforms_and_palettes.fs',
 
-    src: '100_199/4/140_vx.fs',
-    // src: '100_199/3/138_nebulus.fs',
+    // src: '100_199/4/140_vx.fs',
     // src: '100_199/3/138_interstellar_travel.fs',
     // src: '100_199/3/139_blocky_line.fs',
     // src: '100_199/3/137_brick_tunnel.fs',
+
+    src: '100_199/3/139_endless_struggle.fs',
     
     uniforms: [
       // {'name': 'u_fov', 'value': 70}
@@ -28,11 +27,12 @@ let demo = {
   '1': {
     // src: 'post_process/simple_dither.fs',
     src: 'post_process/null.fs',
+    // src: 'post_process/px_sort2.fs',
     // src: 'post_process/blur.fs',
-     // src: 'post_process/flood.fs',
+    // src: 'post_process/flood.fs',
     // src: 'post_process/cel.fs',
     // src: 'post_process/pixelate.fs',
-     // src: 'post_process/sobel.fs',
+    // src: 'post_process/sobel.fs',
 
     uniforms: [
       { 'name': 'u_numShades', 'value': 12 },
@@ -190,6 +190,7 @@ function makeSketch(fs, params) {
       gfx.translate(width / 2, height / 2);
       gfx.shader(shader_0);
 
+
       shader_0.setUniform('u_res', [width, height]);
       shader_0.setUniform('u_mouse', [p.mouseX.clamp(0, w) / width, p.mouseY.clamp(0, h) / height, mouseIsDown]);
       shader_0.setUniform('u_time', sketchTime);
@@ -210,6 +211,7 @@ function makeSketch(fs, params) {
       shader_1.setUniform('u_res', [width, height]);
       shader_1.setUniform('u_time', sketchTime);
       shader_1.setUniform('u_t0', gfx);
+      shader_1.setUniform('u_frame', p.frameCount);
       // shader_1.setUniform('u_pixelSize', 1.+Math.floor(p.mouseX/10) );
       shader_1.setUniform('u_ditherTex', ditherTex);
 

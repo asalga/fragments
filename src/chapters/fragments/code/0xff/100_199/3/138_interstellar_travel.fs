@@ -26,44 +26,27 @@ float rand (vec2 st) {
 void main(){
   vec2 p = gl_FragCoord.xy/u_res*2.-1.;
   float i;
+  const int NumStars = 35;
 
-  vec3 stars[50];
+  vec3 stars[NumStars];
 
-  for(int it = 0; it < 24; ++it ){
-    //float x = rand(p*4.)*2.-1.;
-    // float y = rand(p)*2.-1.;
-    float x;// = 0.5 * float(it)*9394300.;
-    float y;// = 0.5 * float(it)*1234530.;
-
+  for(int it = 0; it < NumStars; ++it ){
     // y = rand(float(it))*vec2(1234.,19234.)*10.;//*2.-1.;
     float _fit = float(it) + 1.0;
     vec2 r = vec2(_fit) * vec2(sin(121193.), sin(1987373.));
 
     float z = abs(rand(r))*4.;
 
-    x = rand(r/100.) + ( 1./z * u_time/2.);
+    float x = rand(r/100.) + (1./z * u_time/2.);
 
-    float f = floor(x);
-
-    y = rand(r/80.);
-
-    // y = rand(vec2(f,f)) * y;
+    float f = floor(x) + 1.0;
+    // y = rand(r/80.);
+    float y = rand(vec2(f,f)) * z;
+    y = y * 2.0 -1.;
 
     stars[it].xy = fract(vec2(x,y))*2.-1.;
 
-    i += step(sdRect(stars[it].xy + p, vec2(z/100.)), 0.);
-
-
-    // for(int it = 0; it < 5; ++it){
-    //   float _fit = float(it);
-    //   vec2 pos = stars[it].xy + p;
-    //   pos.x -= _fit/20.;
-
-    //   float factor = (1./ (_fit*2. + 1.0));
-
-    //   i += step(sdRect( pos , vec2(z/100.)* factor), 0.) * factor;
-    // }
-
+    i += step(sdRect(stars[it].xy + p, vec2(1./z)*0.01 ), 0.);
   }
 
   gl_FragColor = vec4(vec3(i),1);
