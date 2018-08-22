@@ -31,11 +31,11 @@ void main(){
   vec2 uv = gl_FragCoord.xy/u_res;
   uv.y = 1.-uv.y;
 
-  const float NumSlices = 6.;
+  float NumSlices = 4.;// + sin(u_time/5.)*2.;
 
   float localCell = (1.+floor(uv.y*NumSlices));
 
-  float intensity = sin(u_time/2.);
+  float intensity = sin(u_time/2.);// + smoothstep(-1., 1., sin(u_time/1.))*0.1;
   uv.y = uv.y + fract( smoothValueNoise(vec2(0., (u_time + (localCell*423.123) )/10. ))) * intensity;
   uv.y = fract(uv.y);
 
