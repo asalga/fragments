@@ -21,7 +21,8 @@ let demo = {
 
     // src: '100_199/3/139_endless_struggle.fs',
 
-    src: '100_199/4/143_windows.fs',
+    // src: '100_199/4/143_windows.fs',
+    src: '100_199/4/145.fs',
     
     uniforms: [
       // {'name': 'u_fov', 'value': 70}
@@ -149,7 +150,7 @@ function makeSketch(fs, params) {
 
       p.createCanvas(w, h, p.WEBGL);
       gfx = p.createGraphics(w, h, p.WEBGL);
-       gfx.pixelDensity(1);
+      gfx.pixelDensity(1);
 
       shader_0 = new p5.Shader(gfx._renderer, globalVs, shader_0_Frag);
       shader_1 = new p5.Shader(p._renderer, globalVs, shader_1_Frag);
@@ -198,6 +199,15 @@ function makeSketch(fs, params) {
       shader_0.setUniform('u_res', [width, height]);
       shader_0.setUniform('u_mouse', [p.mouseX.clamp(0, w) / width, p.mouseY.clamp(0, h) / height, mouseIsDown]);
       shader_0.setUniform('u_time', sketchTime);
+      
+      // if(frameCount < 10){
+        // shader_0.setUniform('u_t0', gfx);
+        // after rendering,
+         // get pixels
+         // instead o
+      // }
+
+      shader_0.setUniform('u_frame', p.frameCount);
       demo[0].uniforms.forEach(v => { // custom uniforms
         shader_0.setUniform(v.name, v.value);
       });
