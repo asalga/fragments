@@ -124,7 +124,7 @@ float sdScene(in vec3 p, out float col){
   col = 1.;
   const float numBricks = 8.;
 
-  p.y += fract(t);
+  // p.y += fract(t);
 
   vec3 c = vec3(0., 1.5, 0.);
   vec3 r = mod(p,c)-0.5*c;
@@ -141,7 +141,7 @@ float sdScene(in vec3 p, out float col){
   }
 
   float res = 1.;
-  const float len = 3.;
+  const float len = 2.5;
   const float inc = TAU/numBricks;
 
   r = (vec4(r, 1) * r2dY(rotAlt)).xyz;

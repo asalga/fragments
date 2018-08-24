@@ -31,7 +31,7 @@ void main(){
   vec2 uv = gl_FragCoord.xy/u_res;
   uv.y = 1.-uv.y;
 
-  float NumSlices = 4.;// + sin(u_time/5.)*2.;
+  float NumSlices = 4.;
 
   float localCell = (1.+floor(uv.y*NumSlices));
 

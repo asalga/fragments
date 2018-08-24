@@ -7,31 +7,44 @@ let relPath = '../../chapters/fragments/code/0xff/';
 
 let demo = {
   'size': {
-    'width': 600,
-    'height': 600
+    'width': 500,
+    'height': 500
   },
   '0': {
     // src: '100_199/2/120_box_tex_displace.fs',
-    src: '100_199/0/105_cube_walk.fs',
-
-    // src: '100_199/4/140_vx.fs',
-    // src: '100_199/3/138_interstellar_travel.fs',
-    // src: '100_199/3/139_blocky_line.fs',
-    // src: '100_199/3/137_brick_tunnel.fs',
-
-    // src: '100_199/3/139_endless_struggle.fs',
-
-    // src: '100_199/4/143_windows.fs',
-    // src: '100_199/4/145_primitives.fs',
+    // src: '100_199/0/105_cube_walk.fs',
     
+    // src: '100_199/3/130_little_critters.fs',
+    // src: '100_199/3/132_vel.fs',
+    // src: '100_199/3/133_helpful_mushroom.fs',
+    // src: '100_199/3/135_platforms_and_palettes.fs',
+    
+    // src: '100_199/4/140_vx.fs',
+    // src: '100_199/3/139_blocky_line.fs',
+    // src: '100_199/3/139_endless_struggle.fs',
+    // src: '100_199/4/143_windows.fs',
+    // src: '100_199/4/144_blocky.fs',
+    // src: '100_199/4/14x_brick_tunnel.fs',
+    // src: '100_199/4/145.fs',
+    
+    // src: '100_199/4/in_space.fs',
+
+    // src: '100_199/4/143_untitled.fs',
+    // src: '100_199/4/143_untitled.fs',
+
+    // src: '100_199/3/136_rollers.fs',
+    src: '100_199/4/142_primitives.fs',
+    // src: '100_199/0/108_seed_of_life.fs',
+
     uniforms: [
       // {'name': 'u_fov', 'value': 70}
     ]
   },
   '1': {
     // src: 'post_process/simple_dither.fs',
-    // src: 'post_process/null.fs',
-    src: 'post_process/182.fs',
+    src: 'post_process/null.fs',
+    // src: 'post_process/182.fs',
+    // src: 'post_process/182_voronoi.fs',
     // src: 'post_process/px_sort2.fs',
     // src: 'post_process/blur.fs',
     // src: 'post_process/flood.fs',

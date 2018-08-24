@@ -65,7 +65,7 @@ vec3 rayDirection(float fieldOfView, vec2 size, vec2 fragCoord) {
 float cubeSDF(vec3 p, vec3 sz) {
   vec3 d = abs(p) - sz;
   float insideDistance = min(max(d.x, max(d.y, d.z)), 0.0);
-  float outsideDistance = length(max(d, 0.0));    
+  float outsideDistance = length(max(d, 0.0));
   return insideDistance + outsideDistance;
 }
 
@@ -113,7 +113,7 @@ float sdScene(vec3 p, out float col){
 
 
 	float ground = cubeSDF(op, vec3(40,.01,40));
-	
+
 	if(c < E){
 		col = lightGrey.x;
 	}
@@ -139,7 +139,7 @@ float shadowMarch(vec3 point, vec3 lightPos){
   float s = 0.;
   for(int i = 0; i < MaxShadowStep; ++i){
     vec3 v = ro + (rd*s);
-    
+
     float dum;
     float dist;
     dist = sdScene(v, dum);
@@ -169,11 +169,11 @@ float rayMarch(vec3 ro, vec3 rd, out vec3 col){
 	float s = 0.;
 	for(int i = 0; i < MaxSteps; i++){
 		vec3 p = ro + rd * s;
-		
+
 		float intensity;
 		float d = sdScene(p, intensity);
 		col = vec3(intensity);
-		
+
 		if(d < Epsilon){
 			return s;
 		}
@@ -206,7 +206,7 @@ float ao(vec3 p, vec3 n)
 void main(){
 	vec2 p = (gl_FragCoord.xy/u_res)*2. -1.;
 	float i;
-	float t = u_time*1.;
+	float t = u_time*0.;
 
 	float x =  sin(t) * 10.;
 	float z =  cos(t) * 10.;
@@ -232,8 +232,8 @@ void main(){
 		vec3 n = estimateNormal(v);
 		float lights = lighting(v, n, lightPos);
 
-			i += d * lights * col.x;	
-		
+			i += d * lights * col.x;
+
 		if(visibleToLight == 0.){
 			i *= 0.4;
 		}
@@ -251,7 +251,7 @@ void main(){
 		// i *= .5;
 	// }
 
-	// float vignette = 1.-smoothstep(0.9, 1., abs(p.x)) *  
+	// float vignette = 1.-smoothstep(0.9, 1., abs(p.x)) *
 									 // 1.-smoothstep(0.9, 1., abs(p.y));
 	// i *= vignette;
 

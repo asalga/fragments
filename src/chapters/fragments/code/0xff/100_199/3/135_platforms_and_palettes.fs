@@ -193,7 +193,7 @@ float bricks(vec2 p, float sc, float offset, float tsc){
 
 void main(){
   vec2 p = gl_FragCoord.xy/u_res;
-  float t = u_time*0.1;
+  float t = u_time*0.01;
   float i;
 
   i += sdS_Rect(p - vec2(0.6), vec2(1., 0.5)) * bricks(p, 0.25, 0., 0.5) * p.y*p.y;

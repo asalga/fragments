@@ -58,7 +58,7 @@ void main(){
     vel[i] /= 7.;
 
     // move pos
-    pos[i] += vel[i] * t*2.;
+    pos[i] += vel[i] * t*0.;
     vec2 screenIdx = floor(mod(pos[i], 2.));// 0..1
     vec2 dir = screenIdx * 2. - 1.;
     vec2 finalPos = vec2((1.-screenIdx) + dir * mod(pos[i], 1.));
