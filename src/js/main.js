@@ -47,13 +47,15 @@ let demo = {
     // src: '100_199/4/14x_brick_tunnel.fs',
     // src: '100_199/4/145.fs',
     
-    src: '100_199/4/143_fly_casual.fs',
+    src: '100_199/4/glow1.fs',
+
+    // src: '100_199/4/143_fly_casual.fs',
 
     uniforms: [
       // {'name': 'u_fov', 'value': 70}
-      {'name': 'u_type0', 'value': type0},
-      {'name': 'u_type1', 'value': type1},
-      {'name': 'u_type2', 'value': type2}
+      // {'name': 'u_type0', 'value': type0},
+      // {'name': 'u_type1', 'value': type1},
+      // {'name': 'u_type2', 'value': type2}
     ]
   },
   '1': {
