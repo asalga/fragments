@@ -47,7 +47,7 @@ let demo = {
     // src: '100_199/4/14x_brick_tunnel.fs',
     // src: '100_199/4/145.fs',
     
-    src: '100_199/4/in_space.fs',
+    src: '100_199/4/143_fly_casual.fs',
 
     uniforms: [
       // {'name': 'u_fov', 'value': 70}
