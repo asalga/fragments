@@ -5,39 +5,55 @@
 
 let relPath = '../../chapters/fragments/code/0xff/';
 
+// note the last xy tuple is a copy of the second last so that
+// all 3 shapes have the same length which makes the shader have less code
+let type0 = [-0.25, -1, -1, -0.25, -0.5, -0.06, -1, 0.25, 
+            -0.47, 0.88, 0.03, 0.25, 0.03, 0.88, 0.56, 0.88, 
+            1, 0.25, 1, -0.25, 0.5, -1, -0.25, -1, 
+            -0.25, -1];// degenerate line here
+
+// len: 26
+let type1 = [-0.4, -1, -0.21, -0.51, -1, -0.51, -1, 0.21, 
+            -0.45, 0.81, 0.21, 0.63, 0.512, 0.89, 1, 0.39, 
+            0.22, 0, 1, -0.30, 1, -0.5, 0.5, -1, 
+            -0.4, -1];
+
+// len: 26
+let type2 = [ -0.45, -1, -1, -0.51, -0.69, -0.08, -1, 0.42,
+              -0.45, 0.85, -0.2, 0.63, 0.54, 0.85, 1, 0.17,
+              0.54, -0.32, 1, -0.51, 0.54, -1, 0.02, -0.75,
+              -0.45, -1];
+
 let demo = {
   'size': {
-    'width': 500,
-    'height': 500
+    'width': 600,
+    'height': 600
   },
   '0': {
-    // src: '100_199/2/120_box_tex_displace.fs',
     // src: '100_199/0/105_cube_walk.fs',
-    
+    // src: '100_199/0/108_seed_of_life.fs',
+    // src: '100_199/2/120_box_tex_displace.fs',
     // src: '100_199/3/130_little_critters.fs',
     // src: '100_199/3/132_vel.fs',
     // src: '100_199/3/133_helpful_mushroom.fs',
     // src: '100_199/3/135_platforms_and_palettes.fs',
-    
-    // src: '100_199/4/140_vx.fs',
+    // src: '100_199/3/136_rollers.fs',
     // src: '100_199/3/139_blocky_line.fs',
     // src: '100_199/3/139_endless_struggle.fs',
+    // src: '100_199/4/140_vx.fs',
+    // src: '100_199/4/142_primitives.fs',
     // src: '100_199/4/143_windows.fs',
     // src: '100_199/4/144_blocky.fs',
     // src: '100_199/4/14x_brick_tunnel.fs',
     // src: '100_199/4/145.fs',
     
-    // src: '100_199/4/in_space.fs',
-
-    // src: '100_199/4/143_untitled.fs',
-    // src: '100_199/4/143_untitled.fs',
-
-    // src: '100_199/3/136_rollers.fs',
-    src: '100_199/4/142_primitives.fs',
-    // src: '100_199/0/108_seed_of_life.fs',
+    src: '100_199/4/in_space.fs',
 
     uniforms: [
       // {'name': 'u_fov', 'value': 70}
+      {'name': 'u_type0', 'value': type0},
+      {'name': 'u_type1', 'value': type1},
+      {'name': 'u_type2', 'value': type2}
     ]
   },
   '1': {
@@ -104,6 +120,7 @@ function makeSketch(fs, params) {
 
   // let timeVal = { t: 0 };
   let sketchTime;
+  let epochTime;
   let tracking = [];
   let easing = 0.05;
   let start = 0;
@@ -185,6 +202,7 @@ function makeSketch(fs, params) {
       let [width, height] = [w, h];
       let sz = 1.;
       sketchTime = (p.millis() - start) / 1000;
+      epochTime = Math.floor(new Date().getTime()/10000);
 
       // totally mess with the dithering :)
       // if( p.frameCount % 40 == 0){
@@ -212,6 +230,9 @@ function makeSketch(fs, params) {
       shader_0.setUniform('u_res', [width, height]);
       shader_0.setUniform('u_mouse', [p.mouseX.clamp(0, w) / width, p.mouseY.clamp(0, h) / height, mouseIsDown]);
       shader_0.setUniform('u_time', sketchTime);
+      shader_0.setUniform('u_epochTime', epochTime);
+
+      
       
       // if(frameCount < 10){
         // shader_0.setUniform('u_t0', gfx);
