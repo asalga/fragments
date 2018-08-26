@@ -47,7 +47,11 @@ let demo = {
     // src: '100_199/4/14x_brick_tunnel.fs',
     // src: '100_199/4/145.fs',
     
-    src: '100_199/4/glow1.fs',
+    src: '100_199/4/14x_pacman.fs',
+
+    // src: '100_199/4/glow1.fs',
+
+    // src: '100_199/4/_.fs',
 
     // src: '100_199/4/143_fly_casual.fs',
 
@@ -65,6 +69,7 @@ let demo = {
     // src: 'post_process/182_voronoi.fs',
     // src: 'post_process/px_sort2.fs',
     // src: 'post_process/blur.fs',
+    // src: 'post_process/static.fs',
     // src: 'post_process/flood.fs',
     // src: 'post_process/cel.fs',
     // src: 'post_process/pixelate.fs',
@@ -190,7 +195,7 @@ function makeSketch(fs, params) {
       p.pixelDensity(1);
       $(p.canvas).appendTo($('#target'));
       $(ditherTex.canvas).appendTo($('#target2'));
-      // p.noLoop();
+      p.noLoop();
     };
 
     p.mouseClicked = function() {

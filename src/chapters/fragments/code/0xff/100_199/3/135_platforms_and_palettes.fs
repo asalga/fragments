@@ -13,6 +13,10 @@ const float TAU = PI*2.0;
 // morter is at every 7/8 of a pixel across
 #define SEVEN_EIGHTS (7./8.)
 
+float valueNoise(float i, float scale){
+  return fract(sin(i*scale));
+}
+
 float sdRect(in vec2 p, in vec2 sz){
   vec2 d = abs(p)-sz;
   float _out = length(max(d, 0.));
@@ -149,7 +153,7 @@ float boxDude(in vec2 p, in float sc, in float warp){
 }
 
 float obstacle(in vec2 p){
-  float t = u_time*timeScale;///PI;
+  float t = u_time*timeScale;
   float obsSz = 0.1;
   // vec2 np = p * vec2( (1.+obsSz), 1.);
   // np.x += obsSz*2.;
@@ -162,8 +166,29 @@ float obstacle(in vec2 p){
   return sdS_Rect(p - pos, vec2(obsSz, 0.025));// * 0.5;
 }
 
+float candle( in vec2 p){
+  float T = u_time * timeScale * .12;
+
+  vec2 test = p;
+  test.x -= 0.5;
+  p.y -= 0.75;
+
+  p.x += T;
+  p.x = mod(p.x + T, 1.25) - (1.25/2.);
+
+  test.x -= 0.5 + T;
+  vec2 op = floor( test *2.)/2.;
+
+  float flicker = valueNoise( u_time * op.x, 34804.2342)/10.;
+
+  p = floor(p*30.)/30.;
+  float intensity = (1. - (length(p)*5.)) + flicker;
+
+  return intensity;
+}
+
 float bricks(vec2 p, float sc, float offset, float tsc){
-  float t = u_time* timeScale* 0.18 * tsc;
+  float t = u_time* timeScale* 0.12 * tsc;
   float i;
   float ROWS = u_res.y/16.;
   float NUM_BRICK_LINES = 4.;
@@ -193,10 +218,15 @@ float bricks(vec2 p, float sc, float offset, float tsc){
 
 void main(){
   vec2 p = gl_FragCoord.xy/u_res;
-  float t = u_time*0.01;
   float i;
 
-  i += sdS_Rect(p - vec2(0.6), vec2(1., 0.5)) * bricks(p, 0.25, 0., 0.5) * p.y*p.y;
+  i += sdS_Rect(p - vec2(0.6), vec2(1., 0.5)) * bricks(p, 0.25, 0., 0.5) * (p.y*p.y) * 0.5;
+
+  i += candle(p);
+  i = clamp(i, 0., 1.);
+
+  i += sdS_Rect(p - vec2(0.6), vec2(1., 0.5)) * bricks(p, 0.25, 0., 0.5) * (p.y*p.y) * 0.5;
+
   i += obstacle(p);
   i += ground(p) * bricks(p, .15, 0.300, .98) * 0.8;
   i += boxDude(p, 1., 0.);

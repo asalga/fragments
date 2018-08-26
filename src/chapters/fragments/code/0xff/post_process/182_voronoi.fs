@@ -63,11 +63,14 @@ void main() {
 
     sites[i] = vec2(rand(fi, 3144.), rand(fi, 145144.));
     vel[i]   = vec2(rand(fi, 83634.), rand(fi, 39598.))*2. -1.;
-    vel[i] /= 10.;
+    // vel[i] /= 10.;
+    vel[i] = vec2(0.);
 
     sites[i] += vel[i] * t;
     vec2 screenIdx = floor(mod(sites[i], 2.));// 0..1
     vec2 dir = screenIdx * 2. - 1.;
+
+    dir = vec2(0.);
 
     vec2 finalPos = vec2((1.-screenIdx) + dir * mod(sites[i], 1.));
     // sites[i] = (finalPos-0.5)*2.;
@@ -96,7 +99,7 @@ void main() {
   // float c = fract(res.z + t/5.);
 
   p -= vec2(0.5);
-  p *= r2d( sin(u_time)/10. * (id/float(CNT))*2.-1.  * PI);
+  p *= r2d( sin(234.)/10. * (id/float(CNT))*2.-1.  * PI);
   p += vec2(0.5);
   p.y = 1.-p.y;
   p.x = 1.- p.x;
