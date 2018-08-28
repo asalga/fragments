@@ -85,7 +85,7 @@ void main(){
   i += step(sdRect(rc, line.yx*.75), 0.);
 
   // white bk makes it look like we have ao.
-  i = 1.- i;
+  // i = 1.- i;
 
   // i *= 1.5/abs( (mod(p.x*p.y, 0.5)-0.25) *200.)*70.;
 
