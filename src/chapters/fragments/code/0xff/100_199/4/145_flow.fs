@@ -47,7 +47,8 @@ void main(){
   float t = u_time;
   vec2 trans = vec2(t/4., 0.);
 
-  vec2 rc = mod(p+trans, vec2(0.2))- vec2(0.1);
+  float c = 0.5;
+  vec2 rc = mod(p+trans, vec2(c))- vec2(c/2.);
 
   // float te = floor( sin(u_time)*100.);
   float te = 195.;// should be 5, but use  to 'tear'
@@ -62,28 +63,31 @@ void main(){
 
   rc *= r2d( n/2.);
 
+  vec2 line = vec2(0.07, 0.013) * 2.25;
+
+  // cool fade effect, but still need to polish it.
+  // for(int it = 10; it > 1; --it){
+  //   vec2 rc2 = mod(p+trans, vec2(c))- vec2(c/2.);
+  //   float fit = float(it);
+  //   //(1./pow(9.91, fit))
+  //   float n2 = smoothValueNoise(fp-vec2(t -(1./pow(100.91, fit)) , t)) * TAU;
+  //   rc2 *= r2d(n2/2.);
+  //   // i += step(sdRect(rc2, line ), 0.) * 0.019;
+  //   // i += step(sdRect(rc2, line.yx ), 0.) * 0.019;
+  // }
 
 
+  i += 1./(sdRect(rc, line.xy)*500.);
+  i += 1./(sdRect(rc, line.yx)*500.);
+  i = clamp(i,0.,1.);
 
+  i += step(sdRect(rc, line.xy*.75), 0.);
+  i += step(sdRect(rc, line.yx*.75), 0.);
 
-  for(int it = 15; it > 1; --it){
-    vec2 rc2 = mod(p+trans, vec2(0.2))- vec2(0.1);
-    float fit = float(it);
-    float n2 = smoothValueNoise(fp-vec2(t - (1./pow(1.91, fit)), t)) * TAU;
-    rc2 *= r2d(n2/2.);
-    i += step(sdRect(rc2, vec2(0.07 )), 0.) * 0.19;
-  }
-  // i = clamp(i, 0., 1.);
+  // white bk makes it look like we have ao.
+  i = 1.- i;
 
-  i = 0.;
-  i += step(sdRect(rc, vec2(0.070, 0.013)), 0.) ;// + .8101/pow(n/1., 1.);
-  i += step(sdRect(rc, vec2(0.013, 0.070)), 0.);// + .8101/pow(n/1., 1.);
-
-
+  // i *= 1.5/abs( (mod(p.x*p.y, 0.5)-0.25) *200.)*70.;
 
   gl_FragColor = vec4(vec3(i),1.);
 }
-
-
-
-

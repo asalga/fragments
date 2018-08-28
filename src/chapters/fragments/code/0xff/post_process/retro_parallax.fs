@@ -5,7 +5,7 @@ uniform vec2 u_res;
 uniform float u_time;
 uniform sampler2D u_t0;
 
-const float pxSize = 2.0;
+const float pxSize = 1.0;
 
 void main(){
 	vec2 pixel = gl_FragCoord.xy - (u_res.xy*.5);

@@ -52,8 +52,8 @@ let demo = {
     // src: '100_199/4/14x_voxel_tutorial2.fs',
 
     // src: '100_199/4/glow1.fs',
-    // src: '100_199/4/145_flow.fs',
-    src: '100_199/4/retro_parallax.fs',
+    src: '100_199/4/145_flow.fs',
+    // src: '100_199/4/retro_parallax.fs',
 
     // src: '100_199/4/_.fs',
 
@@ -71,7 +71,7 @@ let demo = {
   },
   '1': {
     // src: 'post_process/simple_dither.fs',
-    // src: 'post_process/null.fs',
+    src: 'post_process/null.fs',
     // src: 'post_process/182.fs',
     // src: 'post_process/182_voronoi.fs',
     // src: 'post_process/px_sort2.fs',
@@ -81,7 +81,7 @@ let demo = {
     // src: 'post_process/cel.fs',
     // src: 'post_process/pixelate.fs',
     // src: 'post_process/sobel.fs',
-    src: 'post_process/retro_parallax.fs',
+    // src: 'post_process/retro_parallax.fs',
 
     uniforms: [
       { 'name': 'u_numShades', 'value': 12 },
