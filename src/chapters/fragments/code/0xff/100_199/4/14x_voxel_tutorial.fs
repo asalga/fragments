@@ -47,7 +47,8 @@ vec4 dist (inout vec3 p, in vec3 ray, in float voxelized, in float rayLengthMax)
       if (d.x < DELTA) {
         break;
       }
-    } else if (rayLength < rayLengthCheckVoxel) {
+    }
+    else if (rayLength < rayLengthCheckVoxel) {
       vec3 rayDelta = (0.5 - raySign * (fract (p + 0.5) - 0.5)) * rayDeltaVoxel;
       float dNext = min (rayDelta.x, min (rayDelta.y, rayDelta.z));
       d = distScene (floor (p + 0.5), P);
@@ -58,7 +59,8 @@ vec4 dist (inout vec3 p, in vec3 ray, in float voxelized, in float rayLengthMax)
       } else {
         d.x = DELTA + dNext;
       }
-    } else {
+    }
+     else {
       d = distScene (p, P);
       if (voxelized > 0.5) {
         if (d.x < SQRT3 * 0.5) {
@@ -115,7 +117,7 @@ void main () {
   float dd =110.;
   vec3 eye = vec3(dd * cos(t), 3.  , dd * sin(t));
   vec3 center = vec3(0, 0, 0.);
-  vec3 lightPos =  vec3(0., 2., 4);
+
   vec3 up = vec3(0,1,0);
 
   mat3 viewWorld = viewMatrix(eye, center, up);
@@ -132,10 +134,16 @@ void main () {
   vec3 finalColor;
   if (d.x < DELTA) {
     vec3 color = vec3( modeVoxel);
-    vec3 l = vec3(1,0,0);
+    vec3 l =  vec3(0., 0., 1.);
+    l = normalize(l);
+
     vec3 n = normal (origin, modeVoxel);
     float diffuse = dot (n, l);
-    diffuse = max(diffuse, 0.);
+
+    if(diffuse > 1.){
+      diffuse = 1.;
+    }
+    // diffuse = max(diffuse, 0.);
     color = (AMBIENT + diffuse) * color;
     finalColor = mix (finalColor, color, 1.0);
   }

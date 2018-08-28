@@ -5,6 +5,8 @@
 
 let relPath = '../../chapters/fragments/code/0xff/';
 
+let imgTest;
+
 // note the last xy tuple is a copy of the second last so that
 // all 3 shapes have the same length which makes the shader have less code
 let type0 = [-0.25, -1, -1, -0.25, -0.5, -0.06, -1, 0.25, 
@@ -26,8 +28,8 @@ let type2 = [ -0.45, -1, -1, -0.51, -0.69, -0.08, -1, 0.42,
 
 let demo = {
   'size': {
-    'width': 600,
-    'height': 600
+    'width': 500,
+    'height': 500
   },
   '0': {
     // src: '100_199/0/105_cube_walk.fs',
@@ -47,24 +49,29 @@ let demo = {
     // src: '100_199/4/14x_brick_tunnel.fs',
     // src: '100_199/4/145.fs',
     
-    src: '100_199/4/14x_pacman.fs',
+    // src: '100_199/4/14x_voxel_tutorial2.fs',
 
     // src: '100_199/4/glow1.fs',
+    // src: '100_199/4/145_flow.fs',
+    src: '100_199/4/retro_parallax.fs',
 
     // src: '100_199/4/_.fs',
 
     // src: '100_199/4/143_fly_casual.fs',
 
+    // src: '0_99/80/80_world_0_0.fs',
+
+
     uniforms: [
       // {'name': 'u_fov', 'value': 70}
-      // {'name': 'u_type0', 'value': type0},
-      // {'name': 'u_type1', 'value': type1},
-      // {'name': 'u_type2', 'value': type2}
+      {'name': 'u_type0', 'value': type0},
+      {'name': 'u_type1', 'value': type1},
+      {'name': 'u_type2', 'value': type2}
     ]
   },
   '1': {
     // src: 'post_process/simple_dither.fs',
-    src: 'post_process/null.fs',
+    // src: 'post_process/null.fs',
     // src: 'post_process/182.fs',
     // src: 'post_process/182_voronoi.fs',
     // src: 'post_process/px_sort2.fs',
@@ -74,6 +81,7 @@ let demo = {
     // src: 'post_process/cel.fs',
     // src: 'post_process/pixelate.fs',
     // src: 'post_process/sobel.fs',
+    src: 'post_process/retro_parallax.fs',
 
     uniforms: [
       { 'name': 'u_numShades', 'value': 12 },
@@ -195,7 +203,9 @@ function makeSketch(fs, params) {
       p.pixelDensity(1);
       $(p.canvas).appendTo($('#target'));
       $(ditherTex.canvas).appendTo($('#target2'));
-      p.noLoop();
+      // p.noLoop();
+
+      imgTest = p.loadImage('../chapters/fragments/tex/tex.jpg');
     };
 
     p.mouseClicked = function() {
@@ -238,7 +248,7 @@ function makeSketch(fs, params) {
       shader_0.setUniform('u_mouse', [p.mouseX.clamp(0, w) / width, p.mouseY.clamp(0, h) / height, mouseIsDown]);
       shader_0.setUniform('u_time', sketchTime);
       shader_0.setUniform('u_epochTime', epochTime);
-
+      shader_0.setUniform('u_t0', imgTest);
       
       
       // if(frameCount < 10){
