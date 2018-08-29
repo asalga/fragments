@@ -1,3 +1,4 @@
+// 147 - "Dual"
 precision mediump float;
 
 uniform vec2 u_res;
@@ -40,25 +41,21 @@ void main(){
   x = pow(10., x);
   i += x;
 
-  i = clamp(i, 0., 1.);
-
   x = sdCircle(vec2(fract(p.x+0.4+t),p.x), 0.9);
   x = pow(4., x);
-  // i -= 1.-x;
 
   i -= fract(p.x*10. + t*2.);
 
   i = 0.;
 
-  float test = sin(p.y*1.*3.14159+t*5.)/5.;
-  float test2 = sin(p.x*1.*3.14159+t*5.)/5.;
-
+  float test = sin(p.y * PI + t * 5.)/5.;
+  float test2 = sin(p.x * PI + t * 5.)/5.;
 
   i = step(-.9, p.x) * step(p.y, 0.9);
   i *= step(p.x, 0.9) * step( -0.9, p.y);
 
   if(p.x > test){
-    i= 1.-i;
+    i = 1.-i;
   }
   if(p.y > test2){
     i= 1.-i;
@@ -70,12 +67,3 @@ void main(){
 
   gl_FragColor = vec4(vec3(i),1.);
 }
-
-
-
-
-
-
-
-
-

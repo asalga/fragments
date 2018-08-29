@@ -28,8 +28,8 @@ let type2 = [ -0.45, -1, -1, -0.51, -0.69, -0.08, -1, 0.42,
 
 let demo = {
   'size': {
-    'width': 500,
-    'height': 500
+    'width': 400,
+    'height': 400
   },
   '0': {
     // src: '100_199/0/105_cube_walk.fs',
@@ -48,7 +48,9 @@ let demo = {
     // src: '100_199/4/144_blocky.fs',
     // src: '100_199/4/14x_brick_tunnel.fs',
     // src: '100_199/4/145.fs',
-    
+    // src: '100_199/4/147_dual.fs',
+    // src: '100_199/4/147_dreamcatcher.fs',
+
     // src: '100_199/4/14x_voxel_tutorial2.fs',
 
     // src: '100_199/4/glow1.fs',
@@ -62,8 +64,10 @@ let demo = {
     // src: '0_99/80/80_world_0_0.fs',
 
 
-    // src: '100_199/4/147_dreamcatcher.fs',
-    src: '100_199/4/14x_untitled.fs',
+    src: '100_199/4/148.fs',
+
+
+
     
 
     // src: '0_99/80/86_wavering_contours.fs',
