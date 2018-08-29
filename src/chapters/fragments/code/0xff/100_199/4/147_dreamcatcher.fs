@@ -1,4 +1,4 @@
-// 139
+// 147 "Dreamcatcher"
 precision mediump float;
 
 uniform vec2 u_res;
@@ -13,6 +13,10 @@ float cross2d(vec2 a, vec2 b){
   return a.x*b.y-a.y*b.x;
 }
 
+float ringSDF(vec2 p, float r, float w){
+  return abs(length(p) - (r*.5)) - w;
+}
+
 float sdLine(vec2 p, vec2 a, vec2 b, float r) {
     vec2 pa = p - a, ba = b - a;
     float h = clamp( dot(pa,ba)/dot(ba,ba), 0.0, 1.0 );
@@ -23,7 +27,7 @@ float sdCircle(vec2 p, float r){
   return length(p)-r;
 }
 
-float valueNoise(float i, float scale){
+float rand(float i, float scale){
   return fract(sin(i*scale));
 }
 
@@ -43,7 +47,7 @@ bool line_line_intersection(vec2 a, vec2 b, vec2 c, vec2 d, out vec2 p){
   float t = ((c.x - a.x) * s.y - (c.y-a.y)*s.x)/d_;
 
   if( u >= 0. && u <= 1. && t >= 0. && t <= 1.){
-    p = a + t*r;
+    p = a + t * r;
     return true;
   }
 
@@ -56,34 +60,28 @@ float rand(in vec2 p){
 
 void main(){
   vec2 p = (gl_FragCoord.xy/u_res)*2.-1.;
-  float t = u_time*0.25;
+  float t = u_time*.5;
   float c;
 
-  c +=  step(sdCircle(p, 1.015), 0.);
-  c -=  step(sdCircle(p, 0.96), 0.);
+  float circ;
+  circ = ringSDF(p, 1.6, 0.00001);
+  c += 1./(circ*300.);
 
   const int CNT = 10;
   vec4 lines[CNT];
+  vec2 speed[CNT];
 
   for(int it = 0; it < CNT; it++){
-    float fit = float(it);
+    float fit = float(it) + 1.;
 
-    float r = (fit/9.) * TAU;
-    lines[it].xy = vec2(cos(r), sin(r));
-    lines[it].zw = -lines[it].xy;
+    float theta0 = rand(fit,2703.6) * TAU + t * ((rand(fit,2663.3823)*2.)-1.);
+    float theta1 = rand(fit,7093.6) * TAU + t * ((rand(fit,2663.3823)*2.)-1.);
 
-    lines[it].x += sin(t+ fit);
-    lines[it].y += sin(t - fit*2.);
+    lines[it].xy = normalize(vec2(cos(theta0), sin(theta0))) * 0.8;
+    lines[it].zw = normalize(vec2(cos(theta1), sin(theta1))) * 0.8;
 
-    lines[it].w -= sin(t- fit*3.);
-    lines[it].z += cos(fit*fit* 14. + fit*12.);
-
-    lines[it].xy = normalize(lines[it].xy)*0.99;
-    lines[it].zw = normalize(lines[it].zw)*0.99;
-
-    c += step(sdLine(p, lines[it].xy, lines[it].zw, 0.004), 0.);
+    c += abs(1./(sdLine(p, lines[it].xy, lines[it].zw, 0.001) * 400.));
   }
-
 
   // for(int i = 0; i < CNT; ++i){
   //   vec2 p1 = lines[i].xy;
@@ -92,7 +90,7 @@ void main(){
   //   // c += step(sdCircle(p3-p, 0.025), 0.)*0.25;
   // }
 
-
+  float cSize = 0.015;
   for(int i = 0; i < CNT; ++i){
     for(int j = 0; j < CNT; ++j){
       // if(i > j) continue;
@@ -107,14 +105,14 @@ void main(){
       vec2 p4 = lines[i].zw;
 
       vec2 ip;
+
       // if(line_line_intersection(p1, p2, p3, p4, ip)){
       if(line_line_intersection(p1, p2, p3, p4, ip)){
-        float test = sdCircle(ip-p, 0.02);
-        c += smoothstep(0.01, .000, test);
+        float test = sdCircle(ip-p, cSize);
+        c += abs(1./(test*800.));
       }
     }
   }
-
 
   gl_FragColor = vec4(vec3(c),1);
 }

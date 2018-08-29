@@ -62,7 +62,7 @@ let demo = {
     // src: '0_99/80/80_world_0_0.fs',
 
 
-    src: '100_199/4/147_line_dot_line.fs',
+    src: '100_199/4/147_dreamcatcher.fs',
 
     // src: '0_99/80/86_wavering_contours.fs',
 
@@ -207,7 +207,7 @@ function makeSketch(fs, params) {
       p.pixelDensity(1);
       $(p.canvas).appendTo($('#target'));
       $(ditherTex.canvas).appendTo($('#target2'));
-      // p.noLoop();
+     // p.noLoop();
 
       imgTest = p.loadImage('../chapters/fragments/tex/tex.jpg');
     };

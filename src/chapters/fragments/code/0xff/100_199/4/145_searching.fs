@@ -34,15 +34,12 @@ void main( void ) {
   c *= step(p.x, 0.9) * step( -0.9, p.y);
 
 
-
   float vn = random(p);//+vec2(t/100000., 1.));
-
 
   if(c <= 0.05){
     float co = abs(.1/(( fract(vn)) * vn) ) * 0.01;
     c += co;// * (sin(u_time*33.)+1.));
   }
-
 
   gl_FragColor = vec4( vec3(c), 1 );
 }
