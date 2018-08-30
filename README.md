@@ -3,7 +3,7 @@ Math, Code, Art, Expression.
 
 Original procedural GLSL shaders.
 
-Thanks to Patricio Gonzalez Vivo works who gave me the inspiration to make this repo.
+Thanks to Patricio Gonzalez Vivo's work. It gave me the inspiration to make this repo.
 https://github.com/patriciogonzalezvivo/PixelSpiritDeck
 
 <p>
