@@ -64,10 +64,10 @@ void main(){
   float c;
 
   float circ;
-  circ = ringSDF(p, 1.6, 0.00001);
-  c += 1./(circ*300.);
+  circ = ringSDF(p, 1.6, 0.000001);
+  c += 1./(pow(circ, 1.5)*2000.);
 
-  const int CNT = 10;
+  const int CNT = 8;
   vec4 lines[CNT];
   vec2 speed[CNT];
 
@@ -75,12 +75,12 @@ void main(){
     float fit = float(it) + 1.;
 
     float theta0 = rand(fit,2703.6) * TAU + t * ((rand(fit,2663.3823)*2.)-1.);
-    float theta1 = rand(fit,7093.6) * TAU + t * ((rand(fit,2663.3823)*2.)-1.);
+    float theta1 = rand(fit,7093.6) * TAU + t*1.9 * ((rand(fit,2663.3823)*2.)-1.);
 
     lines[it].xy = normalize(vec2(cos(theta0), sin(theta0))) * 0.8;
     lines[it].zw = normalize(vec2(cos(theta1), sin(theta1))) * 0.8;
 
-    c += abs(1./(sdLine(p, lines[it].xy, lines[it].zw, 0.001) * 400.));
+    // c += abs(1./(sdLine(p, lines[it].xy, lines[it].zw, 0.001) * 400.));
   }
 
   // for(int i = 0; i < CNT; ++i){
@@ -90,11 +90,14 @@ void main(){
   //   // c += step(sdCircle(p3-p, 0.025), 0.)*0.25;
   // }
 
+
+  float intersectionCount[CNT];
+
   float cSize = 0.015;
   for(int i = 0; i < CNT; ++i){
     for(int j = 0; j < CNT; ++j){
-      // if(i > j) continue;
-      if(i == j)continue;
+      if(i >= j) continue;
+      // if(i == j)continue;
 
       // line 1
       vec2 p1 = lines[j].xy;
@@ -108,11 +111,39 @@ void main(){
 
       // if(line_line_intersection(p1, p2, p3, p4, ip)){
       if(line_line_intersection(p1, p2, p3, p4, ip)){
+
         float test = sdCircle(ip-p, cSize);
-        c += abs(1./(test*800.));
+        c += abs(3./(test*1000.));
+        intersectionCount[i]++;
       }
     }
   }
+
+
+ for(int it = 0; it < CNT; it++){
+
+    vec2 p1 = lines[it].xy;
+    vec2 p2 = lines[it].zw;
+
+    float intCnt = intersectionCount[it];
+    c += abs(2./(sdLine(p, p1, p2, 0.001) * (2000. - intCnt*450.) ));
+
+    // float test = sdCircle(ip-p, cSize);
+    // c += abs(1./(test*1000.));
+  }
+
+
+  // for(int i = 0; i < CNT; ++i){
+  //     vec2 p1 = lines[j].xy;
+  //     vec2 p2 = lines[j].zw;
+
+  //     // line 2
+  //     vec2 p3 = lines[i].xy;
+  //     vec2 p4 = lines[i].zw;
+
+  //   float test = sdCircle(ip-p, cSize);
+  //   c += abs(1./(test*1000.));
+  // }
 
   gl_FragColor = vec4(vec3(c),1);
 }

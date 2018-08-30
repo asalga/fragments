@@ -28,8 +28,8 @@ let type2 = [ -0.45, -1, -1, -0.51, -0.69, -0.08, -1, 0.42,
 
 let demo = {
   'size': {
-    'width': 400,
-    'height': 400
+    'width': 600,
+    'height': 600
   },
   '0': {
     // src: '100_199/0/105_cube_walk.fs',
@@ -40,6 +40,9 @@ let demo = {
     // src: '100_199/3/133_helpful_mushroom.fs',
     // src: '100_199/3/135_platforms_and_palettes.fs',
     // src: '100_199/3/136_rollers.fs',
+    // src: '100_199/2/129_invading_space.fs',
+    
+
     // src: '100_199/3/139_blocky_line.fs',
     // src: '100_199/3/139_endless_struggle.fs',
     // src: '100_199/4/140_vx.fs',
@@ -49,7 +52,7 @@ let demo = {
     // src: '100_199/4/14x_brick_tunnel.fs',
     // src: '100_199/4/145.fs',
     // src: '100_199/4/147_dual.fs',
-    // src: '100_199/4/147_dreamcatcher.fs',
+    src: '100_199/4/148_dreamcatcher.fs',
 
     // src: '100_199/4/14x_voxel_tutorial2.fs',
 
@@ -64,7 +67,7 @@ let demo = {
     // src: '0_99/80/80_world_0_0.fs',
 
 
-    src: '100_199/4/148.fs',
+    // src: '100_199/4/151.fs',
 
 
 
@@ -213,7 +216,7 @@ function makeSketch(fs, params) {
       p.pixelDensity(1);
       $(p.canvas).appendTo($('#target'));
       $(ditherTex.canvas).appendTo($('#target2'));
-     // p.noLoop();
+      // p.noLoop();
 
       imgTest = p.loadImage('../chapters/fragments/tex/tex.jpg');
     };

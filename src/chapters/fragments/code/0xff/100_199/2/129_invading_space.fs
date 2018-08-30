@@ -191,12 +191,12 @@ float rayMarch(vec3 ro, vec3 rd, out vec3 rot){
 
 void main(){
   float i;
-  float t = u_time * 2.0;
+  float t = u_time * 8.0;
 
   float dist = 30.;
-  vec3 eye = vec3(10, -5. -t, 10);
+  vec3 eye = vec3(0,  -t, 10);
 
-  vec3 center = vec3(0, -t, 0);
+  vec3 center = vec3(0, t, 0);
   vec3 up = vec3(0,1,0);
   vec3 lightPos =  vec3(0,0,10);
 
@@ -216,7 +216,7 @@ void main(){
   }
 
   float fog = (1./pow(d*d,.3));
-  i3 *= fog * 1.;
+  // i3 *= fog * 1.;
 
 
   // i3 = pow(i3, 1./vec3(2.2));
