@@ -4,7 +4,7 @@ Math, Code, Art, Expression.
 Original procedural GLSL shaders.
 
 Thanks to Patricio Gonzalez Vivo's work. It gave me the inspiration to make this repo.
-https://github.com/patriciogonzalezvivo/PixelSpiritDeck
+[PixelSpiritDeck](https://github.com/patriciogonzalezvivo/PixelSpiritDeck)
 
 <p>
 <img src="https://github.com/asalga/fragments/blob/master/img/108.png" alt="108" width="150"/>
