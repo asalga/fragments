@@ -11,11 +11,9 @@ mat2 r2d(float a){
 
 void main(){
   vec2 p = (gl_FragCoord.xy/u_res)*2.-1.;
-  p = mod(p, vec2(0.5))-vec2(.25);
-  p *= r2d(PI/4.);
+  p = (mod(p, vec2(0.5))-vec2(.25)) * r2d(PI/4.);
   vec2 shape = mod(abs(p*4.) - u_time * 0.5, vec2(0.5));
-  shape = step(shape, vec2(0.25));
-  shape *= step(abs(p.yx), abs(p.xy));
+  shape = step(shape, vec2(0.25)) * step(abs(p.yx), abs(p.xy));
   gl_FragColor = vec4(vec3(shape.x + shape.y),1);
 }
 

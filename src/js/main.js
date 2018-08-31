@@ -28,8 +28,8 @@ let type2 = [ -0.45, -1, -1, -0.51, -0.69, -0.08, -1, 0.42,
 
 let demo = {
   'size': {
-    'width': 600,
-    'height': 600
+    'width': 500,
+    'height': 500
   },
   '0': {
     // src: '100_199/0/105_cube_walk.fs',
@@ -52,7 +52,11 @@ let demo = {
     // src: '100_199/4/14x_brick_tunnel.fs',
     // src: '100_199/4/145.fs',
     // src: '100_199/4/147_dual.fs',
-    src: '100_199/4/148_dreamcatcher.fs',
+    // src: '100_199/4/148_dreamcatcher.fs',
+    // src: '100_199/4/149_diaid.fs',
+
+
+
 
     // src: '100_199/4/14x_voxel_tutorial2.fs',
 
@@ -67,13 +71,11 @@ let demo = {
     // src: '0_99/80/80_world_0_0.fs',
 
 
-    // src: '100_199/4/151.fs',
 
 
-
-    
-
-    // src: '0_99/80/86_wavering_contours.fs',
+    // 5
+    src: '100_199/5/150_wax_and_wane.fs',
+    // src: '100_199/5/150_all_platforms_levitate.fs',
 
     uniforms: [
       // {'name': 'u_fov', 'value': 70}
@@ -94,7 +96,7 @@ let demo = {
     // src: 'post_process/cel.fs',
     // src: 'post_process/pixelate.fs',
     // src: 'post_process/sobel.fs',
-    // src: 'post_process/retro_parallax.fs',
+    // src: 'post_process/parallax.fs',
 
     uniforms: [
       { 'name': 'u_numShades', 'value': 12 },

@@ -1,27 +1,32 @@
+// 150 - "All platforms Levitate"
 // concept from: https://www.shadertoy.com/view/4sSGD1
-precision mediump float;
 
+precision mediump float;
 uniform vec2 u_res;
 uniform float u_time;
 uniform sampler2D u_t0;
 
 void main(){
-	vec2 p = gl_FragCoord.xy - (u_res.xy * .5);
+	// vec2 p = gl_FragCoord.xy - (u_res.xy * .5);
+
+	vec2 p = (gl_FragCoord.xy/u_res)*2.-1.;
 	vec3 col;
 
-	for ( int i=0; i < 10; i+=1 )
-	{
-		float depth = 2.+float(i);
+	//  (0 - 500) - (250)
+	// -250 250
+
+	for (int i = 0; i < 3; ++i){
+
+		float depth = 5. + float(i);
 		vec2 uv = p + floor(vec2(depth));
 
-		uv /= u_res.y;
-		uv *= depth/4.0;
-		uv = fract(uv/2. + 0.5);
+		uv /= 20.;//u_res.y;
+		uv *= depth*1.;
+		uv = fract(uv/3.);
+		col = texture2D(u_t0, uv).rgb;
 
-		col = texture2D( u_t0, uv ).rgb;
-
-		//
-		if ( 1.0 - col.r < (float(i)+1.) /14.0 ) {
+		// if (1.0 - col.r < (float(i)+1.) / 10.0) {
+		if (col.r < (float(i)+1.) / 3.0) {
 			break;
 		}
 	}
