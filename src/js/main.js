@@ -42,7 +42,6 @@ let demo = {
     // src: '100_199/3/136_rollers.fs',
     // src: '100_199/2/129_invading_space.fs',
     
-
     // src: '100_199/3/139_blocky_line.fs',
     // src: '100_199/3/139_endless_struggle.fs',
     // src: '100_199/4/140_vx.fs',
@@ -55,30 +54,22 @@ let demo = {
     // src: '100_199/4/148_dreamcatcher.fs',
     // src: '100_199/4/149_diaid.fs',
 
-
-
-
     // src: '100_199/4/14x_voxel_tutorial2.fs',
 
     // src: '100_199/4/glow1.fs',
     // src: '100_199/4/146_flow.fs',
     // src: '100_199/4/retro_parallax.fs',
-
     // src: '100_199/4/_.fs',
-
     // src: '100_199/4/143_fly_casual.fs',
-
     // src: '0_99/80/80_world_0_0.fs',
 
-    // src: '100_199/5/151_ei.fs',
-
-    // src: '100_199/5/152.fs',
-    // src: '100_199/4/14x_lightspeed.fs',
-    src: '0_99/70/72_states.fs',
+    
 
     // 5
     // src: '100_199/5/150_wax_and_wane.fs',
-    // src: '100_199/5/150_all_platforms_levitate.fs',
+    // src: '100_199/5/151_slash-etc.fs',
+    src: '100_199/5/152_alt_tunnel.fs',
+    // src: '100_199/5/15x_all_platforms_levitate.fs',
 
     uniforms: [
       // {'name': 'u_fov', 'value': 70}
@@ -89,7 +80,7 @@ let demo = {
   },
   '1': {
     // src: 'post_process/simple_dither.fs',
-    // src: 'post_process/null.fs',
+    src: 'post_process/null.fs',
     // src: 'post_process/182.fs',
     // src: 'post_process/182_voronoi.fs',
     // src: 'post_process/px_sort2.fs',
@@ -98,7 +89,7 @@ let demo = {
     // src: 'post_process/flood.fs',
     // src: 'post_process/cel.fs',
     // src: 'post_process/pixelate.fs',
-    src: 'post_process/tunnel.fs',
+    // src: 'post_process/tunnel.fs',
     // src: 'post_process/sobel.fs',
     // src: 'post_process/parallax.fs',
 
