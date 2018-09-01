@@ -28,8 +28,8 @@ let type2 = [ -0.45, -1, -1, -0.51, -0.69, -0.08, -1, 0.42,
 
 let demo = {
   'size': {
-    'width': 500,
-    'height': 500
+    'width': 512,
+    'height': 512
   },
   '0': {
     // src: '100_199/0/105_cube_walk.fs',
@@ -70,11 +70,14 @@ let demo = {
 
     // src: '0_99/80/80_world_0_0.fs',
 
+    // src: '100_199/5/151_ei.fs',
 
-
+    // src: '100_199/5/152.fs',
+    // src: '100_199/4/14x_lightspeed.fs',
+    src: '0_99/70/72_states.fs',
 
     // 5
-    src: '100_199/5/150_wax_and_wane.fs',
+    // src: '100_199/5/150_wax_and_wane.fs',
     // src: '100_199/5/150_all_platforms_levitate.fs',
 
     uniforms: [
@@ -86,7 +89,7 @@ let demo = {
   },
   '1': {
     // src: 'post_process/simple_dither.fs',
-    src: 'post_process/null.fs',
+    // src: 'post_process/null.fs',
     // src: 'post_process/182.fs',
     // src: 'post_process/182_voronoi.fs',
     // src: 'post_process/px_sort2.fs',
@@ -95,6 +98,7 @@ let demo = {
     // src: 'post_process/flood.fs',
     // src: 'post_process/cel.fs',
     // src: 'post_process/pixelate.fs',
+    src: 'post_process/tunnel.fs',
     // src: 'post_process/sobel.fs',
     // src: 'post_process/parallax.fs',
 

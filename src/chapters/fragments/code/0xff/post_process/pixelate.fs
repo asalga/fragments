@@ -23,15 +23,58 @@ void main(){
 
   float i = 0.;
 
-  // for(int it = 10; it > 1; it--){
-
     // pxSize = 1. + floor(gl_FragCoord.y/u_res.y*10.) ;
 
-    float py = gl_FragCoord.y/u_res.y;
+    float y = gl_FragCoord.y;
 
-    pxSize =  pow(floor(py*10.), 2.)/5.;
+    // if(y >= 16. * 25.){//400
+    //   pxSize = 16.;
+    //   // i = 0.15;
+    // }
+    // else if(y >= 8. * 30.){// 320
+    //   pxSize = 8.;
+    //   // i = 0.2;
+    // }
+    // // else if(y >= 4. * 38.){ //152
+    //   // pxSize  = 4.;
+    //   // i = 0.14;
+    // // }
+    // else if(y >= 2. * 80.){//40.
+    //   pxSize  = 4.;
+    // }
+    // else{
+    //   pxSize = 1.;
+    // }
+
+
+
+
+  if(y >= 16. * 25.){//400
+      pxSize = 32.;
+      // i = 0.15;
+    }
+    else if(y >= 8. * 30.){// 320
+      pxSize = 16.;
+      // i = 0.2;
+    }
+    // else if(y >= 4. * 38.){ //152
+      // pxSize  = 4.;
+      // i = 0.14;
+    // }
+    else if(y >= 2. * 80.){//40.
+      pxSize  = 8.;
+    }
+    else{
+      pxSize = 1.;
+    }
+
+
+    // float py = gl_FragCoord.y/u_res.y;
+
+    // pxSize =  pow(floor(py*10.), 2.)/5.;
 
     //(float(it)/10.) * p.y/1. * pxSize/1.;
+
     vec2 c = floor(p/pxSize) * pxSize;
 
     // Use pixel closest to 'center'. Mostly
@@ -46,8 +89,9 @@ void main(){
       // i = texture2D(u_t0, c/u_res).x;
     // }
     // else{
-      i = texture2D(u_t0, c/u_res).x;
+      i += texture2D(u_t0, c/u_res).x;
     // }
+
 
 
 
