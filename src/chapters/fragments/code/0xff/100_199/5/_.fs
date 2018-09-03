@@ -48,7 +48,7 @@ void main( void ) {
 
  	co *= 0.013;
  	// co -= pow(length(p)+0.3, 30.);
-	texture2D(u_t0, p) + co;
+	vec4 test = texture2D(u_t0, p) + co;
 
 	gl_FragColor = vec4(vec3(co), 1.);
 }

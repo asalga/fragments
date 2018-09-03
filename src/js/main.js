@@ -63,12 +63,16 @@ let demo = {
     // src: '100_199/4/143_fly_casual.fs',
     // src: '0_99/80/80_world_0_0.fs',
 
-    
+    // src: '100_199/5/14x_windows.fs',
 
     // 5
     // src: '100_199/5/150_wax_and_wane.fs',
     // src: '100_199/5/151_slash-etc.fs',
-    src: '100_199/5/152_alt_tunnel.fs',
+    // src: '100_199/5/152_alt_tunnel.fs',
+    
+    // src: '100_199/5/153_mixing.fs',
+    src: '100_199/5/154_pixies.fs',
+    
     // src: '100_199/5/15x_all_platforms_levitate.fs',
 
     uniforms: [
@@ -80,7 +84,7 @@ let demo = {
   },
   '1': {
     // src: 'post_process/simple_dither.fs',
-    src: 'post_process/null.fs',
+    // src: 'post_process/null.fs',
     // src: 'post_process/182.fs',
     // src: 'post_process/182_voronoi.fs',
     // src: 'post_process/px_sort2.fs',
@@ -88,7 +92,7 @@ let demo = {
     // src: 'post_process/static.fs',
     // src: 'post_process/flood.fs',
     // src: 'post_process/cel.fs',
-    // src: 'post_process/pixelate.fs',
+    src: 'post_process/pixelate.fs',
     // src: 'post_process/tunnel.fs',
     // src: 'post_process/sobel.fs',
     // src: 'post_process/parallax.fs',

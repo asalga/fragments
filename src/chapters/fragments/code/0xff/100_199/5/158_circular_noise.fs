@@ -3,6 +3,13 @@ precision mediump float;
 uniform vec2 u_res;
 uniform float u_time;
 
+const float PI = 3.141592658;
+const float TAU = PI*2.;
+
+mat2 r2d(float a){
+  return mat2(cos(a),-sin(a),sin(a),cos(a));
+}
+
 float valueNoise(vec2 p){
   #define Y_SCALE 45343.
   #define X_SCALE 37738.
@@ -46,18 +53,31 @@ float sdRing(vec2 p, float r, float w){
 //   return c * smoothstep(1., 0., r1*2.);
 // }
 
-const float BANDS = 105.;
+const float BANDS = 5.;
 
 void main(){
   vec2 p = (gl_FragCoord.xy/u_res)*2.-1.;
   float c;
-  float ti = u_time * 0.0;
+  float ti = u_time * 1.0;
 
-  float r = length(p) + ti;
+  float density = 2.5;
+
+  float a = ((atan(p.y,-p.x)/PI)+1.)/2.;
+  // float r = length(p)*density + a;
+  // float i = step(mod(r, 1.), 0.5);
+  // gl_FragColor = vec4(vec3(i), 1.);
+
+
+  vec2 op = p*r2d( PI/3.);
+
+  p *= length(p);
+
   float theta = atan(p.y, p.x);
+  float r = length(p) * density - ti;
 
   vec2 pc = vec2(r,theta);
   float n;
+  ti = 0.;
   n += smoothValueNoise(pc*4.          );
   n += smoothValueNoise(pc*8.  + ti*2. ) * .5;
   n += smoothValueNoise(pc*16. + ti*4. ) * .25;
@@ -65,14 +85,48 @@ void main(){
   n += smoothValueNoise(pc*64. + ti*8. ) * .0625;
   n /= 1.5;
 
+
+
+  vec2 pc2 = vec2(r, atan(op.y, op.x));
+
+  //   vec2 pc2 = vec2(r,theta2);
+  float n2;
+  // // ti = 0.;
+  n2 += smoothValueNoise(pc*4.          );
+  n2 += smoothValueNoise(pc*8.  + ti*2. ) * .5;
+  n2 += smoothValueNoise(pc*16. + ti*4. ) * .25;
+  n2 += smoothValueNoise(pc*32. + ti*6. ) * .125;
+  n2 += smoothValueNoise(pc*64. + ti*8. ) * .0625;
+  n2 /= 1.5;
+
+
+
+
+
+
+
   float test = floor(n*BANDS)/BANDS;
   // c = sdCircle(p, 0.5);
 
   float b = floor(((length(p))* BANDS))/BANDS;
 
-  c = test * step(sdRing(p, 1., 0.5), 0.) * b;
+  c =  length(p) * step(sdRing(p, 2.5, 2.), 0.);// * b;
 
   // c = step(sdRing(p, .5, 1.1), 0.);
+
+  float i = sin((atan(p.y,p.x) + r)*4.);
+
+  // float i2 = sin(atan(p.y, p.x)+PI) * 3.;
+
+  float sdf = abs(sin((atan(p.y,p.x)+PI)*1.));
+
+  c *= sdf;// * i2;
+  // c *= i;
+
+
+
+  float sdf2 = abs(sin((atan(op.y,op.x)+PI)*1.));
+   c *= n2;
 
   gl_FragColor = vec4(vec3(c),1.);
 

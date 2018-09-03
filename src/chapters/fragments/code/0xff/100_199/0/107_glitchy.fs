@@ -19,7 +19,7 @@ const float Y_SCALE = 389492.;
 float sdSphere(vec3 p, float r){
 	return length(p)-r;
 }
-float valueNoise(float seed, vec2 p){  
+float valueNoise(float seed, vec2 p){
   float x = p.x * X_SCALE;
   float y = p.y * Y_SCALE;
   return fract( sin(x+y) * (23454. + seed));
@@ -73,7 +73,7 @@ vec3 rayDirection(float fieldOfView, vec2 size, vec2 fragCoord) {
 float cubeSDF(vec3 p, vec3 sz) {
   vec3 d = abs(p) - sz;
   float insideDistance = min(max(d.x, max(d.y, d.z)), 0.0);
-  float outsideDistance = length(max(d, 0.0));    
+  float outsideDistance = length(max(d, 0.0));
   return insideDistance + outsideDistance;
 }
 
@@ -106,7 +106,7 @@ float sdScene(vec3 p, out float col){
 	float c = 1.;
 	vec3 np = mod(p, vec3(c))-c *0.5;
 	np.y = p.y;
-	
+
 	// float xIdx = abs(sin( floor(p.x)/10. + t )) *3.;
 	float xIdx = floor(p.x)/10.;
 	float zIdx = floor(p.z)/10.;
@@ -134,7 +134,7 @@ float shadowMarch(vec3 point, vec3 lightPos){
   float s = 0.;
   for(int i = 0; i < MaxShadowStep; ++i){
     vec3 v = ro + (rd*s);
-    
+
     float dum;
     float dist;
     dist = sdScene(v, dum);
@@ -164,11 +164,11 @@ float rayMarch(vec3 ro, vec3 rd, out vec3 col){
 	float s = 0.;
 	for(int i = 0; i < MaxSteps; i++){
 		vec3 p = ro + rd * s;
-		
+
 		float intensity;
 		float d = sdScene(p, intensity);
 		col = vec3(intensity);
-		
+
 		if(d < Epsilon){
 			return s;
 		}
@@ -242,13 +242,13 @@ void main(){
 
 		float lights = lighting(v, n, lightPos);
 
-		i += (d * lights) * col.x;	
+		i += (d * lights) * col.x;
 	}
 
   float fog = 5./ pow( d, 2.);
   // i *= fog;
 
-	// float vignette = 1.-smoothstep(0.9, 1., abs(p.x)) *  
+	// float vignette = 1.-smoothstep(0.9, 1., abs(p.x)) *
 									 // 1.-smoothstep(0.9, 1., abs(p.y));
 	// i *= vignette;
 
