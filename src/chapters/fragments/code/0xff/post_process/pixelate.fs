@@ -44,7 +44,7 @@ void main(){
     // }
     // else{
       pxSize = ((sin(u_time)+1.)/2.) * 20.;
-      pxSize = 1.;
+      pxSize = 4.;
     // }
 
 

@@ -71,7 +71,11 @@ let demo = {
     // src: '100_199/5/152_alt_tunnel.fs',
     
     // src: '100_199/5/153_mixing.fs',
-    src: '100_199/5/154_pixies.fs',
+    // src: '100_199/5/154_pixies.fs',
+    // src: '100_199/5/155_infinite.fs',
+    // src: '100_199/5/156_connexion.fs',
+    src: '100_199/5/157_circular_noise.fs',
+
     
     // src: '100_199/5/15x_all_platforms_levitate.fs',
 
@@ -83,8 +87,8 @@ let demo = {
     ]
   },
   '1': {
+    src: 'post_process/null.fs',
     // src: 'post_process/simple_dither.fs',
-    // src: 'post_process/null.fs',
     // src: 'post_process/182.fs',
     // src: 'post_process/182_voronoi.fs',
     // src: 'post_process/px_sort2.fs',
@@ -92,7 +96,7 @@ let demo = {
     // src: 'post_process/static.fs',
     // src: 'post_process/flood.fs',
     // src: 'post_process/cel.fs',
-    src: 'post_process/pixelate.fs',
+    // src: 'post_process/pixelate.fs',
     // src: 'post_process/tunnel.fs',
     // src: 'post_process/sobel.fs',
     // src: 'post_process/parallax.fs',

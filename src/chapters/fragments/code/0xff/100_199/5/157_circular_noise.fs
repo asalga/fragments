@@ -9,7 +9,11 @@ const float TAU = PI*2.;
 mat2 r2d(float a){
   return mat2(cos(a),-sin(a),sin(a),cos(a));
 }
-
+float sdLine(vec2 p, vec2 a, vec2 b, float r) {
+    vec2 pa = p - a, ba = b - a;
+    float h = clamp( dot(pa,ba)/dot(ba,ba), 0.0, 1.0 );
+    return length( pa - ba*h ) - r;
+}
 float valueNoise(vec2 p){
   #define Y_SCALE 45343.
   #define X_SCALE 37738.
@@ -114,19 +118,21 @@ void main(){
 
   // c = step(sdRing(p, .5, 1.1), 0.);
 
-  float i = sin((atan(p.y,p.x) + r)*4.);
+  float i = sin((atan(p.y,p.x) + r)*3.);
 
   // float i2 = sin(atan(p.y, p.x)+PI) * 3.;
 
   float sdf = abs(sin((atan(p.y,p.x)+PI)*1.));
 
-  c *= sdf;// * i2;
-  // c *= i;
 
 
+  // c *= sdf;// * i2;
+  c *= i;
 
   float sdf2 = abs(sin((atan(op.y,op.x)+PI)*1.));
    c *= n2;
+
+  c += 50./(sdLine(p, vec2(-11., 0.), vec2(11., 0.), 0.00001)* 20000.);
 
   gl_FragColor = vec4(vec3(c),1.);
 
