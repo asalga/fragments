@@ -1,4 +1,4 @@
-// Black & White
+// 157 - "Over"
 precision mediump float;
 
 uniform vec2 u_res;
@@ -31,17 +31,17 @@ void main(){
   float halfTileCnt = (NumTiles-1.)/2.;
   vec2 fp = floor(pnt);// [0..11]
 
-  float dist1 = 1.-(length(fp-vec2(halfTileCnt)))/halfTileCnt;
-  float dist2 = 1.-(diamondDist(fp-vec2(halfTileCnt)))/halfTileCnt;
+  // float dist1 = 1.-(length(fp-vec2(halfTileCnt)))/halfTileCnt;
+  // float dist2 = 1.-(diamondDist(fp-vec2(halfTileCnt)))/halfTileCnt;
 
-  float sz1 = 0.5 * (mod(dist1 + t,     3.0) - 1.5);
-  float sz2 = 0.5 * (mod(dist2 + t-1.0, 3.0) - 1.5);
+  // float sz1 = 0.5 * (mod(dist1 + t,     3.0) - 1.5);
+  // float sz2 = 0.5 * (mod(dist2 + t-1.0, 3.0) - 1.5);
 
   vec2 lp = fract(pnt) - 0.5;
 
   // float white = step(sdCircle(lp, fract( (t + p.x*4.)/10.)  ), 0.);
 
-  float sz = fract( (t*.5 + length(p) )/1.);
+  float sz = fract(t*.5 + length(p));
 
   float white = step(sdRect(lp, vec2(sz) ), 0.);
 

@@ -71,14 +71,13 @@ let demo = {
     // src: '100_199/5/152_alt_tunnel.fs',
     // src: '100_199/5/153_mixing.fs',
     // src: '100_199/5/154_infinite.fs',
-    src: '100_199/5/155_brick_building.fs',
+    // src: '100_199/5/155_brick_building.fs',
+    
+    // src: '100_199/5/156_triad.fs',
+    // src: '100_199/5/157_over.fs',
+    src: '100_199/5/158_connexions.fs',
+    
 
-
-
-
-    // src: '100_199/5/155_pixies.fs',
-    // src: '100_199/5/156_connexion.fs',
-    // src: '100_199/5/157_circular_noise.fs',
     
     // src: '100_199/5/15x_all_platforms_levitate.fs',
 

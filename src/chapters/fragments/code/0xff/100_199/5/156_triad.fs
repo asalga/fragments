@@ -103,12 +103,6 @@ void main(){
   n2 += smoothValueNoise(pc*64. + ti*8. ) * .0625;
   n2 /= 1.5;
 
-
-
-
-
-
-
   float test = floor(n*BANDS)/BANDS;
   // c = sdCircle(p, 0.5);
 
@@ -124,8 +118,6 @@ void main(){
 
   float sdf = abs(sin((atan(p.y,p.x)+PI)*1.));
 
-
-
   // c *= sdf;// * i2;
   c *= i;
 
@@ -133,6 +125,9 @@ void main(){
    c *= n2;
 
   c += 50./(sdLine(p, vec2(-11., 0.), vec2(11., 0.), 0.00001)* 20000.);
+  c = clamp(c, 0., 1.);
+
+  c += step(sdCircle(p, 0.001), 0.);
 
   gl_FragColor = vec4(vec3(c),1.);
 
