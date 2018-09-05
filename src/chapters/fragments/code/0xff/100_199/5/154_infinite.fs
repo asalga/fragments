@@ -21,7 +21,7 @@ void main(){
     float fit = 1./float(it);
     t += fit*2.;
     float x = cos(t);
-    float y = sin(t*2.)/2.;
+    float y = sin(t*2.)/2.5;
     vec2 mov = vec2(x,y);
     i += (.01/sdCircle(p+mov,0.0025 * (1./fit) ))/2.;
   }
@@ -35,12 +35,12 @@ void main(){
 
   if(flip > 0.){
     if(p.y > 0.){
-      // i = 1.-i;
+      i = 1.-i;
     }
   }
   else{
    if(p.y < 0.){
-      // i = 1.-i;
+      i = 1.-i;
     }
   }
 

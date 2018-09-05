@@ -19,7 +19,7 @@ void main(){
 
   p.y = u_res.y - p.y;
 
-  float pxSize = 1.;// + pow((gl_FragCoord.y/u_res.y)*4., 4.);
+  float pxSize;// = 15.;// + pow((gl_FragCoord.y/u_res.y)*4., 4.);
 
   float i = 0.;
 

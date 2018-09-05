@@ -1,7 +1,9 @@
-// 158 "Building"
+// 155 - "Brick Building"
 precision mediump float;
 
 #define SEVEN_EIGHTS (7./8.)
+const float BLOCK_SZ = 8.;
+
 uniform vec2 u_res;
 uniform float u_time;
 
@@ -12,7 +14,7 @@ float sdRect(in vec2 p, in vec2 sz){
   return _in + _out;
 }
 
-float bricks(vec2 p, float sc){
+float bricks(vec2 p){
   float i;
   float ROWS = u_res.y/16.;
   float NUM_BRICK_LINES = 4.;
@@ -42,43 +44,33 @@ float valueNoise(vec2 p){
 
 void main(){
   vec2 p = gl_FragCoord.xy/u_res*2.-1.;
-  vec2 op = gl_FragCoord.xy/u_res;
-  float i;
+  vec2 p0_1 = gl_FragCoord.xy/u_res;
 
-  float t = u_time * 0.25;
-  float gt = t;
+  float t = u_time;
+  float globalTime = t * 0.5;
 
-  float ft = floor(gt * 0.5);
-  t = fract(gt);
-
-  vec2 sz = vec2(0.2);
+  vec2 sz = vec2(2./BLOCK_SZ);
   vec2 rp = mod(p, sz)-(sz*.5);
 
-  vec2 normed = op;
-  vec2 cell = floor(normed*10.)/10.;
-  cell.x += ft;
+  vec2 cell = floor(p0_1*BLOCK_SZ)/BLOCK_SZ;
+  cell.x += floor(globalTime);
 
-  float n = valueNoise(vec2(cell.x, cell.y))/10.;
+  t = fract(globalTime);// vary time for each column?
+  t *= 1. + valueNoise(cell.xx) * 2.;
 
-  // cell y = [0,1,2,3....]
-  // noise value = 0..1 for all values
-
-  // vary time for each column?
-  float variation = 2.;
-  t *= 1. + valueNoise(vec2(cell.x, cell.x)) * variation;
-
-  i = 1.-bricks(op/4., 1.);
+  p0_1 /= 4.;//scale up so bricks are visible in a video capture
+  float i = 1. - bricks(p0_1);
 
   if(t > cell.y){
     float fillTime = t - cell.y;
-    vec2 fillSz = sz * fillTime * 20.;
+    vec2 fillSz = sz * fillTime * 8.;
 
     i -= step(sdRect(rp, fillSz), 0.);    // cut a hole
     i = clamp(i, 0., 1.);
-    i += step(sdRect(rp, fillSz), 0.) * (bricks(op/4., 1.));
+    i += step(sdRect(rp, fillSz), 0.) * bricks(p0_1);
   }
 
-  if( mod(gt, 2.) < 1.){// flip colors
+  if( mod(globalTime, 2.) < 1.){// flip colors
     i = 1.-i;
   }
 
