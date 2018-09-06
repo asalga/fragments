@@ -65,6 +65,7 @@ void main(){
 
       vec2 v = p1 - p2;
       float square = dot(v,v);
+      // float square = distance(p1, p2);
       if( square < _dist ) {
 
         connections[i]++;

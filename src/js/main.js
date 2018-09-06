@@ -32,38 +32,38 @@ let demo = {
     'height': 512
   },
   '0': {
+    // src: '100_199/4/14x_voxel_tutorial2.fs',
+
+    // src: '0_99/80/80_world_0_0.fs',
+
     // src: '100_199/0/105_cube_walk.fs',
     // src: '100_199/0/108_seed_of_life.fs',
+
     // src: '100_199/2/120_box_tex_displace.fs',
+    // src: '100_199/2/129_invading_space.fs',
+    
     // src: '100_199/3/130_little_critters.fs',
     // src: '100_199/3/132_vel.fs',
     // src: '100_199/3/133_helpful_mushroom.fs',
     // src: '100_199/3/135_platforms_and_palettes.fs',
     // src: '100_199/3/136_rollers.fs',
-    // src: '100_199/2/129_invading_space.fs',
-    
     // src: '100_199/3/139_blocky_line.fs',
     // src: '100_199/3/139_endless_struggle.fs',
+
     // src: '100_199/4/140_vx.fs',
     // src: '100_199/4/142_primitives.fs',
-    // src: '100_199/4/143_windows.fs',
-    // src: '100_199/4/144_blocky.fs',
+    // src: '100_199/4/143_fly_casual.fs',
     // src: '100_199/4/14x_brick_tunnel.fs',
     // src: '100_199/4/145.fs',
     // src: '100_199/4/147_dual.fs',
     // src: '100_199/4/148_dreamcatcher.fs',
     // src: '100_199/4/149_diaid.fs',
-
-    // src: '100_199/4/14x_voxel_tutorial2.fs',
-
     // src: '100_199/4/glow1.fs',
     // src: '100_199/4/146_flow.fs',
     // src: '100_199/4/retro_parallax.fs',
-    // src: '100_199/4/_.fs',
-    // src: '100_199/4/143_fly_casual.fs',
-    // src: '0_99/80/80_world_0_0.fs',
-
+    
     // src: '100_199/5/14x_windows.fs',
+    // src: '100_199/5/15x_all_platforms_levitate.fs',
 
     // 5
     // src: '100_199/5/150_wax_and_wane.fs',
@@ -72,18 +72,16 @@ let demo = {
     // src: '100_199/5/153_mixing.fs',
     // src: '100_199/5/154_infinite.fs',
     // src: '100_199/5/155_brick_building.fs',
-    
     // src: '100_199/5/156_triad.fs',
     // src: '100_199/5/157_over.fs',
     // src: '100_199/5/158_connexions.fs',
-
+    // src: '100_199/5/159_voxel_canyon.fs',
 
     // 6
-    src: '100_199/6/161_diaid_2.fs',
+    // src: '100_199/6/160_warp.fs',
+    // src: '100_199/6/161_diaid_2.fs',
+    src: '100_199/6/169_voxel_.fs',
     
-    
-    // src: '100_199/5/15x_all_platforms_levitate.fs',
-
     uniforms: [
       // {'name': 'u_fov', 'value': 70}
       {'name': 'u_type0', 'value': type0},
