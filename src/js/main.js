@@ -75,9 +75,12 @@ let demo = {
     
     // src: '100_199/5/156_triad.fs',
     // src: '100_199/5/157_over.fs',
-    src: '100_199/5/158_connexions.fs',
-    
+    // src: '100_199/5/158_connexions.fs',
 
+
+    // 6
+    src: '100_199/6/161_diaid_2.fs',
+    
     
     // src: '100_199/5/15x_all_platforms_levitate.fs',
 
