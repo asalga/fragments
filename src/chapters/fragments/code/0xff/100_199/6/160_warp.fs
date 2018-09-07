@@ -4,7 +4,6 @@ precision highp float;
 
 uniform vec2 u_res;
 uniform float u_time;
-uniform sampler2D u_t0;
 
 float checker(vec2 c) {
   float sz = .5;
