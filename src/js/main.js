@@ -4,27 +4,7 @@
 'use strict';
 
 let relPath = '../../chapters/fragments/code/0xff/';
-
 let imgTest;
-
-// note the last xy tuple is a copy of the second last so that
-// all 3 shapes have the same length which makes the shader have less code
-let type0 = [-0.25, -1, -1, -0.25, -0.5, -0.06, -1, 0.25, 
-            -0.47, 0.88, 0.03, 0.25, 0.03, 0.88, 0.56, 0.88, 
-            1, 0.25, 1, -0.25, 0.5, -1, -0.25, -1, 
-            -0.25, -1];// degenerate line here
-
-// len: 26
-let type1 = [-0.4, -1, -0.21, -0.51, -1, -0.51, -1, 0.21, 
-            -0.45, 0.81, 0.21, 0.63, 0.512, 0.89, 1, 0.39, 
-            0.22, 0, 1, -0.30, 1, -0.5, 0.5, -1, 
-            -0.4, -1];
-
-// len: 26
-let type2 = [ -0.45, -1, -1, -0.51, -0.69, -0.08, -1, 0.42,
-              -0.45, 0.85, -0.2, 0.63, 0.54, 0.85, 1, 0.17,
-              0.54, -0.32, 1, -0.51, 0.54, -1, 0.02, -0.75,
-              -0.45, -1];
 
 let demo = {
   'size': {
@@ -78,15 +58,15 @@ let demo = {
     // src: '100_199/5/159_voxel_canyon.fs',
 
     // 6
-    // src: '100_199/6/160_warp.fs',
+    src: '100_199/6/160_warp.fs',
     // src: '100_199/6/161_diaid_2.fs',
-    src: '100_199/6/169_voxel_.fs',
+    // src: '100_199/6/169_voxel_.fs',
     
     uniforms: [
       // {'name': 'u_fov', 'value': 70}
-      {'name': 'u_type0', 'value': type0},
-      {'name': 'u_type1', 'value': type1},
-      {'name': 'u_type2', 'value': type2}
+      // {'name': 'u_type0', 'value': type0},
+      // {'name': 'u_type1', 'value': type1},
+      // {'name': 'u_type2', 'value': type2}
     ]
   },
   '1': {
@@ -226,7 +206,7 @@ function makeSketch(fs, params) {
       $(ditherTex.canvas).appendTo($('#target2'));
       // p.noLoop();
 
-      imgTest = p.loadImage('../chapters/fragments/tex/tex.jpg');
+      imgTest = p.loadImage('../chapters/fragments/tex/debug.png');
     };
 
     p.mouseClicked = function() {
