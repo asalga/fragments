@@ -7,10 +7,8 @@ uniform float u_time;
 
 float checker(vec2 c) {
   float sz = .5;
-  float x = step(mod(c.x,sz), sz/2.);
-  float y = step(mod(c.y,sz), sz/2.);
-  // if(x == y){return 0.8;}
-  return x*y;
+  vec2 s = step(mod(c,sz), vec2(sz/2.));
+  return s.x*s.y;
 }
 
 void main(){
@@ -20,6 +18,7 @@ void main(){
   uv.x += u_time;
   float i = checker(uv) * sqLen;
   gl_FragColor = vec4(vec3(i), 1);
+
   // debug
   // uv = fract(uv);
   // vec4 col = texture2D(u_t0, uv) * sqLen;

@@ -55,11 +55,12 @@ let demo = {
     // src: '100_199/5/156_triad.fs',
     // src: '100_199/5/157_over.fs',
     // src: '100_199/5/158_connexions.fs',
-    // src: '100_199/5/159_voxel_canyon.fs',
+    // src: '100_199/5/159_voxels2.fs',
 
     // 6
-    src: '100_199/6/160_warp.fs',
+    // src: '100_199/6/160_warp.fs',
     // src: '100_199/6/161_diaid_2.fs',
+    src: '100_199/6/162_repeat_repeat.fs',
     // src: '100_199/6/169_voxel_.fs',
     
     uniforms: [
@@ -70,7 +71,7 @@ let demo = {
     ]
   },
   '1': {
-    src: 'post_process/null.fs',
+    // src: 'post_process/null.fs',
     // src: 'post_process/simple_dither.fs',
     // src: 'post_process/182.fs',
     // src: 'post_process/182_voronoi.fs',
@@ -81,7 +82,7 @@ let demo = {
     // src: 'post_process/cel.fs',
     // src: 'post_process/pixelate.fs',
     // src: 'post_process/tunnel.fs',
-    // src: 'post_process/sobel.fs',
+    src: 'post_process/sobel.fs',
     // src: 'post_process/parallax.fs',
 
     uniforms: [

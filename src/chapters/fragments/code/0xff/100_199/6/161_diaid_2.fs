@@ -1,7 +1,10 @@
+// 161 - "Diaid 2"
 precision mediump float;
 
 uniform vec2 u_res;
 uniform float u_time;
+
+const float PI = 3.141592658;
 
 float sdRect(in vec2 p, in vec2 sz){
   vec2 d = abs(p)-sz;
@@ -15,29 +18,30 @@ mat2 r2d(float a){
 }
 
 void main(){
-  vec2 p = gl_FragCoord.xy/u_res*2.-1.;
+  vec2 p = gl_FragCoord.xy/u_res;
   float i;
-  float t = u_time;
+  float t = u_time*2.;
 
-  vec2 c = vec2(0.5);
-  vec2 rp = mod(p, c)-c*0.5;
+  float cntPerSide = 1. + mod( (1. + floor(t/PI*2.)), 10.);
 
-  vec2 fp = floor(p*4.)/4.;
+  vec2 c = vec2(1./cntPerSide);
+  vec2 rp = mod(p, c) - c * 0.5;
 
-  if(mod(fp.x, 1.) < .5){
-    t= -t;
+  // alternate the rotation each cell
+  vec2 id = floor(p*cntPerSide);
+  if(mod(id.x, 2.) > .0){
+    t = -t;
   }
-  if(mod(fp.y, 1.) < .5){
-    t= -t;
+  if(mod(id.y, 2.) > .0){
+    t = -t;
   }
 
   rp *= r2d(t);
 
-  i += step(sdRect(rp+vec2(-c.x/2.,   c.y/2.), c*0.5), 0.) * 0.1;
-  i += step(sdRect(rp+vec2(-c.x/2.,  -c.y/2.), c*0.5), 0.) * 0.25;
-  i += step(sdRect(rp+vec2(c.x/2.,   -c.y/2.), c*0.5), 0.) * 0.75;
-  i += step(sdRect(rp+vec2(c.x/2.,    c.y/2.), c*0.5), 0.) * 1.0;
+  i += step(sdRect(rp+vec2(-c.x/2.,   c.y/2.), c*.5), 0.) * 0.1;
+  i += step(sdRect(rp+vec2(-c.x/2.,  -c.y/2.), c*.5), 0.) * 0.25;
+  i += step(sdRect(rp+vec2(c.x/2.,   -c.y/2.), c*.5), 0.) * 0.75;
+  i += step(sdRect(rp+vec2(c.x/2.,    c.y/2.), c*.5), 0.) * 1.0;
 
-  float r = rp.x;
   gl_FragColor = vec4(vec3(i),1.);
 }
