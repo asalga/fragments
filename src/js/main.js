@@ -8,8 +8,8 @@ let imgTest;
 
 let demo = {
   'size': {
-    'width': 512,
-    'height': 512
+    'width': 600,
+    'height': 600
   },
   '0': {
     // src: '100_199/4/14x_voxel_tutorial2.fs',
@@ -17,7 +17,8 @@ let demo = {
     // src: '0_99/80/80_world_0_0.fs',
 
     // src: '100_199/0/105_cube_walk.fs',
-    // src: '100_199/0/108_seed_of_life.fs',
+    
+    src: '100_199/0/108_seed_of_life.fs',
 
     // src: '100_199/2/120_box_tex_displace.fs',
     // src: '100_199/2/129_invading_space.fs',
@@ -60,7 +61,7 @@ let demo = {
     // 6
     // src: '100_199/6/160_warp.fs',
     // src: '100_199/6/161_diaid_2.fs',
-    src: '100_199/6/162_repeat_repeat.fs',
+    // src: '100_199/6/162_repeat_repeat.fs',
     // src: '100_199/6/169_voxel_.fs',
     
     uniforms: [
@@ -82,8 +83,9 @@ let demo = {
     // src: 'post_process/cel.fs',
     // src: 'post_process/pixelate.fs',
     // src: 'post_process/tunnel.fs',
-    src: 'post_process/sobel.fs',
+    // src: 'post_process/sobel.fs',
     // src: 'post_process/parallax.fs',
+    src: 'post_process/half_tone.fs',
 
     uniforms: [
       { 'name': 'u_numShades', 'value': 12 },
