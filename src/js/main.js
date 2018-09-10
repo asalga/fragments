@@ -17,8 +17,8 @@ let demo = {
     // src: '0_99/80/80_world_0_0.fs',
 
     // src: '100_199/0/105_cube_walk.fs',
-    
-    src: '100_199/0/108_seed_of_life.fs',
+
+    // src: '100_199/0/108_seed_of_life.fs',
 
     // src: '100_199/2/120_box_tex_displace.fs',
     // src: '100_199/2/129_invading_space.fs',
@@ -63,6 +63,7 @@ let demo = {
     // src: '100_199/6/161_diaid_2.fs',
     // src: '100_199/6/162_repeat_repeat.fs',
     // src: '100_199/6/169_voxel_.fs',
+    src: '100_199/6/test.fs',
     
     uniforms: [
       // {'name': 'u_fov', 'value': 70}
@@ -207,7 +208,7 @@ function makeSketch(fs, params) {
       p.pixelDensity(1);
       $(p.canvas).appendTo($('#target'));
       $(ditherTex.canvas).appendTo($('#target2'));
-      // p.noLoop();
+      p.noLoop();
 
       imgTest = p.loadImage('../chapters/fragments/tex/debug.png');
     };

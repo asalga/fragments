@@ -15,7 +15,7 @@ void main() {
 
   // divide up into sections
 
-  float cnt = 80.;
+  float cnt = 20.;
   vec2 cell = floor(p*cnt)/cnt;
 
   float intensity = (texture2D(u_t0, cell) ).x;
