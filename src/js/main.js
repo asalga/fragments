@@ -61,8 +61,10 @@ let demo = {
     // 6
     // src: '100_199/6/160_warp.fs',
     // src: '100_199/6/161_diaid_2.fs',
-    src: '100_199/6/162_repeat_repeat.fs',
-    
+    // src: '100_199/6/162_repeat_repeat.fs',
+    src: '100_199/6/163_simple_halftones.fs',
+
+
     // src: '100_199/6/169_voxel_.fs',
     // src: '100_199/6/test.fs',
     
@@ -85,9 +87,9 @@ let demo = {
     // src: 'post_process/cel.fs',
     // src: 'post_process/pixelate.fs',
     // src: 'post_process/tunnel.fs',
-    src: 'post_process/sobel.fs',
+    // src: 'post_process/sobel.fs',
     // src: 'post_process/parallax.fs',
-    // src: 'post_process/half_tone.fs',
+    src: 'post_process/half_tone.fs',
 
     uniforms: [
       { 'name': 'u_numShades', 'value': 12 },
@@ -201,6 +203,12 @@ function makeSketch(fs, params) {
 
       p.createCanvas(w, h, p.WEBGL);
       gfx = p.createGraphics(w, h, p.WEBGL);
+
+      let GL = gfx._renderer.GL;
+      // GL.getExtension('OES_standard_derivatives');
+      // GL.hint(GL.FRAGMENT_SHADER_DERIVATIVE_HINT_OES, true);
+      // console.log(GL);
+
       gfx.pixelDensity(1);
 
       shader_0 = new p5.Shader(gfx._renderer, globalVs, shader_0_Frag);
