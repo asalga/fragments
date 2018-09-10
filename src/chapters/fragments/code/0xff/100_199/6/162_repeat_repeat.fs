@@ -198,6 +198,6 @@ void main(){
     i *= (1./d);
   }
 
-  i = 1.-i;
+  // i = 1.-i;
   gl_FragColor = vec4(vec3(i), 1);
 }

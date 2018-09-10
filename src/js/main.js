@@ -61,9 +61,10 @@ let demo = {
     // 6
     // src: '100_199/6/160_warp.fs',
     // src: '100_199/6/161_diaid_2.fs',
-    // src: '100_199/6/162_repeat_repeat.fs',
+    src: '100_199/6/162_repeat_repeat.fs',
+    
     // src: '100_199/6/169_voxel_.fs',
-    src: '100_199/6/test.fs',
+    // src: '100_199/6/test.fs',
     
     uniforms: [
       // {'name': 'u_fov', 'value': 70}
@@ -84,9 +85,9 @@ let demo = {
     // src: 'post_process/cel.fs',
     // src: 'post_process/pixelate.fs',
     // src: 'post_process/tunnel.fs',
-    // src: 'post_process/sobel.fs',
+    src: 'post_process/sobel.fs',
     // src: 'post_process/parallax.fs',
-    src: 'post_process/half_tone.fs',
+    // src: 'post_process/half_tone.fs',
 
     uniforms: [
       { 'name': 'u_numShades', 'value': 12 },
@@ -208,7 +209,7 @@ function makeSketch(fs, params) {
       p.pixelDensity(1);
       $(p.canvas).appendTo($('#target'));
       $(ditherTex.canvas).appendTo($('#target2'));
-      p.noLoop();
+      // p.noLoop();
 
       imgTest = p.loadImage('../chapters/fragments/tex/debug.png');
     };
