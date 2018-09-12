@@ -19,5 +19,7 @@ void main(){
 
    c += texture2D(u_t0, p + vec2(marker*2.,0.) ).rgb;
 
+
+
   gl_FragColor = vec4(c, 1);
 }

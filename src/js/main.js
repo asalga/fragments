@@ -8,21 +8,19 @@ let imgTest;
 
 let demo = {
   'size': {
-    'width': 500,
-    'height': 500
+    'width': 400,
+    'height': 400
   },
   '0': {
+    // -------- older
     // src: '100_199/4/14x_voxel_tutorial2.fs',
-
     // src: '0_99/80/80_world_0_0.fs',
-
     // src: '100_199/0/105_cube_walk.fs',
-
     // src: '100_199/0/108_seed_of_life.fs',
-
     // src: '100_199/2/120_box_tex_displace.fs',
     // src: '100_199/2/129_invading_space.fs',
     
+    // -------- 3
     // src: '100_199/3/130_little_critters.fs',
     // src: '100_199/3/132_vel.fs',
     // src: '100_199/3/133_helpful_mushroom.fs',
@@ -31,6 +29,7 @@ let demo = {
     // src: '100_199/3/139_blocky_line.fs',
     // src: '100_199/3/139_endless_struggle.fs',
 
+    // -------- 4
     // src: '100_199/4/140_vx.fs',
     // src: '100_199/4/142_primitives.fs',
     // src: '100_199/4/143_fly_casual.fs',
@@ -42,11 +41,8 @@ let demo = {
     // src: '100_199/4/glow1.fs',
     // src: '100_199/4/146_flow.fs',
     // src: '100_199/4/retro_parallax.fs',
-    
-    // src: '100_199/5/14x_windows.fs',
-    // src: '100_199/5/15x_all_platforms_levitate.fs',
 
-    // 5
+    // --------  5
     // src: '100_199/5/150_wax_and_wane.fs',
     // src: '100_199/5/151_slash-etc.fs',
     // src: '100_199/5/152_alt_tunnel.fs',
@@ -57,20 +53,25 @@ let demo = {
     // src: '100_199/5/157_over.fs',
     // src: '100_199/5/158_connexions.fs',
     // src: '100_199/5/159_voxels2.fs',
+    // src: '100_199/5/14x_windows.fs',
+    // src: '100_199/5/15x_all_platforms_levitate.fs',
 
-    // 6
+    // --------  6
     // src: '100_199/6/160_warp.fs',
     // src: '100_199/6/161_diaid_2.fs',
     // src: '100_199/6/162_repeat_repeat.fs',
     // src: '100_199/6/163_simple_halftones.fs',
     // src: '100_199/6/164_inf_pac.fs',
     // src: '100_199/6/165_absolute_sin.fs',
-    src: '100_199/6/166.fs',
-
-
-    // src: '100_199/6/169_voxel_.fs',
+    // src: '100_199/6/166_truchet.fs',
+    // src: '100_199/6/167_vines.fs',
+    // src: '100_199/6/168_saturns_shadow.fs',
     // src: '100_199/6/test.fs',
+    // src: '100_199/6/169_voxel_.fs',
     
+    // --------  7
+    src: '100_199/7/170_clouds.fs',
+
     uniforms: [
       // {'name': 'u_fov', 'value': 70}
       // {'name': 'u_type0', 'value': type0},
@@ -79,14 +80,14 @@ let demo = {
     ]
   },
   '1': {
-    src: 'post_process/null.fs',
+    // src: 'post_process/null.fs',
     // src: 'post_process/simple_dither.fs',
     // src: 'post_process/182.fs',
     // src: 'post_process/182_voronoi.fs',
     // src: 'post_process/px_sort2.fs',
     // src: 'post_process/blur.fs',
     // src: 'post_process/static.fs',
-    // src: 'post_process/flood.fs',
+    src: 'post_process/flood.fs',
     // src: 'post_process/cel.fs',
     // src: 'post_process/pixelate.fs',
     // src: 'post_process/tunnel.fs',

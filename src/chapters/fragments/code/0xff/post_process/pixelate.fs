@@ -95,7 +95,9 @@ void main(){
 
       i += texture2D(u_t0, c/u_res).x;
     // }
-    i = step(i,0.);
+
+    // make it super aliased
+    // i = step(i,0.);
 
 
 

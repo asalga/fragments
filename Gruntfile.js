@@ -10,7 +10,7 @@ module.exports = function(grunt) {
   const tmp = '.tmp';
   const app = 'app';
   const _0xff = '/chapters/fragments/code/0xff';
-  const currDir = '100_199/6';
+  const currDir = '100_199/7';
 
   require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
