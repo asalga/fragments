@@ -47,6 +47,10 @@ float sdBox(vec3 p, vec3 sz) {
   return _in + _out;
 }
 
-float sdSquarePyramid(){}
-float sdTorus(){}
+float sdTorus(in vec3 p, in vec2 t){
+  vec2 q = vec2(length(p.xz)-t.x, p.y);
+  return length(q) - t.y;
+}
+
 float sdGear(){}
+float sdSquarePyramid(){}

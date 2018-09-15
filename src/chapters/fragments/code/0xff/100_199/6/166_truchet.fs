@@ -18,15 +18,15 @@ mat2 r2d(float a){
 }
 
 float truchet(in vec2 p, float s){
-  // if(s > 0.75){
-  //   p = vec2(-p.x, p.y);
-  // }
-  // else if(s > .5){
-  //   p = vec2(p.x, -p.y);
-  // }
-  // else if( s > .25){
-  //   p = -p;
-  // }
+  if(s > 0.75){
+    p = vec2(-p.x, p.y);
+  }
+  else if(s > .5){
+    p = vec2(p.x, -p.y);
+  }
+  else if( s > .25){
+    p = -p;
+  }
 
   // float t = sin(u_time*0.5);
   // float a = smoothstep(2., 5., t) * PI/2.;
@@ -51,7 +51,7 @@ float rand(vec2 p){
 
 void main(){
   vec2 p = gl_FragCoord.xy/u_res*2.-1.;
-  float CNT = 1.;
+  float CNT = 5.;
   float i;
   float t = u_time;
 
@@ -60,7 +60,7 @@ void main(){
   // p.x += t*1.;
 
   vec2 id = floor(p*CNT);
-  id = vec2(0.);
+  // id = vec2(0.);
 
   vec2 c = vec2(1./CNT);
   p = mod(p, c)-0.5*c;
@@ -70,5 +70,5 @@ void main(){
 
   vec2 grid = fract(np*CNT);
   //= vec2(fract(gl_FragCoord.xy/u_res)*10.);
-  gl_FragColor = vec4(vec3(i,grid),1.);
+  gl_FragColor = vec4(vec3(i),1.);
 }
