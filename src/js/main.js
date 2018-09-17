@@ -64,10 +64,10 @@ let demo = {
     // src: '100_199/6/164_absolute_sin.fs',
 
     // src: '100_199/6/164_inf_pac.fs',
+    // src: '100_199/6/165_vines.fs',
     // src: '100_199/6/166_truchet.fs',
-    // src: '100_199/6/167_vines.fs',
     // src: '100_199/6/168_saturns_shadow.fs',
-    src: '100_199/6/164_truchet_3d.fs',
+    src: '100_199/6/167_truchet_3d.fs',
 
     // src: '100_199/6/test.fs',
     // src: '100_199/6/169_voxel_.fs',

@@ -18,15 +18,15 @@ mat2 r2d(float a){
 }
 
 float truchet(in vec2 p, float s){
-  if(s > 0.75){
-    p = vec2(-p.x, p.y);
-  }
-  else if(s > .5){
+  // if(s > 0.75){
+    // p = vec2(-p.x, p.y);
+  // }
+  if(s > .5){
     p = vec2(p.x, -p.y);
   }
-  else if( s > .25){
-    p = -p;
-  }
+  //else if( s > .25){
+    //p = -p;
+  //}
 
   // float t = sin(u_time*0.5);
   // float a = smoothstep(2., 5., t) * PI/2.;
@@ -56,6 +56,7 @@ void main(){
   float t = u_time;
 
   vec2 np = p;
+  p += t/2.;
 
   // p.x += t*1.;
 
