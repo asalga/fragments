@@ -78,34 +78,26 @@ mat3 viewMatrix(vec3 eye, vec3 center, vec3 up) {
 }
 
 float lighting(vec3 p, vec3 n, vec3 lightPos, vec3 eye){
-  float ambient = 0.0;
+  float ambient = 0.07;
+
   // ---
   vec3 pToLight = vec3(lightPos - p);
-  float power = 30.;
+  float power = 1.;
   vec3 lightRayDir = normalize(pToLight);
   float d = length(pToLight);
   d *= d;
   float nDotL = max(dot(n,lightRayDir), 0.);
-  float diffuse = (nDotL*power) / d;
-  float kd = 1.;
-
-  // ---
-
-  // vec3 H = normalize(lightRayDir + p);
-  // float NdotH = dot(n, H);
-  // vec3 r = reflect(lightRayDir, n);
-  // float RdotV = dot(r, normalize(p));
-  // float spec = pow( NdotH , gloss );
-  // float spec = pow(RdotV, gloss) / d;
-  // ---
+  float diffuse = (nDotL*power);
+  float kd = .39;
 
   vec3 V = normalize(eye-p);
-  float gloss = 10.;
+  float gloss = 114.;
   vec3 R = normalize(reflect(-lightRayDir, n));
-  float dotRV = dot(R, V);
-  float spec = pow(dotRV, gloss)/d;
+  float dotRV = max(dot(R, V), 0.);
+  float spec = pow(dotRV, gloss);
+  float ks = 0.9;
 
-  return ambient + diffuse + spec;
+  return ambient + diffuse*kd + spec *ks;
 }
 
 vec3 rayDirection(float fieldOfView, vec2 size, vec2 fragCoord) {
@@ -226,15 +218,15 @@ void main(){
   vec2 fc = gl_FragCoord.xy;
 
   float dist = 13.;
-  vec3 eye = vec3(t, 2.5, 2.+t);
+  vec3 eye = vec3(t, 3.5, 2.+t);
   // vec3 eye = vec3(-0, 5, 0);
 
-  vec3 center = vec3(t+4., -1.3, .25+t);
+  vec3 center = vec3(t+4., -2.3, .25+t);
   vec3 lightPos =  vec3(0., 4., 4) + eye;
   vec3 up = vec3(0,1,0);
 
   mat3 viewWorld = viewMatrix(eye, center, up);
-  vec3 ray = rayDirection(90., u_res, fc);
+  vec3 ray = rayDirection(80., u_res, fc);
 
   vec3 worldDir = viewWorld * ray;
   vec3 col;
