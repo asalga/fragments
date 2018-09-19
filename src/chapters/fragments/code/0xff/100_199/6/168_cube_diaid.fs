@@ -212,21 +212,18 @@ float sdScene(vec3 p, out float col){
   // r3dX(p, t/2.);
 
   vec2 uv;
-  if(b1 < 0.001){
+  if(b1 < 0.0001){
     uv = p.xz;
   }
-  else if(b2 <0.001){
-    uv = p.xy;// + vec2(0.1, 0.1);
+  else if(b2 < 0.0001){
+    uv = p.xy;
   }
   else {
-    uv = p.yz;// + vec2(0.1, 0.);
+    uv = p.yz;
   }
 
   // col = sampleChecker( uv );
   col = diaid1(uv);
-
-  //= sampleChecker( uv );
-
 
 
   float res = min(b1,b2);

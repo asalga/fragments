@@ -68,7 +68,10 @@ let demo = {
     // src: '100_199/6/166_truchet.fs',
     // src: '100_199/6/168_saturns_shadow.fs',
     // src: '100_199/6/167_truchet_3d.fs',
-    src: '100_199/6/168_cube_diaid.fs',
+    // src: '100_199/6/168_cube_diaid.fs',
+
+    src: '100_199/6/169_high_low_octave.fs',
+    
 
     // src: '100_199/6/test.fs',
     // src: '100_199/6/169_voxel_.fs',
@@ -85,10 +88,11 @@ let demo = {
     ]
   },
   '1': {
-    src: 'post_process/null.fs',
+    // src: 'post_process/null.fs',
     // src: 'post_process/simple_dither.fs',
     // src: 'post_process/182.fs',
     // src: 'post_process/182_voronoi.fs',
+    src: 'post_process/flipy.fs',
     // src: 'post_process/px_sort2.fs',
     // src: 'post_process/blur.fs',
     // src: 'post_process/static.fs',
