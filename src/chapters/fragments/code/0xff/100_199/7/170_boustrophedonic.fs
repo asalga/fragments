@@ -1,3 +1,5 @@
+// 170 - Boustrophedonic
+
 precision mediump float;
 
 uniform vec2 u_res;
@@ -5,6 +7,14 @@ uniform float u_time;
 
 const float Rows = 10.;
 const float VertSpacing = .2;
+
+float sdRing(vec2 p, float r, float w){
+  return abs(length(p)- (r*.5)) - w;
+}
+
+float sdCircle(vec2 p, float r){
+  return length(p)-r;
+}
 
 float sdRect(in vec2 p, in vec2 sz){
   vec2 d = abs(p)-sz;
@@ -20,7 +30,7 @@ void main(){
 
   t = mod(u_time, Rows) * .4;// * 0.;
   // p.y += u_time/15.;
-
+t = 4.;
   float rowID = floor(p.y * Rows);
 
   float y = floor(p.y * Rows);
@@ -46,8 +56,9 @@ void main(){
 
     // 0 if ft < edge
     // 1 if ft > edge
-    _x = step(x, ft) * horizStrip;
+    _x = step(x, ft);
   }
+
 
   vec2 p2 = (gl_FragCoord.xy/u_res)*2.-1.;
   float straightLineSpace = step(sdRect(p2, vec2(0.8, 1.)), 0.);
@@ -55,12 +66,17 @@ void main(){
 
 
 
+  // add it all together
   i = _y * horizStrip * straightLineSpace;
-  i += _x * straightLineSpace;
+  i += _x * horizStrip * straightLineSpace;
 
 
+  vec2 c = vec2(0., 0.2);
+  vec2 ringSpace = mod(p, c)- c*.5;
+  i += step(sdRing(ringSpace - vec2(0.1, 0.), .1, .03), 0.);
 
-  vec2 grid = mod(p, .1) * Rows;
-  // gl_FragColor = vec4(vec3(i,grid),1.);
-  gl_FragColor = vec4(vec3(i),1.);
+
+  vec2 debugGrid = mod(p, .1) * Rows;
+  gl_FragColor = vec4(vec3(i,debugGrid),1.);
+  // gl_FragColor = vec4(vec3(i),1.);
 }

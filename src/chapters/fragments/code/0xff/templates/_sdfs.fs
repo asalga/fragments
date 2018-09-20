@@ -11,6 +11,10 @@ float sdRect(in vec2 p, in vec2 sz){
   return _in + _out;
 }
 
+float sdRing(vec2 p, float r, float w){
+  return abs(length(p)- (r*.5)) - w;
+}
+
 float sdEqTriangle(vec2 p, vec2 d){
 }
 
