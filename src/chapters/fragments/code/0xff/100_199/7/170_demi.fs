@@ -21,18 +21,25 @@ mat2 r2d(float a){
 }
 
 void main(){
-  vec2 p = gl_FragCoord.xy/u_res*2.-1.;
-  float i;
+  vec2 p = (gl_FragCoord.xy/u_res)*2.-1.;
   float t = u_time;
-  float r = .45;
+  vec2 op = p;
 
-  vec2 c = vec2(.25);
-  p = mod(p, c) - 0.5*c;
+  float i;
+  float r = 0.2;
+  float sz = 0.25;
 
-  p *= r2d(t);
+  // p += vec2(sz/2.);
+  vec2 cellID = floor(p/sz);
 
-  i = step(sdCircle(p, r), 0.);
-  i -= step(sdRect(p - vec2(0., r), vec2(r)), 0.);
+  vec2 c = vec2(sz);
+  p = mod(p, c) - (0.5*c);
 
+  p *= r2d(t + (cellID.x/11. + cellID.y/11.) );
+
+  i = smoothstep(0.02, 0.000, sdCircle(p, r*2.));
+  i -= smoothstep(0.02, 0.023, sdRect(p - vec2(0., r), vec2(r, r)));
+
+  vec2 gr = vec2(p)*1.;
   gl_FragColor = vec4(vec3(i),1);
 }

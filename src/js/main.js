@@ -8,8 +8,8 @@ let imgTest;
 
 let demo = {
   'size': {
-    'width': 300,
-    'height': 300
+    'width': 500,
+    'height': 500
   },
   '0': {
     // -------- older
@@ -71,8 +71,9 @@ let demo = {
     // src: '100_199/6/169_high_low_octave.fs',
 
     // --------  7
-    // src: '100_199/7/170_Boustrophedonic.fs',
-    // src: '100_199/7/171_demi_circle.fs',
+    // src: '100_199/7/170_demi_circle.fs',
+    src: '100_199/7/171_boustrophedonic.fs',
+    
     
 
     
