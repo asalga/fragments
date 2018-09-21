@@ -77,13 +77,10 @@ void main(){
   float rowID = floor(p.y * Rows);
 
 
-
   float y = floor(p.y * Rows);
 
-
-
-  float _x;
-  float _y = step(y, t-1.);
+  float snakeX;
+  float snakeY = step(y, t-1.);
 
   // make the snake thinner
   float localY = fract(p.y*10.);
@@ -99,15 +96,15 @@ void main(){
     if(mod(rowID,2.) == 0.){
       x = 1.-x;
     }
-    _x = step(x, ft);
+    snakeX = step(x, ft);
   }
 
   vec2 p2 = (gl_FragCoord.xy/u_res)*2.-1.;
   float straightLineSpace = step(sdRect(p2, vec2(0.8, 1.)), 0.);
 
   // assemble the horizontal component of the snake
-  i = _y * horizStrip * straightLineSpace;
-  i += _x * horizStrip * straightLineSpace;
+  i = snakeY * horizStrip * straightLineSpace;
+  i += snakeX * horizStrip * straightLineSpace;
 
   i += createEdge(t,p, 0., 0.);
   i += createEdge(t,vec2(1.-p.x, p.y), .1, 1.);
