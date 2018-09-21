@@ -1,4 +1,4 @@
-// 170 - Boustrophedonic
+// 170 - "boustrophedonic"
 
 precision mediump float;
 
@@ -29,7 +29,6 @@ float sdRect(in vec2 p, in vec2 sz){
 
 float createEdge(float t, vec2 p, float cellOffset, float _){
   // multiply by 2 because we alternate even/odd between sides
-  // 5   4
   // 3   2
   // 1   0
   t -= _;
@@ -67,17 +66,21 @@ float createEdge(float t, vec2 p, float cellOffset, float _){
   return edge;
 }
 
-
-
 void main(){
   vec2 p = gl_FragCoord.xy/u_res;
-  float t = u_time;// * 0.2;
+  float t = u_time;// t = mod(t, 8.);
   float i;
-  t = mod(t, 8.);
+
+  p.y -= 0.5;
+  p.y += t/10.;
 
   float rowID = floor(p.y * Rows);
 
+
+
   float y = floor(p.y * Rows);
+
+
 
   float _x;
   float _y = step(y, t-1.);
