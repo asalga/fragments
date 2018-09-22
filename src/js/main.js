@@ -65,7 +65,6 @@ let demo = {
     // src: '100_199/6/164_inf_pac.fs',
     // src: '100_199/6/165_vines.fs',
     // src: '100_199/6/166_truchet.fs',
-    // src: '100_199/6/168_saturns_shadow.fs',
     // src: '100_199/6/167_truchet_3d.fs',
     // src: '100_199/6/168_cube_diaid.fs',
     // src: '100_199/6/169_high_low_octave.fs',
@@ -73,7 +72,7 @@ let demo = {
     // --------  7
     // src: '100_199/7/170_demi_circle.fs',
     src: '100_199/7/171_boustrophedonic.fs',
-    
+    // src: '100_199/6/168_saturns_shadow.fs',
     
 
     
