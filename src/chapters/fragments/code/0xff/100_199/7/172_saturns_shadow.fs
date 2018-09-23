@@ -64,10 +64,12 @@ mat3 viewMatrix(vec3 eye, vec3 center, vec3 up) {
 }
 
 float lighting(vec3 p, vec3 n, vec3 lightPos){
-  vec3 pToLight = vec3(lightPos - p);
-  vec3 lightRayDir = normalize(pToLight);
-  float nDotL = max(dot(n,lightRayDir), 0.);
-  return nDotL;
+  // vec3 pToLight = vec3(lightPos - p);
+  // vec3 lightRayDir = normalize(pToLight);
+
+
+  float nDotL = max(dot(n,lightPos), 0.);
+  return nDotL/2.;
 }
 
 vec3 rayDirection(float fieldOfView, vec2 size, vec2 fragCoord) {
@@ -105,7 +107,7 @@ mat4 r3dZ(float a){
 }
 
 
-float sdScene(vec3 p, out float col){
+float sdScene(vec3 p, out float col, out float obj){
   float t = u_time;
   col = 1.;
 
@@ -116,7 +118,9 @@ float sdScene(vec3 p, out float col){
   float ringSub = sdSphere(p, 1.12);
   rings = max(rings, -ringSub);
 
-  if(rings < 0.01){
+  obj = 0.;
+  if(rings < 0.001){
+    obj = 1.;
     float len = length(p.xz*30.);
     float n = smoothValueNoise(vec2(len));
     col = n;
@@ -141,8 +145,9 @@ float shadowMarch(vec3 point, vec3 lightPos){
   float k = 120.;
 
   float dum;
+  float dum2;
   for(int i = 0; i < MaxShadowStep; ++i){
-    float h = sdScene(ro + (rd*t), dum);
+    float h = sdScene(ro + (rd*t), dum, dum2);
 
     if(h < Epsilon){
       return 0.;
@@ -162,19 +167,21 @@ float shadowMarch(vec3 point, vec3 lightPos){
 vec3 estimateNormal(vec3 v){
   vec3 n;
   float dum;
-  n.x = sdScene(vec3(v.x + Epsilon, v.y, v.z),dum) - sdScene( vec3(v.x - Epsilon, v.y, v.z),dum);
-  n.y = sdScene(vec3(v.x, v.y + Epsilon, v.z),dum) - sdScene( vec3(v.x, v.y - Epsilon, v.z),dum);
-  n.z = sdScene(vec3(v.x, v.y, v.z + Epsilon),dum) - sdScene( vec3(v.x, v.y, v.z - Epsilon),dum);
+  float dum2;
+  n.x = sdScene(vec3(v.x + Epsilon, v.y, v.z),dum, dum2) - sdScene( vec3(v.x - Epsilon, v.y, v.z),dum, dum2);
+  n.y = sdScene(vec3(v.x, v.y + Epsilon, v.z),dum, dum2) - sdScene( vec3(v.x, v.y - Epsilon, v.z),dum, dum2);
+  n.z = sdScene(vec3(v.x, v.y, v.z + Epsilon),dum, dum2) - sdScene( vec3(v.x, v.y, v.z - Epsilon),dum, dum2);
   return normalize(n);
 }
 
-float rayMarch(vec3 ro, vec3 rd, out vec3 col){
+float rayMarch(vec3 ro, vec3 rd, out vec3 col, out float obj){
   float s = 0.;
   for(int i = 0; i < MaxSteps; i++){
     vec3 p = ro + rd * s;
 
     float intensity;
-    float d = sdScene(p, intensity);
+    // float obj;
+    float d = sdScene(p, intensity, obj);
     col = vec3(intensity);
 
     if(d < Epsilon){
@@ -200,12 +207,12 @@ void main(){
   vec3 eye = vec3(3.5, 2., 3.5);
   vec3 center = vec3(0, 0, 0.);
 
-  t = 0.;
+  // t = 0.;
   float cs = cos(t);
   float sn = sin(t);
-  // vec3 lightPos =  vec3(cs, 2., sn);
-  vec3 lightPos = vec3(20., 20. , 0.);
-  //vec3(cs, 2., sn);
+  vec3 lightPos =  vec3(cs, 0.8, sn);
+  // vec3 lightPos = vec3(20., 20. , 0.);
+  vec3(cs, 2., sn);
   vec3 up = vec3(0, 1, 0.5);
 
   mat3 viewWorld = viewMatrix(eye, center, up);
@@ -213,7 +220,8 @@ void main(){
 
   vec3 worldDir = viewWorld * ray;
   vec3 col;
-  float d = rayMarch(eye, worldDir, col);
+  float obj;
+  float d = rayMarch(eye, worldDir, col, obj);
   vec3 v = eye + worldDir*d;
 
   if(d < MaxDist){
@@ -221,7 +229,14 @@ void main(){
     float lights = lighting(v, n, lightPos);
     i = lights * col.x;
 
+    if(obj == 1.){
+      i = col.x;
+    }
+
     // float visibleToLight = shadowMarch(eye+ray*(d-0.0001), lightPos);
+    // if(visibleToLight == 0.){
+    //   i = 0.;
+    // }
     // vec3 n = estimateNormal(point);
     // float l = phong(point, n, lightPos);
     // i = l + visibleToLight + ambient;
