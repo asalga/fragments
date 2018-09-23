@@ -45,11 +45,13 @@ void main( void ) {
    // final.x = abs(1. / (c*p.x * 10000. ));
 
   float vn = random(p /sin(t));//+vec2(t/100000., 1.));
-  float co = abs(1./(( fract( (p.y+vn)/2.+t )) * 150. * vn) );
+  float co = abs(1./(( fract( (p.y+vn)/2.+t )) * 10. * vn) );
 
   co *= 0.2 + fract(abs(sin(u_time)*100.));
   // co -= pow(length(p)+0.3, 30.);
   co = texture2D(u_t0, gl_FragCoord.xy/u_res ).r + co;
+
+  co = 1.-co;
 
   gl_FragColor = vec4(vec3(co), 1.);
 }
