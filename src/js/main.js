@@ -73,8 +73,8 @@ let demo = {
     // src: '100_199/7/170_demi_circle.fs',
     // src: '100_199/7/171_boustrophedonic.fs',
     // src: '100_199/7/17x_saturns_shadow.fs',
-    // src: '100_199/7/173_disc.fs',
-    src: '100_199/7/174_.fs',
+    src: '100_199/7/173_disc.fs',
+    // src: '100_199/7/174_.fs',
     
 
     
@@ -94,14 +94,14 @@ let demo = {
     ]
   },
   '1': {
-    // src: 'post_process/null.fs',
+    src: 'post_process/null.fs',
     // src: 'post_process/simple_dither.fs',
     // src: 'post_process/182.fs',
     // src: 'post_process/182_voronoi.fs',
     // src: 'post_process/flipy.fs',
     // src: 'post_process/px_sort2.fs',
     // src: 'post_process/blur.fs',
-    src: 'post_process/static.fs',
+    // src: 'post_process/static.fs',
     // src: 'post_process/flood.fs',
     // src: 'post_process/cel.fs',
     // src: 'post_process/pixelate.fs',
