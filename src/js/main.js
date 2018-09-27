@@ -19,7 +19,7 @@ let demo = {
     // src: '100_199/0/108_seed_of_life.fs',
     // src: '100_199/2/120_box_tex_displace.fs',
     // src: '100_199/2/129_invading_space.fs',
-    
+
     // -------- 3
     // src: '100_199/3/130_little_critters.fs',
     // src: '100_199/3/132_vel.fs',
@@ -74,15 +74,14 @@ let demo = {
     // src: '100_199/7/171_boustrophedonic.fs',
     // src: '100_199/7/17x_saturns_shadow.fs',
     // src: '100_199/7/173_disc.fs',
-    // src: '100_199/7/174_.fs',
-    src: '100_199/7/175.fs',
-    
+    // src: '100_199/7/17x_just_static.fs',
+    // src: '100_199/7/175.fs',
+    src: '100_199/7/176_.fs',
 
-    
 
     // src: '100_199/6/test.fs',
     // src: '100_199/6/169_voxel_.fs',
-    
+
     // --------  7
     // src: '100_199/7/170_clouds.fs',
     //
@@ -208,9 +207,9 @@ function makeSketch(fs, params) {
       // Dither texture/matrix
       // let ditherMat = [
       // 2,5,3,4,1,6,7,8
-        // 7, 9, 5,
-        // 2, 1, 4,
-        // 6, 3, 8
+      // 7, 9, 5,
+      // 2, 1, 4,
+      // 6, 3, 8
       // ];
 
       for (let x = 0; x < 3; ++x) {
@@ -253,7 +252,7 @@ function makeSketch(fs, params) {
       let [width, height] = [w, h];
       let sz = 1.;
       sketchTime = (p.millis() - start) / 1000;
-      epochTime = Math.floor(new Date().getTime()/10000);
+      epochTime = Math.floor(new Date().getTime() / 10000);
 
       // totally mess with the dithering :)
       // if( p.frameCount % 40 == 0){
@@ -283,13 +282,13 @@ function makeSketch(fs, params) {
       shader_0.setUniform('u_time', sketchTime);
       shader_0.setUniform('u_epochTime', epochTime);
       shader_0.setUniform('u_t0', imgTest);
-      
-      
+
+
       // if(frameCount < 10){
-        // shader_0.setUniform('u_t0', gfx);
-        // after rendering,
-         // get pixels
-         // instead o
+      // shader_0.setUniform('u_t0', gfx);
+      // after rendering,
+      // get pixels
+      // instead o
       // }
 
       shader_0.setUniform('u_frame', p.frameCount);
@@ -343,7 +342,7 @@ function getFs1() {
 (function load() {
   Promise.all([getFs0(), getFs1()])
     .then(fragShaders => {
-      
+
       let sketch = new p5(makeSketch(fragShaders, demo.size), relPath);
     });
 })();
