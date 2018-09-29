@@ -77,7 +77,8 @@ let demo = {
     // src: '100_199/7/17x_just_static.fs',
     // src: '100_199/7/175.fs',
     // src: '100_199/7/176_.fs',
-    src: '100_199/7/177.fs',
+    // src: '100_199/7/177.fs',
+    src: '100_199/7/178.fs',
 
 
     // src: '100_199/6/test.fs',
@@ -92,6 +93,7 @@ let demo = {
       // {'name': 'u_type0', 'value': type0},
       // {'name': 'u_type1', 'value': type1},
       // {'name': 'u_type2', 'value': type2}
+      { 'name': 'contribs', 'value': [.929, .850, .717, .682, .525, .368, .329] }
     ]
   },
   '1': {
