@@ -8,8 +8,8 @@ let imgTest;
 
 let demo = {
   'size': {
-    'width': 400,
-    'height': 400
+    'width': 500,
+    'height': 500
   },
   '0': {
     // -------- older
@@ -73,21 +73,18 @@ let demo = {
     // src: '100_199/7/170_demi_circle.fs',
     // src: '100_199/7/171_boustrophedonic.fs',
     // src: '100_199/7/17x_saturns_shadow.fs',
-    // src: '100_199/7/173_disc.fs',
+    // src: '100_199/7/173_bad_sector.fs',
     // src: '100_199/7/17x_just_static.fs',
     // src: '100_199/7/175.fs',
     // src: '100_199/7/176_.fs',
     // src: '100_199/7/177.fs',
     // src: '100_199/7/178.fs',
-    src: '100_199/7/179_path_to_cydonia.fs',
+    // src: '100_199/7/179_path_to_cydonia.fs',
 
 
-    // src: '100_199/6/test.fs',
-    // src: '100_199/6/169_voxel_.fs',
+    // --------  8
+    src: '100_199/8/180_good_sector.fs',
 
-    // --------  7
-    // src: '100_199/7/170_clouds.fs',
-    //
 
     uniforms: [
       // {'name': 'u_fov', 'value': 70}
