@@ -8,8 +8,8 @@ let imgTest;
 
 let demo = {
   'size': {
-    'width': 500,
-    'height': 500
+    'width': 400,
+    'height': 400
   },
   '0': {
     // -------- older
@@ -83,7 +83,8 @@ let demo = {
 
 
     // --------  8
-    src: '100_199/8/180_good_sector.fs',
+    // src: '100_199/8/180_good_sector.fs',
+    src: '100_199/8/181_brick_tunnel.fs',
 
 
     uniforms: [
