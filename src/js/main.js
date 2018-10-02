@@ -84,7 +84,8 @@ let demo = {
 
     // --------  8
     // src: '100_199/8/180_good_sector.fs',
-    src: '100_199/8/181_brick_tunnel.fs',
+    // src: '100_199/8/181_brick_tunnel.fs',
+    src: '100_199/8/182_inout.fs',
 
 
     uniforms: [
