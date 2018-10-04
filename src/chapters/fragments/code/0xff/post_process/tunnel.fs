@@ -14,7 +14,7 @@ void main() {
   float len = length(p);
 
   float r = .5/len + t;
-  float th = atan(p.y / p.x)/TAU;
+  float th = atan(p.y / p.x)/TAU - t/10.;
   th *= 4.;
 
   vec2 uv = vec2(r,th);

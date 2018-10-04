@@ -34,8 +34,8 @@ float truchet(in vec2 p, float s){
   // p *= r2d(a);
 
   float i;
-  i += smoothstep(0.1, 0.01, sdRing(p + vec2(1), 2., .02));
-  i += smoothstep(0.1, 0.01, sdRing(p - vec2(1), 2., .02));
+  i += smoothstep(0.1, 0.01, sdRing(p + vec2(1.0), 2., .0542));
+  i += smoothstep(0.1, 0.01, sdRing(p - vec2(1.0), 2., .0542));
 
   // i += step(sdCircle(p + vec2(1.), 1.), 0.);
   // i += step(sdCircle(p - vec2(1.), .2), 0.);
@@ -50,15 +50,14 @@ float rand(vec2 p){
 }
 
 void main(){
-  vec2 p = gl_FragCoord.xy/u_res*2.-1.;
+  vec2 p = gl_FragCoord.xy/u_res*2.;
   float CNT = 5.;
   float i;
-  float t = u_time;
+  float t = u_time*.125;
 
-  vec2 np = p;
-  p += t/2.;
+  vec2 np = p*4.;
 
-  // p.x += t*1.;
+  p *= .5;
 
   vec2 id = floor(p*CNT);
   // id = vec2(0.);
@@ -68,6 +67,10 @@ void main(){
 
   // float i = step(sdCircle(p, 1./CNT), 0.);
   i = truchet(p*CNT*2., rand(id));
+
+  // if( >.5){
+    // i = 1.-fract(u_time*0.25)*i;
+  // }
 
   vec2 grid = fract(np*CNT);
   //= vec2(fract(gl_FragCoord.xy/u_res)*10.);
