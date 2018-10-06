@@ -64,7 +64,7 @@ let demo = {
     // src: '100_199/6/164_absolute_sin.fs',
     // src: '100_199/6/164_inf_pac.fs',
     // src: '100_199/6/165_vines.fs',
-    src: '100_199/6/166_truchet.fs',
+    // src: '100_199/6/166_truchet.fs',
     // src: '100_199/6/167_truchet_3d.fs',
     // src: '100_199/6/168_cube_diaid.fs',
     // src: '100_199/6/169_high_low_octave.fs',
@@ -87,6 +87,7 @@ let demo = {
     // src: '100_199/8/181_brick_tunnel.fs',
     // src: '100_199/8/182_inout.fs',
     // src: '100_199/8/183.fs',
+    src: '100_199/8/184.fs',
 
 
     uniforms: [
@@ -98,7 +99,7 @@ let demo = {
     ]
   },
   '1': {
-    // src: 'post_process/null.fs',
+    src: 'post_process/null.fs',
     // src: 'post_process/sin.fs',
     // src: 'post_process/wave.fs',
     // src: 'post_process/simple_dither.fs',
@@ -111,7 +112,7 @@ let demo = {
     // src: 'post_process/flood.fs',
     // src: 'post_process/cel.fs',
     // src: 'post_process/pixelate.fs',
-    src: 'post_process/tunnel.fs',
+    // src: 'post_process/tunnel.fs',
     // src: 'post_process/sobel.fs',
     // src: 'post_process/parallax.fs',
     // src: 'post_process/half_tone.fs',
