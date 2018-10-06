@@ -29,10 +29,18 @@ void main(){
   vec2 p = ((gl_FragCoord.xy/u_res) * 2. -1.);
   float t = u_time * 1.;
 
-  float r = PI/2. * floor(mod(t, 4.));
+  vec2 c = vec2(0.5);
+  // p = mod(p,)
 
-  rot(p, -r);
-  float i = step(sdRect(p-vec2(0.5), vec2(0.5, 0.5)), 0.);
+  // main rotation
+  float mainRot = PI/2. * floor(mod(t*2., 4.));
+  rot(p, -mainRot);
 
+  float minorRot = mod(t * PI, PI/2.) - (PI/2.);
+  p += vec2(.0, 1.);
+  rot(p, minorRot);
+  p -= vec2(0.5);
+
+  float i = step(sdRect(p, vec2(0.5, 0.5)), 0.);
   gl_FragColor = vec4(vec3(i), 1.);
 }
