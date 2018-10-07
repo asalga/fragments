@@ -14,6 +14,7 @@ const float HALF_PI = PI*0.5;
 const vec3 lightGrey = vec3(1.);
 const vec3 darkGrey = vec3(0.4);
 
+
 float samplePolarChecker(vec2 c){
   float t = u_time*2.;
 
@@ -38,6 +39,64 @@ float sampleChecker(vec2 c) {
   return x*y;
 }
 
+
+
+
+
+
+float sdRect(in vec2 p, in vec2 sz){
+  vec2 d = abs(p)-sz;
+  float _out = length(max(d, 0.));
+  float _in = min(max(d.y,d.x),0.);
+  return _in + _out;
+}
+
+mat2 r2d(float a){
+  return mat2(cos(a),sin(a),-sin(a),cos(a));
+}
+
+float diaid(vec2 p){
+  // vec2 p = gl_FragCoord.xy/u_res;
+  float i;
+  float t = u_time*4.;
+
+  float cntPerSide = 1. + mod( (1. + floor(t/PI*2.)), 10.);
+
+  vec2 c = vec2(1./cntPerSide);
+  vec2 rp = mod(p, c) - c * 0.5;
+
+  // alternate the rotation each cell
+  vec2 id = floor(p*cntPerSide);
+  if(mod(id.x, 2.) > .0){
+    t = -t;
+  }
+  if(mod(id.y, 2.) > .0){
+    t = -t;
+  }
+
+  rp *= r2d(t);
+
+  i += step(sdRect(rp+vec2(-c.x/2.,   c.y/2.), c*.5), 0.) * 0.1;
+  i += step(sdRect(rp+vec2(-c.x/2.,  -c.y/2.), c*.5), 0.) * 0.25;
+  i += step(sdRect(rp+vec2(c.x/2.,   -c.y/2.), c*.5), 0.) * 0.75;
+  i += step(sdRect(rp+vec2(c.x/2.,    c.y/2.), c*.5), 0.) * 1.0;
+
+  // gl_FragColor = vec4(vec3(i),1.);
+  return i;
+}
+
+float diaid1(vec2 p){
+  // vec2 p = (gl_FragCoord.xy/u_res)*2.-1.;
+  p = (mod(p, vec2(0.5))-vec2(.25)) * r2d(PI/4.);
+  vec2 shape = mod(abs(p*4.) - u_time * 0.5, vec2(0.5));
+  shape = step(shape, vec2(0.25)) * step(abs(p.yx), abs(p.xy));
+  // gl_FragColor = vec4(vec3(shape.x + shape.y),1);
+  return shape.x +shape.y;
+}
+
+
+
+
 float sdBox(vec3 p, vec3 sz) {
   vec3 d = abs(p) - sz;
   float insideDistance = min(max(d.x, max(d.y, d.z)), 0.0);
@@ -51,12 +110,14 @@ mat3 viewMatrix(vec3 eye, vec3 center, vec3 up) {
   vec3 u = cross(s, f);
   return mat3(s, u, -f);
 }
-
+float sdSphere(in vec3 p, in float r){
+  return length(p)-r;
+}
 float lighting(vec3 p, vec3 n, vec3 lightPos){
   float ambient = 0.0;
   // ---
   vec3 pToLight = vec3(lightPos - p);
-  float power = 140.;
+  float power = 50.;
   vec3 lightRayDir = normalize(pToLight);
   float d = length(pToLight);
   d *= d;
@@ -115,7 +176,43 @@ mat4 r3dZ(float a){
 float sdScene(vec3 p, out float col){
   float t = u_time;
   col = 1.;
-  return sdBox(p, vec3(1));
+
+  float mv = t-1.;
+  float visibleBox = sdBox(p-vec3(0.,mv,0.), vec3(1., 0.08, 1.));
+
+  float sphereSub = sdSphere(p-vec3(0., mv, 0.), (sin(t*PI + PI/2.)+1.)/2. * .8  );
+  vec2 uv = p.xy;// + vec2(t/10.);
+
+  vec3 c = vec3(0., 2., 0. );
+  vec3 rp = mod(p, c)-c*0.5;
+  // rp.y += t;
+  float sphereArmy = sdSphere(rp, .5);
+
+  col = 1.;//
+
+  // if(sphereArmy < 0.001){col = samplePolarChecker(uv);}
+  // col = samplePolarChecker(uv);
+
+  // return
+  //visibleBox;res
+  // float res = max(visibleBox, -subtractbox1);
+   // float res = max(visibleBox, -subtractbox2);
+  // float _2 = min(_1, -subtractbox2);
+  float res = max(visibleBox, -sphereSub);
+  res = min(res, sphereArmy);
+  // return visibleBox;
+  return res;
+}
+
+float sdSceneFront(vec3 p, out float col){
+  float t = u_time;
+  col = 1.;
+
+  float visibleBox = sdBox(p, vec3(1));
+  // fl//oat subtractbox = sdBox(p - vec3(.05), vec3(1));
+
+  return visibleBox;
+  //max(visibleBox, -subtractbox);
 }
 
 vec3 estimateNormal(vec3 v){
@@ -153,9 +250,10 @@ void main(){
   float t = u_time;
   vec2 fc = gl_FragCoord.xy;
 
-  float dist = 4.;
-  vec3 eye = vec3(dist);
-  vec3 center = vec3(0, 0, 0.);
+  float dist = 2.7;
+  vec3 eye = vec3( dist, t, dist);
+  // vec3 eye = vec3(cos(.4)*dist, t, sin(.4)*dist);
+  vec3 center = vec3(0, t, 0.);
   vec3 lightPos =  vec3(0., 4., 2) + eye;
   vec3 up = vec3(0,1,0);
 

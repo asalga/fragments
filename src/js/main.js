@@ -8,8 +8,8 @@ let imgTest;
 
 let demo = {
   'size': {
-    'width': 400,
-    'height': 400
+    'width': 600,
+    'height': 600
   },
   '0': {
     // -------- older
@@ -88,7 +88,8 @@ let demo = {
     // src: '100_199/8/182_inout.fs',
     // src: '100_199/8/183.fs',
     // src: '100_199/8/184.fs',
-    src: '100_199/8/185.fs',
+    // src: '100_199/8/185.fs',
+    src: '100_199/8/186.fs',
 
 
     uniforms: [
@@ -96,7 +97,7 @@ let demo = {
       // {'name': 'u_type0', 'value': type0},
       // {'name': 'u_type1', 'value': type1},
       // {'name': 'u_type2', 'value': type2}
-      { 'name': 'contribs', 'value': [.929, .850, .717, .682, .525, .368, .329] }
+      // { 'name': 'contribs', 'value': [.929, .850, .717, .682, .525, .368, .329] }
     ]
   },
   '1': {
