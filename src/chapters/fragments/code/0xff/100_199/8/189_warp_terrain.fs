@@ -62,10 +62,12 @@ float sdScene(vec3 p, out float col){
   vec2 nLookup2 = vec2(np.xz + vec2(2, -t));
   float n2;
   // n2 += smoothValueNoise(nLookup2*2.) * 0.500;
-  // n2 += smoothValueNoise(nLookup2*4.) * 0.250;
+  n2 += smoothValueNoise(nLookup2*4.) * 0.250;
   n2 += n + smoothValueNoise(nLookup2*8.) * 0.125;
   // // n2/= 2.061;
-  n2/= 1.875;
+  // n2/= 1.875;
+
+  n *= (sin(t+p.z)+1.)/2.;// + p.z/1.;
 
 
 
@@ -108,7 +110,7 @@ float rayMarch(vec3 ro, vec3 rd, out float col){
     if(dist < Epsilon){
       return s;
     }
-    s += dist/5.;
+    s += dist/2.;
 
     if(s >= MaxDist){
       return MaxDist;
@@ -170,7 +172,7 @@ void main(){
   vec3 n = estimateNormal(point);
 
     i += phong(point, n, lightPos);
-    i *=  col;
+    // i *=  col;
 
       // i = col;
   // float fog = 1./ pow( test, 1.8);
