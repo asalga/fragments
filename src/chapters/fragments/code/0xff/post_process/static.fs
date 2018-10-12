@@ -27,7 +27,7 @@ void main( void ) {
   float t = u_time;
   vec2 p = (gl_FragCoord.xy / u_res)*2.-1.;//  - u_mouse.xy;
 
-  float a = fract(atan(p.x, p.y) / Tau);
+  float a = fract(atan(p.x, p.y+t) / Tau);
   float d = length(a);
 
   vec2 coord = vec2(pow(d, shape), a)*26.;
@@ -49,9 +49,11 @@ void main( void ) {
 
   co *= 1.2 + fract(abs(sin(u_time)*100.));
   // co -= pow(length(p)+0.3, 30.);
-  co = texture2D(u_t0, gl_FragCoord.xy/u_res ).r + co;
+  co = texture2D(u_t0, gl_FragCoord.xy/u_res ).r;// + co;
 
   co = 1.-co;
+
+  // if()
 
   gl_FragColor = vec4(vec3(co), 1.);
 }
