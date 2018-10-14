@@ -96,7 +96,8 @@ let demo = {
 
     // --------  9
     // src: '100_199/9/190_.fs',
-    src: '100_199/9/191_.fs',
+    // src: '100_199/9/191_.fs',
+    src: '100_199/9/192_.fs',
 
     uniforms: [
       // {'name': 'u_fov', 'value': 70}
@@ -107,7 +108,7 @@ let demo = {
     ]
   },
   '1': {
-    src: 'post_process/null.fs',
+    // src: 'post_process/null.fs',
     // src: 'post_process/sin.fs',
     // src: 'post_process/wave.fs',
     // src: 'post_process/simple_dither.fs',
@@ -116,7 +117,7 @@ let demo = {
     // src: 'post_process/flipy.fs',
     // src: 'post_process/px_sort2.fs',
     // src: 'post_process/blur.fs',
-    // src: 'post_process/static.fs',
+    src: 'post_process/static.fs',
     // src: 'post_process/flood.fs',
     // src: 'post_process/cel.fs',
     // src: 'post_process/pixelate.fs',

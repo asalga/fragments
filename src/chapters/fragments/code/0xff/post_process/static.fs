@@ -27,11 +27,11 @@ void main( void ) {
   float t = u_time;
   vec2 p = (gl_FragCoord.xy / u_res)*2.-1.;//  - u_mouse.xy;
 
-  float a = fract(atan(p.x, p.y+t) / Tau);
-  float d = length(a);
+  // float a = fract(atan(p.x, p.y+t) / Tau);
+  // float d = length(a);
 
-  vec2 coord = vec2(pow(d, shape), a)*26.;
-  vec2 delta = vec2(u_time*speed*15., .5);
+  // vec2 coord = vec2(pow(d, shape), a)*26.;
+  // vec2 delta = vec2(u_time*speed*15., .5);
 
   float c = 0.;
   // for(int i=0; i<14; i++) {
@@ -44,16 +44,16 @@ void main( void ) {
   // final.yz = vec2(0.);
    // final.x = abs(1. / (c*p.x * 10000. ));
 
-  float vn = random(p /sin(t));//+vec2(t/100000., 1.));
-  float co = abs(1./(( fract( (p.y+vn)/2.+t )) * 10. * vn) );
+   p = floor(p*vec2(1.+(t*1.)*1.));
 
-  co *= 1.2 + fract(abs(sin(u_time)*100.));
+  float vn = random(p /sin(t/1.));//+vec2(t/100000., 1.));
+  float co = abs(1./(( fract( (p.y+vn)/2.+0. )) * 1. * 1.) );
+
+  co *=  fract(abs(sin(t/100.)*1.));
   // co -= pow(length(p)+0.3, 30.);
-  co = texture2D(u_t0, gl_FragCoord.xy/u_res ).r;// + co;
+  // co = texture2D(u_t0, gl_FragCoord.xy/u_res ).r;// + co;
 
-  co = 1.-co;
-
-  // if()
-
+  // co = 1.-co;
+co = step(co, (sin(t)+1.)/2. );
   gl_FragColor = vec4(vec3(co), 1.);
 }
