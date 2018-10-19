@@ -101,7 +101,8 @@ let demo = {
     // src: '100_199/9/193_.fs',
     // src: '100_199/9/194_.fs',
     // src: '100_199/9/195.fs',
-    src: '100_199/9/196_planks.fs',
+    // src: '100_199/9/196_planks.fs',
+    src: '100_199/9/197_.fs',
 
     uniforms: [
       // {'name': 'u_fov', 'value': 70}
