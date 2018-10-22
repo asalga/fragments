@@ -17,12 +17,12 @@ void main(){
 
 	for (int i = 0; i < 3; ++i){
 
-		float depth = 5. + float(i);
+		float depth = 1. + float(i);
 		vec2 uv = p + floor(vec2(depth));
 
-		uv /= 20.;//u_res.y;
-		uv *= depth*1.;
-		uv = fract(uv/3.);
+		// uv /= 100.;//u_res.y;
+		uv *= depth +  u_time*0.1;
+		uv = fract(uv*1.);
 		col = texture2D(u_t0, uv).rgb;
 
 		// if (1.0 - col.r < (float(i)+1.) / 10.0) {

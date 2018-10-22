@@ -60,7 +60,7 @@ void main(){
   // i += step(sdRect(p, vec2(sc/2.)*1.), 0.);
   i += smoothstep(0.01, 0.001, sdRect(p, vec2(sc/2.)*1.));
 
-i -= smoothstep(0.01, 0.001, sdRect(p, vec2(sc/4.)*1.));
+  i -= smoothstep(0.01, 0.001, sdRect(p, vec2(sc/4.)*1.));
   // i -= step(sdRect(p, vec2(sc/4.)*1.), 0.);
 
   sc = 0.5;
@@ -74,31 +74,3 @@ i -= smoothstep(0.01, 0.001, sdRect(p, vec2(sc/4.)*1.));
 
   gl_FragColor = vec4(vec3(i), 1.);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

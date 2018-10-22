@@ -13,9 +13,9 @@ void main() {
   float t = u_time * .25;
   float len = length(p);
 
-  float r = .5/len + t;
-  float th = atan(p.y / p.x)/TAU - t/10.;
-  th *= 4.;
+  float r = .5/len + t*2.;
+  float th = atan(p.y / p.x)/TAU + t/2.;
+  th *= 2.;
 
   vec2 uv = vec2(r,th);
 
@@ -23,9 +23,9 @@ void main() {
 
   vec3 col = texture2D(u_t0, uv).rgb;
 
-  float fog = .1- (1./(length(p) * 200.));
+  float fog = .1- (1./(length(p) * 100.));
 
-  fog = pow( len, 2.4) * 2.;
+  fog = pow( len, 2.4) * 1.;
   col *= fog;
 
   gl_FragColor = vec4(col, 1);
