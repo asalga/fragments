@@ -20,7 +20,8 @@ let demo = {
     // src: '200_299/0/204_ghost.fs',
     // src: '200_299/0/204_diamonds.fs',
     // src: '200_299/0/205.fs',
-    src: '200_299/0/206.fs',
+    // src: '200_299/0/206.fs',
+    src: '200_299/0/207_2.fs',
 
     // -------- older
     // src: '100_199/4/14x_voxel_tutorial2.fs',
