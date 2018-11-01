@@ -27,7 +27,7 @@ void main(){
   p *= 0.032;
 
   float x = -2. + floor((sin(t*4.)+1.5));
-  float y =  + floor((cos(t*4.)+1.));
+  float y = floor((cos(t*4.)+1.));
 
   vec2 np = gl_FragCoord.xy/u_res*2.-1.;
 
