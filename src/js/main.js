@@ -139,7 +139,7 @@ let demo = {
     ]
   },
   '1': {
-    src: 'post_process/null.fs',
+    // src: 'post_process/null.fs',
     // src: 'post_process/sin.fs',
     // src: 'post_process/wave.fs',
     // src: 'post_process/simple_dither.fs',
@@ -155,7 +155,7 @@ let demo = {
     // src: 'post_process/tunnel.fs',
     // src: 'post_process/sobel.fs',
     // src: 'post_process/parallax.fs',
-    // src: 'post_process/half_tone.fs',
+    src: 'post_process/half_tone.fs',
 
     uniforms: [
       { 'name': 'u_numShades', 'value': 12 },
