@@ -28,7 +28,8 @@ let demo = {
     // src: '200_299/1/211.fs',
     // src: '200_299/1/212.fs',
     // src: '200_299/1/213.fs',
-    src: '200_299/1/214.fs',
+    // src: '200_299/1/214.fs',
+    src: '200_299/1/215.fs',
 
     // -------- older
     // src: '100_199/4/14x_voxel_tutorial2.fs',
@@ -282,7 +283,7 @@ function makeSketch(fs, params) {
       p.pixelDensity(1);
       $(p.canvas).appendTo($('#target'));
       $(ditherTex.canvas).appendTo($('#target2'));
-      p.noLoop();
+      // p.noLoop();
 
       imgTest = p.loadImage('../chapters/fragments/tex/debug.png');
     };
