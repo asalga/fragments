@@ -1,3 +1,4 @@
+// 217 - denom
 precision mediump float;
 
 uniform vec2 u_res;
@@ -48,18 +49,7 @@ void main(){
   float halfSz = sz/2.;
   float h = sqrt(sz*sz - halfSz*halfSz );
   float REP = 4.;
-  float t = u_time * 1.;
-
-  // p.y -= t*2.;
-
-
-  // if( floor(p.x * REP) == 0.){
-    // p.y -= t*2.;
-  // }
-
-   // p.y -= t*2. * floor(p.x);
-
-   // p.y -= fract(t * floor(p.x * REP));
+  float t = u_time * .5;
 
    if(fract(t) < .25 && floor(p.x * REP) == 0.){
     p.y += t * h;
@@ -86,15 +76,9 @@ void main(){
 
   if( mod(id.x, 2.) == 0.){
     i = step(sdTriangle(rp , a, b, c), 0.) * 0.25;
-    // i *= step(sin(length(rp)) *  sdCircle(rp, sz), 0.);
-    // i *= step(sdCircle(rp, 0.25), 0.);
   }
   else {
-
-
     t = 0.;
-    // float f1 = mod(t*2. * fract(id.x/10.), h*0.25);
-    // float f2 = mod(t*2. * fract(id.x/10.), h*0.25);
     float f1 = mod(-t*4., h*0.25);
     float f2 = mod(-t*4., h*0.25);
 
@@ -102,9 +86,8 @@ void main(){
     b.y = -b.y;
     c.y = -c.y;
 
-    i += step(sdTriangle(rp - vec2(0., f1       ), a, b, c), 0.)*0.25;// * .75;
-    i += step(sdTriangle(rp - vec2(.0, f2 + h/4.), a, b, c), 0.)*0.25;// * .75;
-
+    i += step(sdTriangle(rp - vec2(0., f1       ), a, b, c), 0.)*0.25;
+    i += step(sdTriangle(rp - vec2(.0, f2 + h/4.), a, b, c), 0.)*0.25;
   }
 
   gl_FragColor = vec4(vec3(i),1.);
