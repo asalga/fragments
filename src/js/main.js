@@ -30,7 +30,8 @@ let demo = {
     // src: '200_299/1/213.fs',
     // src: '200_299/1/214.fs',
     // src: '200_299/1/215.fs',
-    src: '200_299/1/216.fs',
+    // src: '200_299/1/216.fs',
+    src: '200_299/1/217.fs',
 
     // -------- older
     // src: '100_199/4/14x_voxel_tutorial2.fs',
@@ -140,7 +141,7 @@ let demo = {
     ]
   },
   '1': {
-    src: 'post_process/null.fs',
+    // src: 'post_process/null.fs',
     // src: 'post_process/sin.fs',
     // src: 'post_process/wave.fs',
     // src: 'post_process/simple_dither.fs',
@@ -154,7 +155,7 @@ let demo = {
     // src: 'post_process/cel.fs',
     // src: 'post_process/pixelate.fs',
     // src: 'post_process/tunnel.fs',
-    // src: 'post_process/sobel.fs',
+    src: 'post_process/sobel.fs',
     // src: 'post_process/parallax.fs',
     // src: 'post_process/half_tone.fs',
 
