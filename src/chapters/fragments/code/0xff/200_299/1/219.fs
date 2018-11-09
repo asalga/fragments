@@ -13,9 +13,9 @@ float sdCircle(vec2 p, float r){
 }
 
 void rot(inout vec2 p, float a){
-  mat2 m = mat2(cos(a), sin(a),
-                -sin(a), cos(a));
-  p *= m;
+  float c = cos(a);
+  float s = sin(a);
+  p *= mat2(c, s, -s, c);
 }
 
 void main(){
@@ -32,20 +32,29 @@ void main(){
   float _a = 1.-smoothstep(0., 0.012, sdCircle(_ap + vec2(0., 0.25), 0.02));
   _a -= step(sdCircle(_ap+ vec2(0., 0.25), 0.024), 0.)*2.;
 
+
   vec2 _bp = p;
   rot(_bp, t*.58);
   float _b;
   _b = 1.-smoothstep(0., 0.012, sdCircle(_bp + vec2(0., 0.75), 0.027));
   _b -= step(sdCircle(_bp+ vec2(0., 0.75), 0.03), 0.)*2.;
 
+  _bp += vec2(0., 0.75);
+  rot(_bp, t*3.);
+  _b += 1.-smoothstep(0., 0.012, sdCircle(_bp + vec2(0., 0.1), 0.0027));
+
   vec2 _cp = p;
   rot(_cp, PI * 8.4 + t);
   float _c = 1.-smoothstep(0., 0.012, sdCircle(_cp + vec2(0., 0.4), 0.025));
   _c -= step(sdCircle(_cp+ vec2(0., 0.4), 0.03), 0.)*2.;
 
+  _cp += vec2(0., 0.4);
+  rot(_cp, t*5.3);
+  _c += 1.-smoothstep(0., 0.012, sdCircle(_cp + vec2(0., 0.08), 0.0027));
+
+
   i = b + a + c;
   i += _a + _b + _c;
-
 
     vec2 pos = p;
     rot(pos, t*.5);
