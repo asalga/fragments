@@ -4,7 +4,7 @@ uniform sampler2D u_t0;
 uniform vec2 u_res;
 uniform float u_time;
 
-const int CNT = 30;
+const int CNT = 40;
 const float PI = 3.141592658;
 
 float random (vec2 st) {
