@@ -39,7 +39,7 @@ let demo = {
     // src: '200_299/2/220.fs',
     // src: '200_299/2/221.fs',
     // src: '200_299/2/221_shatter_tunnel.fs',
-    src: '200_299/2/222_intake.fs',
+    src: '200_299/2/222.fs',
 
     // -------- older
     // src: '100_199/4/14x_voxel_tutorial2.fs',
